@@ -1,0 +1,6 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "all": "minecraft:block/crimson_planks"
+  }
+}
