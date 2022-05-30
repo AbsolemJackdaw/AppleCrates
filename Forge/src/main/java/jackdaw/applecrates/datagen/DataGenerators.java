@@ -15,9 +15,12 @@ public class DataGenerators {
 
         if (event.includeServer()) {
             generator.addProvider(new CrateTag(generator, event.getExistingFileHelper()));
+
         }
         if (event.includeClient()) {
+            generator.addProvider(new CrateModels(generator, event.getExistingFileHelper()));
             generator.addProvider(new CrateStates(generator, event.getExistingFileHelper()));
+
         }
     }
 }

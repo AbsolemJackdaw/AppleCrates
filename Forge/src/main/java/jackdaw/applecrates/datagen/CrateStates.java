@@ -15,10 +15,10 @@ public class CrateStates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        GeneralRegistry.BLOCK_MAP.forEach((woodType, blockRegistryObject) ->
-                simpleBlock(blockRegistryObject.get(), modelFile -> {
-
-                    return new net.minecraftforge.client.model.generators.ConfiguredModel[0];
-                }));
+        GeneralRegistry.BLOCK_MAP.forEach((woodType, block) ->
+                horizontalBlock(
+                        block.get(),
+                        new ModelFile.ExistingModelFile(new ResourceLocation(AppleCrates.MODID, "block/" + woodType.name() + "_crate"), models().existingFileHelper)
+                        , 180));
     }
 }

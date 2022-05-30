@@ -26,7 +26,7 @@ public class GeneralRegistry {
     {
         Map blockMap = new HashMap<>();
         WoodType.values().forEach(woodType -> {
-            blockMap.put(woodType, BLOCKS.register(woodType.name() + "_crate", CrateBlock::new));
+            blockMap.put(woodType, BLOCKS.register(woodType.name() + "_crate", () -> new CrateBlock(woodType)));
         });
         return blockMap;
     });
@@ -38,6 +38,15 @@ public class GeneralRegistry {
         });
         return itemMap;
     });
+    public static final Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> BE_MAP = Util.make(() -> {
+        Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> blockEntityMap = new HashMap<>();
+        BLOCK_MAP.forEach((woodType, block) -> {
+            blockEntityMap.put(woodType, BLOCK_ENTITIES.register(woodType.name() + "_crate_be", () ->
+                    BlockEntityType.Builder.of((pos, state) -> new CrateBE(woodType, pos, state), block.get()).build(null)));
+        });
+
+        return blockEntityMap;
+    });
 
     public static void startup() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -45,16 +54,6 @@ public class GeneralRegistry {
         ITEMS.register(bus);
         BLOCK_ENTITIES.register(bus);
     }
-
-    public static final Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> BE_MAP = Util.make(() -> {
-        Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> blockEntityMap = new HashMap<>();
-        BLOCK_MAP.forEach((woodType, block) -> {
-            blockEntityMap.put(woodType, BLOCK_ENTITIES.register(woodType.name() + "_crate_be", () ->
-                    BlockEntityType.Builder.of(CrateBE::new, block.get()).build(null)));
-        });
-
-        return blockEntityMap;
-    });
 
 
 }

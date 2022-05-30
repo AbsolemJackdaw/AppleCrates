@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 
 public class CrateBE extends BlockEntity {
 
-    public CrateBE(BlockPos pos, BlockState state) {
-        super(GeneralRegistry.BE_MAP.get(WoodType.OAK).get(), pos, state);
+    public CrateBE(WoodType type, BlockPos pos, BlockState state) {
+        super(GeneralRegistry.BE_MAP.get(type).get(), pos, state);
     }
 
     @Override

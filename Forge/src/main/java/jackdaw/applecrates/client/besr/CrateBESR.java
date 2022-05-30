@@ -31,7 +31,7 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
             stack.translate(0.5F + (i == 2 ? randomOffset.x : 0.0), 0.3F + (0.02f * (float) i), 0.6F + (i == 1 ? randomOffset.z : 0));
             var blockRotation = pBlockEntity.getBlockState().getValue(CrateBlock.FACING).getRotation();
             stack.mulPose(blockRotation);
-            stack.mulPose(new Quaternion(-45.0f + 22.5f, 0.0f, 0.0f, true));
+            stack.mulPose(new Quaternion(-45.0f + 22.5f, 180.0f, 0.0f, true));
             Minecraft.getInstance().getItemRenderer().renderStatic(
                     new ItemStack(Items.APPLE),
                     ItemTransforms.TransformType.GROUND,
