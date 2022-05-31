@@ -1,6 +1,7 @@
 {
   "parent": "applecrates:block/applecrate",
   "textures": {
-    "all": "minecraft:block/spruce_planks"
+    "particle": "minecraft:block/spruce_planks",
+    "0": "minecraft:block/spruce_planks"
   }
 }
