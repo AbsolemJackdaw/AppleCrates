@@ -7,8 +7,8 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
 
 import java.util.function.Consumer;
@@ -26,7 +26,7 @@ public class CrateRecipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(GeneralRegistry.BLOCK_MAP.get(woodType).get())
                     .define('p', Registry.BLOCK.get(new ResourceLocation(woodType.name() + "_planks")))
                     .define('S', Items.STICK)
-                    .pattern("S S").pattern("ppp").group("boat").unlockedBy("in_water", insideOf(Blocks.WATER)).save(pFinishedRecipeConsumer);
+                    .pattern("S S").pattern("ppp").group("boat").unlockedBy("has_planks", has(ItemTags.PLANKS)).save(pFinishedRecipeConsumer);
 
         });
 

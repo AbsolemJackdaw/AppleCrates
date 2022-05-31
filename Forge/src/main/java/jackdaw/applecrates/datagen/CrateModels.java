@@ -15,8 +15,10 @@ public class CrateModels extends BlockModelProvider {
     @Override
     protected void registerModels() {
         GeneralRegistry.BLOCK_MAP.forEach((woodType, block) -> {
+            ResourceLocation plank = new ResourceLocation("minecraft:block/" + woodType.name() + "_planks");
             withExistingParent(block.get().getRegistryName().getPath(),
-                    modLoc("block/applecrate")).texture("all", new ResourceLocation("minecraft:block/" + woodType.name() + "_planks"));
+                    modLoc("block/applecrate")).texture("particle", plank).texture("0", plank);
+
         });
     }
 }
