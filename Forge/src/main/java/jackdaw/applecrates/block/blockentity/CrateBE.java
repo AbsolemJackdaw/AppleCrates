@@ -6,8 +6,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class CrateBE extends BlockEntity {
+
+    public ItemStackHandler crateInventory = new ItemStackHandler(27);
+    public ItemStackHandler crateSales = new ItemStackHandler(3);
 
     public CrateBE(WoodType type, BlockPos pos, BlockState state) {
         super(GeneralRegistry.BE_MAP.get(type).get(), pos, state);

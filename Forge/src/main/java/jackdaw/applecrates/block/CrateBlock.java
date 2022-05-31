@@ -1,10 +1,18 @@
 package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -16,8 +24,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class CrateBlock extends BaseEntityBlock {
@@ -80,7 +90,7 @@ public class CrateBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrateBE(type, pos, state);
+        return GeneralRegistry.BE_MAP.get(type).get().create(pos, state);
     }
 
     @Override
@@ -91,6 +101,19 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-        //TODO set nbt data from stack to block entity
+
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pPlayer instanceof ServerPlayer sp && pLevel.getBlockEntity(pPos) instanceof CrateBE be && pHand.equals(InteractionHand.MAIN_HAND)) {
+            boolean owner = pPlayer.isShiftKeyDown();
+            NetworkHooks.openGui(sp,
+                    new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
+                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, owner),
+                            new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.FAIL;//super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 }

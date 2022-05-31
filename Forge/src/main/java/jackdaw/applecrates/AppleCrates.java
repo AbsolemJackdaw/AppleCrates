@@ -1,6 +1,5 @@
 package jackdaw.applecrates;
 
-import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraftforge.fml.common.Mod;
 

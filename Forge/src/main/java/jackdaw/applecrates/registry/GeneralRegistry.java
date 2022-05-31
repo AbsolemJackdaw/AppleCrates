@@ -3,8 +3,10 @@ package jackdaw.applecrates.registry;
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.item.CrateItem;
 import net.minecraft.Util;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,8 +24,11 @@ public class GeneralRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, AppleCrates.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AppleCrates.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, AppleCrates.MODID);
-    public static final Map<WoodType, RegistryObject<Block>> BLOCK_MAP = Util.make(() ->
-    {
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, AppleCrates.MODID);
+    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, false)));
+    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, true)));
+
+    public static final Map<WoodType, RegistryObject<Block>> BLOCK_MAP = Util.make(() -> {
         Map blockMap = new HashMap<>();
         WoodType.values().forEach(woodType -> {
             blockMap.put(woodType, BLOCKS.register(woodType.name() + "_crate", () -> new CrateBlock(woodType)));
@@ -53,6 +58,7 @@ public class GeneralRegistry {
         BLOCKS.register(bus);
         ITEMS.register(bus);
         BLOCK_ENTITIES.register(bus);
+        MENU_TYPES.register(bus);
     }
 
 
