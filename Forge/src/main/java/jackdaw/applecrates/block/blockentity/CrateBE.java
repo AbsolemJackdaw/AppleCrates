@@ -11,7 +11,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class CrateBE extends BlockEntity {
 
     public ItemStackHandler crateInventory = new ItemStackHandler(30);
-    public ItemStackHandler crateSales = new ItemStackHandler(3);
+    public ItemStackHandler crateSales = new ItemStackHandler(2);
     public ItemStackHandler priceAndSale = new ItemStackHandler(2);
 
     public CrateBE(WoodType type, BlockPos pos, BlockState state) {

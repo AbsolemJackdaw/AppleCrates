@@ -45,7 +45,8 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             }));
         } else {
             addRenderableWidget(new Button(x + 4, y + 17, 91, 20, TextComponent.EMPTY, (button) -> {
-                CrateChannel.NETWORK.sendToServer(new SGetSale());
+                if (!menu.outOfStock())
+                    CrateChannel.NETWORK.sendToServer(new SGetSale());
             }));
         }
     }
@@ -65,7 +66,10 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
-        blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
+        if (menu.outOfStock() && !isOwner)
+            blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
+        else
+            blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
 
     }
 
@@ -87,7 +91,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
+
+
         blit(pPoseStack, x, y, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+        //gide second slot
+        blit(pPoseStack, x + 161, y + 36, this.getBlitOffset(), 161.0F, 15.0F, 18, 18, 512, 256);
 
         if (isOwner) {
             //Draw makeshift slots from player inventory in villager gui
@@ -120,7 +128,6 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
                     CrateScreen.this.renderTooltip(pPoseStack, sale, pMouseX, pMouseY);
                 }
             }
-
         }
     }
 }

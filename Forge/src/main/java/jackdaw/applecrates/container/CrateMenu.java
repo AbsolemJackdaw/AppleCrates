@@ -24,7 +24,7 @@ public class CrateMenu extends AbstractContainerMenu {
 
     //Registry overload for menu type registry
     public CrateMenu(int id, Inventory inv, boolean owner) {
-        this(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(3), new ItemStackHandler(2), new ItemStackHandler(30), owner);
+        this(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new ItemStackHandler(30), owner);
     }
 
     public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, ItemStackHandler stock, boolean isOwner) {
@@ -35,11 +35,11 @@ public class CrateMenu extends AbstractContainerMenu {
         this.crateStock = stock;
 
         this.addSlot(new SlotItemHandler(interactableSlots, 0, 136, 37));
-        this.addSlot(new SlotItemHandler(interactableSlots, 1, 162, 37));
-        this.addSlot(new SlotItemHandler(interactableSlots, 2, 220, 38) {
+        //this.addSlot(new SlotItemHandler(interactableSlots, 1, 162, 37));
+        this.addSlot(new SlotItemHandler(interactableSlots, 1, 220, 38) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return false;
+                return isOwner;
             }
         });
 
@@ -88,16 +88,17 @@ public class CrateMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotID, int mouseButton, ClickType click, Player player) {
-        ItemStack resultSlotCache = interactableSlots.getStackInSlot(2).copy();//get copy before clicking
-        super.clicked(slotID, mouseButton, click, player);
-        if (player instanceof ServerPlayer serverPlayer && slotID < 3) {
-            if (slotID == 2 && ClickType.PICKUP.equals(click) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(2).isEmpty()) {
-                //TODO give payement to owner
+        if (!isOwner && player instanceof ServerPlayer serverPlayer && slotID < 2) {
+            ItemStack resultSlotCache = interactableSlots.getStackInSlot(1).copy();//get copy before clicking
+            super.clicked(slotID, mouseButton, click, player);
+            if (slotID == 1 && ClickType.PICKUP.equals(click) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
+                //TODO give payment to owner
                 interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
+                updateSellItem();
             }
+        } else {
+            super.clicked(slotID, mouseButton, click, player);
         }
-        updateSellItem();
-
     }
 
     @Override
@@ -112,14 +113,14 @@ public class CrateMenu extends AbstractContainerMenu {
         if (!paying.isEmpty()) {
             if (!give.isEmpty()) {
                 if (ItemStack.isSameItemSameTags(give, paying) && paying.getCount() >= give.getCount()) {
-                    if (interactableSlots.getStackInSlot(2).isEmpty()) {
+                    if (interactableSlots.getStackInSlot(1).isEmpty()) {
                         movefromStockToSaleSlot(priceAndSaleSlots.getStackInSlot(1).copy()); //check for the item to get
                     }
                 }
             }
         } else {
-            if (!interactableSlots.getStackInSlot(2).isEmpty()) {
-                moveItemStackTo(interactableSlots.getStackInSlot(2), 5, 35, true);
+            if (!interactableSlots.getStackInSlot(1).isEmpty()) {
+                moveItemStackTo(interactableSlots.getStackInSlot(1), 4, 34, true);
             }
         }
     }
@@ -127,7 +128,7 @@ public class CrateMenu extends AbstractContainerMenu {
     public void tryMovePayementToInteraction() {
         ItemStack itemstack = this.interactableSlots.getStackInSlot(0);
         if (!itemstack.isEmpty()) {
-            if (!this.moveItemStackTo(itemstack, 35, 64, true)) {
+            if (!this.moveItemStackTo(itemstack, 34, 34 + (9 * 3), true)) {
                 return;
             }
             this.interactableSlots.setStackInSlot(0, itemstack);
@@ -141,27 +142,28 @@ public class CrateMenu extends AbstractContainerMenu {
 
     @Override
     public void removed(Player pPlayer) {
-        super.removed(pPlayer);
 
         if (pPlayer instanceof ServerPlayer) {
             pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getStackInSlot(0));
-            pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getStackInSlot(1));
+            updateSellItem();
         }
+        super.removed(pPlayer);
+
     }
 
     private void movefromStockToSaleSlot(ItemStack get) {
-        if (!get.isEmpty()) {
-            for (int i = 5; i < 34; ++i) {
+        if (!get.isEmpty() && !outOfStock()) {
+            for (int i = 4; i < 34; ++i) {
                 ItemStack stackinSlot = this.slots.get(i).getItem();
                 if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(get, stackinSlot)) {
-                    ItemStack pickupSlot = this.interactableSlots.getStackInSlot(2);
+                    ItemStack pickupSlot = this.interactableSlots.getStackInSlot(1);
                     int j = pickupSlot.isEmpty() ? 0 : pickupSlot.getCount();
                     int k = Math.min(get.getCount() - j, stackinSlot.getCount());
                     ItemStack copy = stackinSlot.copy();
                     int l = j + k;
                     stackinSlot.shrink(k);
                     copy.setCount(l);
-                    this.interactableSlots.setStackInSlot(2, copy);
+                    this.interactableSlots.setStackInSlot(1, copy);
                     if (l >= get.getCount()) {
                         break;
                     }
@@ -172,7 +174,7 @@ public class CrateMenu extends AbstractContainerMenu {
 
     private void moveFromInventoryToPaymentSlot(ItemStack give) {
         if (!give.isEmpty()) {
-            for (int i = 35; i < 71; ++i) {
+            for (int i = 34; i < (34 + (9 * 4)); ++i) {
                 ItemStack stackinSlot = this.slots.get(i).getItem();
                 if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(give, stackinSlot)) {
                     ItemStack payementSlot = this.interactableSlots.getStackInSlot(0);
@@ -192,6 +194,13 @@ public class CrateMenu extends AbstractContainerMenu {
 
         }
 
+    }
+
+    public boolean outOfStock() {
+        for (int i = 0; i < crateStock.getSlots(); i++)
+            if (!crateStock.getStackInSlot(i).isEmpty() && crateStock.getStackInSlot(i).getCount() >= priceAndSaleSlots.getStackInSlot(1).getCount())
+                return false;
+        return interactableSlots.getStackInSlot(1).isEmpty();
     }
 
     @Override
