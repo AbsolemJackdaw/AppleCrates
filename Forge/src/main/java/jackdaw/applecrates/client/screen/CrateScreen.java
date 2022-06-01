@@ -3,6 +3,9 @@ package jackdaw.applecrates.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.network.CrateChannel;
+import jackdaw.applecrates.network.SCrateTradeSync;
+import jackdaw.applecrates.network.SGetSale;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -36,13 +39,14 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
         if (isOwner) {
-            addRenderableWidget(new Button(x + 5, y + 138, 89, 20, TextComponent.EMPTY, (button) -> {
-
+            addRenderableWidget(new Button(x + 4, y + 138, 91, 20, TextComponent.EMPTY, (button) -> {
+                if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty()))
+                    CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
             }));
-
-//            addRenderableWidget(new Button(x+5, 119, 89, 20, new TextComponent("For"), (button) -> {
-//
-//            }));
+        } else {
+            addRenderableWidget(new Button(x + 4, y + 17, 91, 20, TextComponent.EMPTY, (button) -> {
+                CrateChannel.NETWORK.sendToServer(new SGetSale());
+            }));
         }
     }
 
@@ -53,22 +57,26 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         int y = (this.height - this.imageHeight) / 2;
 
 
-        if (isOwner) {
-            if (!menu.crateSales.getStackInSlot(0).isEmpty()) {
-                ItemStack confirmedSale = menu.crateSales.getStackInSlot(0);
-                this.itemRenderer.renderAndDecorateFakeItem(confirmedSale, x + 74, y + 140);
-                this.itemRenderer.renderGuiItemDecorations(this.font, confirmedSale, x + 74, y + 140);
-            }
-            if (!menu.crateSales.getStackInSlot(1).isEmpty()) {
-                ItemStack confirmedSale = menu.crateSales.getStackInSlot(1);
-                this.itemRenderer.renderAndDecorateFakeItem(confirmedSale, x + 16, y + 140);
-                this.itemRenderer.renderGuiItemDecorations(this.font, confirmedSale, x + 16, y + 140);
-            }
-            RenderSystem.enableBlend();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
-            blit(pPoseStack, x + 5 + 35 + 20, y + 144, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
+        int offSet = isOwner ? 0 : -140 + 19;
+        renderTrade(0, x, y + offSet);
+        renderTrade(1, x, y + offSet);
+        RenderSystem.enableBlend();
+        if (isOwner && !(menu.priceAndSaleSlots.getStackInSlot(0).isEmpty() && menu.priceAndSaleSlots.getStackInSlot(1).isEmpty()) && menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())
+            RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+        blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
 
+    }
+
+    //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
+    private void renderTrade(int slotId, int x, int y) {
+        if ((!menu.interactableSlots.getStackInSlot(slotId).isEmpty() && isOwner) || !menu.priceAndSaleSlots.getStackInSlot(slotId).isEmpty()) {
+            ItemStack saleStack = isOwner && !menu.interactableSlots.getStackInSlot(slotId).isEmpty() ? menu.interactableSlots.getStackInSlot(slotId) : menu.priceAndSaleSlots.getStackInSlot(slotId);
+            int xo = slotId == 0 ? 10 : 74;
+            int yo = 140;
+            this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
+            this.itemRenderer.renderGuiItemDecorations(this.font, saleStack, x + xo, y + yo);
         }
     }
 
@@ -77,9 +85,16 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        blit(pPoseStack, i, j, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
+        blit(pPoseStack, x, y, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+
+        if (isOwner) {
+            //Draw makeshift slots from player inventory in villager gui
+            blit(pPoseStack, x + 4, y + 17, this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
+            blit(pPoseStack, x + 4, y + 17 + (18 * 3), this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
+
+        }
     }
 
     class TradeOfferButton extends Button {

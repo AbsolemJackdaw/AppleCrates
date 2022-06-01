@@ -110,7 +110,7 @@ public class CrateBlock extends BaseEntityBlock {
             boolean owner = pPlayer.isShiftKeyDown();
             NetworkHooks.openGui(sp,
                     new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
-                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, owner),
+                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, be.crateSales, be.priceAndSale,be.crateInventory, owner),
                             new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
             return InteractionResult.SUCCESS;
         }
