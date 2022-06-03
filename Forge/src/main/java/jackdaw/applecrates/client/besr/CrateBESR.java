@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
 public class CrateBESR implements BlockEntityRenderer<CrateBE> {
@@ -26,22 +25,24 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
     public void render(CrateBE pBlockEntity, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         calculateOffset(pBlockEntity.getBlockPos());
 
-        for (int i = 0; i < 3; i++) {
-            stack.pushPose();
-            stack.translate(0.5F + (i == 2 ? randomOffset.x : 0.0), 0.3F + (0.02f * (float) i), 0.6F + (i == 1 ? randomOffset.z : 0));
-            var blockRotation = pBlockEntity.getBlockState().getValue(CrateBlock.FACING).getRotation();
-            stack.mulPose(blockRotation);
-            stack.mulPose(new Quaternion(-45.0f + 22.5f, 180.0f, 0.0f, true));
-            Minecraft.getInstance().getItemRenderer().renderStatic(
-                    new ItemStack(Items.APPLE),
-                    ItemTransforms.TransformType.GROUND,
-                    pPackedLight,
-                    pPackedOverlay,
-                    stack,
-                    pBufferSource,
-                    0);
-            stack.popPose();
-        }
+        ItemStack selling = pBlockEntity.priceAndSale.getStackInSlot(1);
+        if (!selling.isEmpty())
+            for (int i = 0; i < 3; i++) {
+                stack.pushPose();
+                stack.translate(0.5F + (i == 2 ? randomOffset.x : 0.0), 0.3F + (0.02f * (float) i), 0.6F + (i == 1 ? randomOffset.z : 0));
+                var blockRotation = pBlockEntity.getBlockState().getValue(CrateBlock.FACING).getRotation();
+                stack.mulPose(blockRotation);
+                stack.mulPose(new Quaternion(-45.0f + 22.5f, 180.0f, 0.0f, true));
+                Minecraft.getInstance().getItemRenderer().renderStatic(
+                        selling,
+                        ItemTransforms.TransformType.GROUND,
+                        pPackedLight,
+                        pPackedOverlay,
+                        stack,
+                        pBufferSource,
+                        0);
+                stack.popPose();
+            }
 
     }
 
