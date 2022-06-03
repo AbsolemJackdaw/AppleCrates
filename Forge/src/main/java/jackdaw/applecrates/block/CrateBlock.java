@@ -6,7 +6,9 @@ import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -109,7 +111,9 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pPlayer instanceof ServerPlayer sp && pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
-            boolean owner = crate.getOwner().equals(sp.getGameProfile().getId());
+            boolean owner =
+//                    crate.getOwner().equals(sp.getGameProfile().getId());
+                    sp.isShiftKeyDown();
             NetworkHooks.openGui(sp,
                     new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
                             new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
@@ -117,5 +121,46 @@ public class CrateBlock extends BaseEntityBlock {
             return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
         return InteractionResult.FAIL;//super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (!pState.is(pNewState.getBlock())) {
+            if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pLevel instanceof ServerLevel level) {
+                for (int i = 0; i < crate.crateStock.getSlots(); i++) {
+                    ItemStack stack = crate.crateStock.getStackInSlot(i);
+                    if (i == 29) {
+                        if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains("stocked")) {
+                            int pay = stack.getTag().getInt("stocked");
+                            ItemStack prepCopy = stack.copy();
+                            prepCopy.removeTagKey("stocked");
+                            if (prepCopy.getTag() != null && prepCopy.getTag().isEmpty())
+                                prepCopy.setTag(null);
+
+                            while (pay > 0) {
+                                ItemStack toDrop = prepCopy.copy();
+                                if (pay >= prepCopy.getMaxStackSize()) {
+                                    toDrop.setCount(prepCopy.getMaxStackSize());
+                                    pay -= prepCopy.getMaxStackSize();
+                                } else {
+                                    toDrop.setCount(pay);
+                                    pay = 0; //set to 0. we could count down the last items from the counter, but it's the same
+                                }
+                                Containers.dropItemStack(level, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
+                            }
+                        }
+                    } else if (!stack.isEmpty()) {
+                        Containers.dropItemStack(level, pPos.getX(), pPos.getY(), pPos.getZ(), stack);
+                    }
+                }
+                for (int i = 0; i < 2; i++) {
+                    ItemStack toDrop = crate.interactable.getStackInSlot(i);
+                    Containers.dropItemStack(level, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
+                }
+                pLevel.updateNeighbourForOutputSignal(pPos, this);
+            }
+
+            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+        }
     }
 }
