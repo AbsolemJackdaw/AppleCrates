@@ -1,6 +1,9 @@
 package jackdaw.applecrates.container;
 
+import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.registry.GeneralRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,6 +13,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -18,24 +22,33 @@ public class CrateMenu extends AbstractContainerMenu {
 
     public boolean isOwner = false;
 
-    public ItemStackHandler crateStock;
+    public CrateStackHandler crateStock;
     public ItemStackHandler interactableSlots;
     public ItemStackHandler priceAndSaleSlots;
 
+    private Level volatileLevel;
+    private BlockPos volatilePos;
+
     //Registry overload for menu type registry
-    public CrateMenu(int id, Inventory inv, boolean owner) {
-        this(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new ItemStackHandler(30), owner);
+    public CrateMenu(int id, Inventory inv, boolean isOwner) {
+        this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), isOwner);
     }
 
-    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, ItemStackHandler stock, boolean isOwner) {
+    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, CrateBE crate, boolean isOwner) {
+        this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, isOwner);
+        volatileLevel = crate.getLevel();
+        volatilePos = crate.getBlockPos();
+    }
+
+    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean isOwner) {
         super(type, id);
 
         this.interactableSlots = interaction;
         this.priceAndSaleSlots = trade;
         this.crateStock = stock;
+        this.isOwner = isOwner;
 
         this.addSlot(new SlotItemHandler(interactableSlots, 0, 136, 37));
-        //this.addSlot(new SlotItemHandler(interactableSlots, 1, 162, 37));
         this.addSlot(new SlotItemHandler(interactableSlots, 1, 220, 38) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
@@ -73,6 +86,16 @@ public class CrateMenu extends AbstractContainerMenu {
                     public boolean isActive() {
                         return isOwner;
                     }
+
+                    @Override
+                    public boolean mayPlace(@NotNull ItemStack stack) {
+                        return getSlotIndex() < 29 && isOwner;
+                    }
+
+                    @Override
+                    public boolean mayPickup(Player playerIn) {
+                        return getSlotIndex() != 29;
+                    }
                 });
 
         for (int i = 0; i < 3; ++i) {
@@ -88,14 +111,33 @@ public class CrateMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotID, int mouseButton, ClickType click, Player player) {
-        if (!isOwner && player instanceof ServerPlayer serverPlayer && slotID < 2) {
+        if (slotID < 2 && !isOwner) {
             ItemStack resultSlotCache = interactableSlots.getStackInSlot(1).copy();//get copy before clicking
             super.clicked(slotID, mouseButton, click, player);
+            //if the pickup slot had content, then there was payment enough
             if (slotID == 1 && ClickType.PICKUP.equals(click) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
-                //TODO give payment to owner
                 interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
-                updateSellItem();
+                crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
             }
+            updateSellItem();
+        } else if (slotID == 33 && this.getCarried().isEmpty()) {
+            ItemStack inSlot = crateStock.getStackInSlot(29).copy();
+            int amount = inSlot.getOrCreateTag().contains("stocked") ? inSlot.getOrCreateTag().getInt("stocked") : 0;
+            if (amount > 0) {
+                CompoundTag tag = inSlot.getTag();
+                tag.remove("stocked");
+                ItemStack copy = inSlot.copy();
+                int pickUp = Math.min(amount, copy.getMaxStackSize());
+                copy.setCount(pickUp);
+                crateStock.getStackInSlot(29).getOrCreateTag().putInt("stocked", crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") - pickUp);
+                if (crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") <= 0)
+                    crateStock.setStackInSlot(29, ItemStack.EMPTY);
+                if (tag.isEmpty())
+                    tag = null;
+                copy.setTag(tag);
+                this.setCarried(copy);
+            }
+
         } else {
             super.clicked(slotID, mouseButton, click, player);
         }
@@ -104,7 +146,8 @@ public class CrateMenu extends AbstractContainerMenu {
     @Override
     public void slotsChanged(Container pInventory) {
         super.slotsChanged(pInventory);
-        updateSellItem();
+        if (!isOwner)
+            updateSellItem();
     }
 
     private void updateSellItem() {
@@ -142,12 +185,15 @@ public class CrateMenu extends AbstractContainerMenu {
 
     @Override
     public void removed(Player pPlayer) {
-
         if (pPlayer instanceof ServerPlayer) {
             pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getStackInSlot(0));
             updateSellItem();
         }
         super.removed(pPlayer);
+
+        if (volatileLevel != null && volatilePos != null)
+            if (volatileLevel.getBlockEntity(volatilePos) instanceof CrateBE crate) //includes null check
+                crate.setChanged();
 
     }
 
@@ -197,7 +243,7 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     public boolean outOfStock() {
-        for (int i = 0; i < crateStock.getSlots(); i++)
+        for (int i = 0; i < crateStock.getSlots() - 1; i++) //last slot is for payment
             if (!crateStock.getStackInSlot(i).isEmpty() && crateStock.getStackInSlot(i).getCount() >= priceAndSaleSlots.getStackInSlot(1).getCount())
                 return false;
         return interactableSlots.getStackInSlot(1).isEmpty();
