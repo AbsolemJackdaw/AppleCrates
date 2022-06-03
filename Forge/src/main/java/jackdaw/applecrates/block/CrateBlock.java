@@ -101,7 +101,6 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-
     }
 
     @Override
@@ -110,9 +109,9 @@ public class CrateBlock extends BaseEntityBlock {
             boolean owner = pPlayer.isShiftKeyDown();
             NetworkHooks.openGui(sp,
                     new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
-                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, be.crateSales, be.priceAndSale,be.crateInventory, owner),
+                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, be, owner),
                             new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
-            return InteractionResult.SUCCESS;
+            return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
         return InteractionResult.FAIL;//super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
