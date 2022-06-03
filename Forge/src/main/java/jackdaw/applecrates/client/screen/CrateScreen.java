@@ -71,7 +71,18 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         else
             blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
 
+        if (!menu.crateStock.getStackInSlot(29).isEmpty() && isOwner) {
+            ItemStack inSlot = menu.crateStock.getStackInSlot(29);
+            if (inSlot.getOrCreateTag().contains("stocked")) {
+                int pay = inSlot.getOrCreateTag().getInt("stocked");
+                //set inSlot's itemcount to the nbt ammount, but only on client side
+                //this is visual
+                inSlot.setCount(pay);
+                //this.itemRenderer.renderGuiItemDecorations(this.font, inSlot, x + 76, y + 114);
+            }
+        }
     }
+
 
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
@@ -94,15 +105,19 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
 
         blit(pPoseStack, x, y, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
-        //gide second slot
+        //hide second slot
         blit(pPoseStack, x + 161, y + 36, this.getBlitOffset(), 161.0F, 15.0F, 18, 18, 512, 256);
 
         if (isOwner) {
             //Draw makeshift slots from player inventory in villager gui
             blit(pPoseStack, x + 4, y + 17, this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
             blit(pPoseStack, x + 4, y + 17 + (18 * 3), this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
-
+            RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 0.8F);
+            //money slot
+            blit(pPoseStack, x + 4 + 18 * 4, y + 17 + 18 * 5, this.getBlitOffset(), 161.0F, 36.0F, 18, 18, 512, 256);
         }
+
+
     }
 
     class TradeOfferButton extends Button {
