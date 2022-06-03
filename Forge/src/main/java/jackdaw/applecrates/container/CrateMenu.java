@@ -97,12 +97,12 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     private ItemStack pickUpPayement() {
-        ItemStack inSlot = crateStock.getStackInSlot(29).copy();
-        int amount = inSlot.getOrCreateTag().contains("stocked") ? inSlot.getOrCreateTag().getInt("stocked") : 0;
+        ItemStack inSlotCopy = crateStock.getStackInSlot(29).copy();
+        int amount = inSlotCopy.getOrCreateTag().contains("stocked") ? inSlotCopy.getOrCreateTag().getInt("stocked") : 0;
         if (amount > 0) {
-            CompoundTag tag = inSlot.getTag();
+            CompoundTag tag = inSlotCopy.getTag();
             tag.remove("stocked");
-            ItemStack copy = inSlot.copy();
+            ItemStack copy = inSlotCopy.copy();
             int pickUp = Math.min(amount, copy.getMaxStackSize());
             copy.setCount(pickUp);
             crateStock.getStackInSlot(29).getOrCreateTag().putInt("stocked", crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") - pickUp);
