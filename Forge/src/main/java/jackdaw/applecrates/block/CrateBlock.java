@@ -101,15 +101,18 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+        if (pPlacer instanceof ServerPlayer player && pLevel.getBlockEntity(pPos) instanceof CrateBE crate) {
+            crate.setOwner(player);
+        }
     }
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer instanceof ServerPlayer sp && pLevel.getBlockEntity(pPos) instanceof CrateBE be && pHand.equals(InteractionHand.MAIN_HAND)) {
-            boolean owner = pPlayer.isShiftKeyDown();
+        if (pPlayer instanceof ServerPlayer sp && pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
+            boolean owner = crate.getOwner().equals(sp.getGameProfile().getId());
             NetworkHooks.openGui(sp,
                     new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
-                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, be, owner),
+                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
                             new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
             return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
