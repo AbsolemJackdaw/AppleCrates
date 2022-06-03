@@ -4,7 +4,6 @@ import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -96,6 +95,13 @@ public class CrateMenu extends AbstractContainerMenu {
         }
     }
 
+    @Override
+    public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
+        if (pSlot.index == 1)
+            return false;
+        return super.canTakeItemForPickAll(pStack, pSlot);
+    }
+
     private ItemStack pickUpPayement() {
         ItemStack inSlotCopy = crateStock.getStackInSlot(29).copy();
         int amount = inSlotCopy.getOrCreateTag().contains("stocked") ? inSlotCopy.getOrCreateTag().getInt("stocked") : 0;
@@ -114,12 +120,6 @@ public class CrateMenu extends AbstractContainerMenu {
             return copy;
         }
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void slotsChanged(Container pInventory) {
-        super.slotsChanged(pInventory);
-        updateSellItem();
     }
 
     private void updateSellItem() {
