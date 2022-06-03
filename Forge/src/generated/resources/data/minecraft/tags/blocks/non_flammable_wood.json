@@ -1,13 +1,13 @@
 {
   "replace": false,
   "values": [
-    "applecrates:birch_crate",
-    "applecrates:jungle_crate",
-    "applecrates:acacia_crate",
-    "applecrates:crimson_crate",
     "applecrates:oak_crate",
+    "applecrates:warped_crate",
     "applecrates:spruce_crate",
     "applecrates:dark_oak_crate",
-    "applecrates:warped_crate"
+    "applecrates:crimson_crate",
+    "applecrates:acacia_crate",
+    "applecrates:birch_crate",
+    "applecrates:jungle_crate"
   ]
 }
