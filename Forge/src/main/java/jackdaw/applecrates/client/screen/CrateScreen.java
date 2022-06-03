@@ -39,12 +39,12 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
         if (isOwner) {
-            addRenderableWidget(new Button(x + 4, y + 138, 91, 20, TextComponent.EMPTY, (button) -> {
+            addRenderableWidget(new SaleButton(x + 4, y + 138, (button) -> {
                 if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty()))
                     CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
             }));
         } else {
-            addRenderableWidget(new Button(x + 4, y + 17, 91, 20, TextComponent.EMPTY, (button) -> {
+            addRenderableWidget(new SaleButton(x + 4, y + 17, (button) -> {
                 if (!menu.outOfStock())
                     CrateChannel.NETWORK.sendToServer(new SGetSale());
             }));
@@ -120,17 +120,10 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
     }
 
-    class TradeOfferButton extends Button {
-        final int index;
+    class SaleButton extends Button {
 
-        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, Button.OnPress p_99208_) {
-            super(p_99205_, p_99206_, 89, 20, TextComponent.EMPTY, p_99208_);
-            this.index = p_99207_;
-            this.visible = false;
-        }
-
-        public int getIndex() {
-            return this.index;
+        public SaleButton(int x, int y, Button.OnPress press) {
+            super(x, y, 91, 20, TextComponent.EMPTY, press);
         }
 
         public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
