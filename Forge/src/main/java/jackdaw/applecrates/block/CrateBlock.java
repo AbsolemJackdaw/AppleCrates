@@ -163,4 +163,13 @@ public class CrateBlock extends BaseEntityBlock {
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
         }
     }
+
+    //only owner can break
+    @Override
+    public float getDestroyProgress(BlockState pState, Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate)
+            if (pPlayer.getGameProfile().getId().equals(crate.getOwner()))
+                return super.getDestroyProgress(pState, pPlayer, pLevel, pPos);
+        return 0;
+    }
 }
