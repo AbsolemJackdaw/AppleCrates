@@ -32,6 +32,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
+
 public class CrateBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -103,36 +105,38 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-        if (pPlacer instanceof ServerPlayer player && pLevel.getBlockEntity(pPos) instanceof CrateBE crate) {
-            crate.setOwner(player);
+        if (pPlacer instanceof ServerPlayer serverPlayer && pLevel.getBlockEntity(pPos) instanceof CrateBE crate) {
+            crate.setOwner(serverPlayer);
         }
     }
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer instanceof ServerPlayer sp && pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
-            boolean owner = sp.isShiftKeyDown() && crate.getOwner().equals(sp.getGameProfile().getId());
-            NetworkHooks.openGui(sp,
-                    new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
-                            new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
-                            new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
-            return InteractionResult.CONSUME;//InteractionResult.sidedSuccess(pLevel.isClientSide);
-            //Eating a food item while interacting with the block played the eating animation. I dont know what interaction result is correct
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
+            boolean owner =
+//                    crate.getOwner().equals(sp.getGameProfile().getId());
+                    pPlayer.isShiftKeyDown();
+            if (pPlayer instanceof ServerPlayer sp)
+                NetworkHooks.openGui(sp, new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
+                        new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
+                        new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
+            pPlayer.swing(pHand);
+            return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
-        return InteractionResult.FAIL;//super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return InteractionResult.FAIL;
     }
 
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
-            if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pLevel instanceof ServerLevel level) {
+            if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pLevel instanceof ServerLevel serverLevel) {
                 for (int i = 0; i < crate.crateStock.getSlots(); i++) {
                     ItemStack stack = crate.crateStock.getStackInSlot(i);
                     if (i == 29) {
-                        if ( !stack.isEmpty() && stack.hasTag() && stack.getTag().contains("stocked")) {
-                            int pay = stack.getTag().getInt("stocked");
+                        if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(TAGSTOCK)) {
+                            int pay = stack.getTag().getInt(TAGSTOCK);
                             ItemStack prepCopy = stack.copy();
-                            prepCopy.removeTagKey("stocked");
+                            prepCopy.removeTagKey(TAGSTOCK);
                             if (prepCopy.getTag() != null && prepCopy.getTag().isEmpty())
                                 prepCopy.setTag(null);
 
@@ -145,16 +149,16 @@ public class CrateBlock extends BaseEntityBlock {
                                     toDrop.setCount(pay);
                                     pay = 0; //set to 0. we could count down the last items from the counter, but it's the same
                                 }
-                                Containers.dropItemStack(level, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
+                                Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
                             }
                         }
                     } else if (!stack.isEmpty()) {
-                        Containers.dropItemStack(level, pPos.getX(), pPos.getY(), pPos.getZ(), stack);
+                        Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), stack);
                     }
                 }
                 for (int i = 0; i < 2; i++) {
                     ItemStack toDrop = crate.interactable.getStackInSlot(i);
-                    Containers.dropItemStack(level, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
+                    Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
                 }
                 pLevel.updateNeighbourForOutputSignal(pPos, this);
             }
@@ -166,8 +170,8 @@ public class CrateBlock extends BaseEntityBlock {
     //only owner can break
     @Override
     public float getDestroyProgress(BlockState pState, Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
-        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && crate.isOwner(pPlayer))//pPlayer.getGameProfile().getId().equals(crate.getOwner()))
-                return super.getDestroyProgress(pState, pPlayer, pLevel, pPos);
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && crate.isOwner(pPlayer))
+            return super.getDestroyProgress(pState, pPlayer, pLevel, pPos);
         return 0;
     }
 }
