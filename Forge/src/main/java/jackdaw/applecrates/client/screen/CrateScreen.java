@@ -14,14 +14,13 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private boolean isOwner;
 
-    private int guiStartX ;
-    private int guiStartY ;
+    private int guiStartX;
+    private int guiStartY;
 
     public CrateScreen(CrateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -112,9 +111,12 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 0.8F);
             //money slot
             blit(pPoseStack, guiStartX + 4 + 18 * 4, guiStartY + 17 + 18 * 5, this.getBlitOffset(), 161.0F, 36.0F, 18, 18, 512, 256);
+        } else {
+            //hide open part of villager scroll gui
+            fill(pPoseStack, guiStartX + 4, guiStartY + 37, guiStartX + 97 + 4, guiStartY + 122 + 37, 0xffc6c6c6);
+            int scrollSpotLength = 5;
+            blit(pPoseStack, guiStartX + 4, guiStartY + 37, this.getBlitOffset(), 4.0F, 158.0F - (float) scrollSpotLength, 97, 5 + scrollSpotLength, 512, 256);
         }
-
-
     }
 
     class SaleButton extends Button {
@@ -126,13 +128,17 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
             if (this.isHovered) {
                 if (pMouseX < this.x + 20) {
-                    ItemStack payment = new ItemStack(Items.EMERALD);
-                    CrateScreen.this.renderTooltip(pPoseStack, payment, pMouseX, pMouseY);
+                    doRenderTip(pPoseStack, pMouseX, pMouseY, 0);
                 } else if (pMouseX > this.x + 65) {
-                    ItemStack sale = new ItemStack(Items.APPLE, 4);
-                    CrateScreen.this.renderTooltip(pPoseStack, sale, pMouseX, pMouseY);
+                    doRenderTip(pPoseStack, pMouseX, pMouseY, 1);
                 }
             }
+        }
+
+        private void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
+            ItemStack stack = menu.priceAndSaleSlots.getStackInSlot(slot);
+            if (!stack.isEmpty())
+                CrateScreen.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }
     }
 }
