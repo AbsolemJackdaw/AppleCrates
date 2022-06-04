@@ -29,16 +29,18 @@ public class SCrateTradeSync {
         context.get().enqueueWork(() -> {
             ServerPlayer player = context.get().getSender();
             if (player.containerMenu instanceof CrateMenu menu) {
-                ItemStack give = menu.interactableSlots.getStackInSlot(0).copy();
-                ItemStack get = menu.interactableSlots.getStackInSlot(1).copy();
-                menu.priceAndSaleSlots.setStackInSlot(0, give.copy());
-                menu.priceAndSaleSlots.setStackInSlot(1, get.copy());
-                player.getInventory().add(give.copy());
-                player.getInventory().add(get.copy());
-                menu.interactableSlots.setStackInSlot(0, ItemStack.EMPTY);
-                menu.interactableSlots.setStackInSlot(1, ItemStack.EMPTY);
+                confirmTrade(menu, player, 0);
+                confirmTrade(menu, player, 1);
             }
         });
         context.get().setPacketHandled(true);
+    }
+
+    private void confirmTrade(CrateMenu menu, ServerPlayer player, int slot) {
+        ItemStack stack = menu.interactableSlots.getStackInSlot(slot).copy();
+        menu.priceAndSaleSlots.setStackInSlot(slot, stack.copy());
+        player.getInventory().add(stack.copy());
+        menu.interactableSlots.setStackInSlot(slot, ItemStack.EMPTY);
+
     }
 }
