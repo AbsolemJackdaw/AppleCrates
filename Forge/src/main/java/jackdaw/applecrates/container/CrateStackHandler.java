@@ -13,21 +13,22 @@ public class CrateStackHandler extends ItemStackHandler {
     }
 
     public boolean updateStackInPayementSlot(ItemStack payment) {
+        ItemStack prepPay = payment.copy();
 
         if (getStackInSlot(29).isEmpty()) {
-            ItemStack solo = payment.copy();
-            solo.setCount(1);
-            setStackInSlot(29, solo);
+            prepPay.setCount(1);
+            setStackInSlot(29, prepPay);
         }
         if (!ItemStack.isSame(payment, getStackInSlot(29)))
             return false;
-        ItemStack inSlot = getStackInSlot(29);
-        CompoundTag tag = inSlot.getOrCreateTag();
+        ItemStack prepXchange = getStackInSlot(29).copy();
+        CompoundTag tag = prepXchange.getOrCreateTag();
         if (tag.contains(TAGSTOCK)) {
             tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
         } else {
             tag.putInt(TAGSTOCK, payment.getCount());
         }
+        setStackInSlot(29, prepXchange);
         return true;
     }
 }
