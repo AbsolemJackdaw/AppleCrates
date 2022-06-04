@@ -120,7 +120,7 @@ public class CrateBlock extends BaseEntityBlock {
                 NetworkHooks.openGui(sp, new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
                         new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
                         new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
-            pPlayer.swing(pHand);
+            //pPlayer.swing(pHand);
             return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
         return InteractionResult.FAIL;
