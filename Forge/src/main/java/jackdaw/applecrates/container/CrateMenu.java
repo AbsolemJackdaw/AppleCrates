@@ -76,7 +76,10 @@ public class CrateMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotID, int mouseButton, ClickType click, Player player) {
-        if (slotID == 1 && !isOwner) {
+        if (slotID == 0 && !isOwner) {
+            super.clicked(slotID, mouseButton, click, player);
+            updateSellItem();
+        } else if (slotID == 1 && !isOwner) {
             ItemStack resultSlotCache = interactableSlots.getStackInSlot(1).copy();//get copy before clicking
             super.clicked(slotID, mouseButton, click, player);
             //if the pickup slot had content, then there was payment enough
@@ -112,6 +115,8 @@ public class CrateMenu extends AbstractContainerMenu {
             ItemStack prepPickup = original.copy();
             CompoundTag tag = prepPickup.getTag();
             tag.remove(TAGSTOCK);
+            if (tag.isEmpty())
+                prepPickup.setTag(null);
             int pickUp = Math.min(amount, prepPickup.getMaxStackSize());
             prepPickup.setCount(pickUp);
 
@@ -147,6 +152,7 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     public void tryMovePayementToInteraction() {
+        //if there's a stack that isnt payment in the slot, put it back in the inventory, then pop in new items that are payment
         ItemStack itemstack = this.interactableSlots.getStackInSlot(0);
         if (!itemstack.isEmpty()) {
             if (!this.moveItemStackTo(itemstack, 34, 34 + (9 * 3), false)) {
@@ -247,6 +253,8 @@ public class CrateMenu extends AbstractContainerMenu {
                         interactableSlots.setStackInSlot(0, prepPayChange);
                         crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
                     }
+                    if (pIndex == 0)
+                        updateSellItem();
                 } else return ItemStack.EMPTY;
 
             if (isOwner) {
