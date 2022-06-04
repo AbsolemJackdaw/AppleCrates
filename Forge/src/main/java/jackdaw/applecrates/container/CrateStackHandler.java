@@ -6,7 +6,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class CrateStackHandler extends ItemStackHandler {
 
-    public static final String STOCKED_STR = "stocked";
+    public static final String TAGSTOCK = "stocked";
 
     public CrateStackHandler() {
         super(30);
@@ -23,10 +23,10 @@ public class CrateStackHandler extends ItemStackHandler {
             return false;
         ItemStack inSlot = getStackInSlot(29);
         CompoundTag tag = inSlot.getOrCreateTag();
-        if (tag.contains(STOCKED_STR)) {
-            tag.putInt(STOCKED_STR, tag.getInt(STOCKED_STR) + payment.getCount());
+        if (tag.contains(TAGSTOCK)) {
+            tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
         } else {
-            tag.putInt(STOCKED_STR, payment.getCount());
+            tag.putInt(TAGSTOCK, payment.getCount());
         }
         return true;
     }
