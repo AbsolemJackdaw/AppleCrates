@@ -96,6 +96,11 @@ public class CrateBE extends BlockEntity {
         return owner;
     }
 
+    //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
+    public boolean isOwner(Player player){
+        return owner == null || player.getGameProfile().getId().equals(getOwner());
+    }
+
     public void setOwner(ServerPlayer player) {
         this.owner = player.getGameProfile().getId();
     }
