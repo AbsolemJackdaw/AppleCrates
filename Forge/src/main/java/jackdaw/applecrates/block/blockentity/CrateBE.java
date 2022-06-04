@@ -69,6 +69,7 @@ public class CrateBE extends BlockEntity {
     private CompoundTag saveCrateDataToTag(CompoundTag tag) {
 //        tag.put("pricensale", priceAndSale.serializeNBT()); //only send price and sale inventory, this is the one that is used client side for rendering in the besr
         tag.put("cratestock", crateStock.serializeNBT());
+        // Move all these strings to constants, this prevents mistakes/typos and is better practise
         tag.put("interactable", interactable.serializeNBT());
         tag.put("pricensale", priceAndSale.serializeNBT());
         if (owner != null)

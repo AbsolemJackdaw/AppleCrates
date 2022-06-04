@@ -85,10 +85,10 @@ public class CrateMenu extends AbstractContainerMenu {
             updateSellItem();
         } else if (slotID == 33 && this.getCarried().isEmpty()) {
             if (click.equals(ClickType.PICKUP)) {
-                this.setCarried(pickUpPayement());
+                this.setCarried(pickUpPayment());
             } else if (click.equals(ClickType.QUICK_MOVE)) {
                 //custom quickmove code because of locking down the payment slot so noone takes out anything ever
-                this.moveItemStackTo(pickUpPayement(), 34, 70, false);
+                this.moveItemStackTo(pickUpPayment(), 34, 70, false);
             }
         } else {
             super.clicked(slotID, mouseButton, click, player);
@@ -102,17 +102,18 @@ public class CrateMenu extends AbstractContainerMenu {
         return super.canTakeItemForPickAll(pStack, pSlot);
     }
 
-    private ItemStack pickUpPayement() {
+    private ItemStack pickUpPayment() {
         ItemStack inSlotCopy = crateStock.getStackInSlot(29).copy();
-        int amount = inSlotCopy.getOrCreateTag().contains("stocked") ? inSlotCopy.getOrCreateTag().getInt("stocked") : 0;
+        int amount = inSlotCopy.getOrCreateTag().contains(CrateStackHandler.STOCKED_STR) ? inSlotCopy.getOrCreateTag().getInt(CrateStackHandler.STOCKED_STR) : 0;
         if (amount > 0) {
             CompoundTag tag = inSlotCopy.getTag();
-            tag.remove("stocked");
+            tag.remove(CrateStackHandler.STOCKED_STR);
             ItemStack copy = inSlotCopy.copy();
             int pickUp = Math.min(amount, copy.getMaxStackSize());
             copy.setCount(pickUp);
-            crateStock.getStackInSlot(29).getOrCreateTag().putInt("stocked", crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") - pickUp);
-            if (crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") <= 0)
+            crateStock.getStackInSlot(29).getOrCreateTag().putInt(CrateStackHandler.STOCKED_STR,
+                    crateStock.getStackInSlot(29).getOrCreateTag().getInt(CrateStackHandler.STOCKED_STR) - pickUp);
+            if (crateStock.getStackInSlot(29).getOrCreateTag().getInt(CrateStackHandler.STOCKED_STR) <= 0)
                 crateStock.setStackInSlot(29, ItemStack.EMPTY);
             if (tag.isEmpty())
                 tag = null;
@@ -166,12 +167,11 @@ public class CrateMenu extends AbstractContainerMenu {
 
         super.removed(pPlayer);
 
-        if (volatileLevel != null && volatilePos != null)
-            if (volatileLevel.getBlockEntity(volatilePos) instanceof CrateBE crate) //includes null check
-            {
-                volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
-                crate.setChanged();
-            }
+        if (volatileLevel != null && volatilePos != null && volatileLevel.getBlockEntity(volatilePos) instanceof CrateBE crate){
+            //includes null check
+            volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
+            crate.setChanged();
+        }
     }
 
     private void movefromStockToSaleSlot(ItemStack get) {
@@ -229,14 +229,41 @@ public class CrateMenu extends AbstractContainerMenu {
         return true;
     }
 
+
+    /*
+    Current method for quickmove stack does not allow shift clicks to move whole stacks.
+    sample code does work, but does not follow other requirements
+
+    @Override
+	public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+		//pPlayer.sendMessage(new TextComponent(String.valueOf(pIndex)), null);
+		ItemStack retStack = ItemStack.EMPTY;
+		final Slot slot = getSlot(pIndex);
+		if (slot.hasItem()){
+			final ItemStack itemStack = slot.getItem();
+			retStack = itemStack.copy();
+			if (pIndex < 36){
+				if(!moveItemStackTo(itemStack, 36, this.slots.size(), false)){
+					return ItemStack.EMPTY;
+				}
+			} else if (!moveItemStackTo(itemStack, 0, 36, true)){
+				return ItemStack.EMPTY;
+			}
+			if (itemStack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged();
+		}
+		return retStack;
+	}
+
+     */
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         if (slots.get(pIndex).hasItem()) {
             //slot 33 is money slot
             if (pIndex >= 4 && pIndex <= 32 || pIndex < 2)
-                if (this.moveItemStackTo(slots.get(pIndex).getItem(), 34, 70, false)) { //player inv
+                if (moveItemStackTo(slots.get(pIndex).getItem(), 34, 70, false)) { //player inv
                     if (pIndex == 1) {
-                        interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
+                        //interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
+                        //Above method cannot be called, as getstackinslot cannot be used to modify itemstacks
                         crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
                     }
                 } else return ItemStack.EMPTY;

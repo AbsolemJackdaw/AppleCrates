@@ -111,14 +111,12 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pPlayer instanceof ServerPlayer sp && pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
-            boolean owner =
-//                    crate.getOwner().equals(sp.getGameProfile().getId());
-                    sp.isShiftKeyDown();
+            boolean owner = sp.isShiftKeyDown() && crate.getOwner().equals(sp.getGameProfile().getId());
             NetworkHooks.openGui(sp,
                     new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
                             new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
                             new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+            return InteractionResult.CONSUME;//InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
         return InteractionResult.FAIL;//super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
@@ -130,7 +128,7 @@ public class CrateBlock extends BaseEntityBlock {
                 for (int i = 0; i < crate.crateStock.getSlots(); i++) {
                     ItemStack stack = crate.crateStock.getStackInSlot(i);
                     if (i == 29) {
-                        if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains("stocked")) {
+                        if ( !stack.isEmpty() && stack.hasTag() && stack.getTag().contains("stocked")) {
                             int pay = stack.getTag().getInt("stocked");
                             ItemStack prepCopy = stack.copy();
                             prepCopy.removeTagKey("stocked");
@@ -167,8 +165,7 @@ public class CrateBlock extends BaseEntityBlock {
     //only owner can break
     @Override
     public float getDestroyProgress(BlockState pState, Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
-        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate)
-            if (pPlayer.getGameProfile().getId().equals(crate.getOwner()))
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pPlayer.getGameProfile().getId().equals(crate.getOwner()))
                 return super.getDestroyProgress(pState, pPlayer, pLevel, pPos);
         return 0;
     }
