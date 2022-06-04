@@ -85,10 +85,10 @@ public class CrateMenu extends AbstractContainerMenu {
             updateSellItem();
         } else if (slotID == 33 && this.getCarried().isEmpty()) {
             if (click.equals(ClickType.PICKUP)) {
-                this.setCarried(pickUpPayement());
+                this.setCarried(pickUpPayment());
             } else if (click.equals(ClickType.QUICK_MOVE)) {
                 //custom quickmove code because of locking down the payment slot so noone takes out anything ever
-                this.moveItemStackTo(pickUpPayement(), 34, 70, false);
+                this.moveItemStackTo(pickUpPayment(), 34, 70, false);
             }
         } else {
             super.clicked(slotID, mouseButton, click, player);
@@ -102,7 +102,7 @@ public class CrateMenu extends AbstractContainerMenu {
         return super.canTakeItemForPickAll(pStack, pSlot);
     }
 
-    private ItemStack pickUpPayement() {
+    private ItemStack pickUpPayment() {
         ItemStack inSlotCopy = crateStock.getStackInSlot(29).copy();
         int amount = inSlotCopy.getOrCreateTag().contains("stocked") ? inSlotCopy.getOrCreateTag().getInt("stocked") : 0;
         if (amount > 0) {
