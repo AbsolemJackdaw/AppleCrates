@@ -20,6 +20,9 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private boolean isOwner;
 
+    private int guiStartX = (this.width - this.imageWidth) / 2;
+    private int guiStartY = (this.height - this.imageHeight) / 2;
+
     public CrateScreen(CrateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.isOwner = pMenu.isOwner;
@@ -36,15 +39,13 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     @Override
     protected void init() {
         super.init();
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
         if (isOwner) {
-            addRenderableWidget(new SaleButton(x + 4, y + 138, (button) -> {
+            addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 138, (button) -> {
                 if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty()))
                     CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
             }));
         } else {
-            addRenderableWidget(new SaleButton(x + 4, y + 17, (button) -> {
+            addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 17, (button) -> {
                 if (!menu.outOfStock())
                     CrateChannel.NETWORK.sendToServer(new SGetSale());
             }));
@@ -54,22 +55,19 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
-
 
         int offSet = isOwner ? 0 : -140 + 19;
-        renderTrade(0, x, y + offSet);
-        renderTrade(1, x, y + offSet);
+        renderTrade(0, guiStartX, guiStartY + offSet);
+        renderTrade(1, guiStartX, guiStartY + offSet);
         RenderSystem.enableBlend();
         if (isOwner && !(menu.priceAndSaleSlots.getStackInSlot(0).isEmpty() && menu.priceAndSaleSlots.getStackInSlot(1).isEmpty()) && menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         if (menu.outOfStock() && !isOwner)
-            blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
+            blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
         else
-            blit(pPoseStack, x + 60, y + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
+            blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
 
         if (!menu.crateStock.getStackInSlot(29).isEmpty() && isOwner) {
             ItemStack inSlot = menu.crateStock.getStackInSlot(29);
@@ -78,7 +76,6 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
                 //set inSlot's itemcount to the nbt ammount, but only on client side
                 //this is visual
                 inSlot.setCount(pay);
-                //this.itemRenderer.renderGuiItemDecorations(this.font, inSlot, x + 76, y + 114);
             }
         }
     }
@@ -100,21 +97,19 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
 
 
-        blit(pPoseStack, x, y, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+        blit(pPoseStack, guiStartX, guiStartY, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
         //hide second slot
-        blit(pPoseStack, x + 161, y + 36, this.getBlitOffset(), 161.0F, 15.0F, 18, 18, 512, 256);
+        blit(pPoseStack, guiStartX + 161, guiStartY + 36, this.getBlitOffset(), 161.0F, 15.0F, 18, 18, 512, 256);
 
         if (isOwner) {
             //Draw makeshift slots from player inventory in villager gui
-            blit(pPoseStack, x + 4, y + 17, this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
-            blit(pPoseStack, x + 4, y + 17 + (18 * 3), this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
+            blit(pPoseStack, guiStartX + 4, guiStartY + 17, this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
+            blit(pPoseStack, guiStartX + 4, guiStartY + 17 + (18 * 3), this.getBlitOffset(), 107.0F, 83.0F, 18 * 5, 18 * 3, 512, 256);
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 0.8F);
             //money slot
-            blit(pPoseStack, x + 4 + 18 * 4, y + 17 + 18 * 5, this.getBlitOffset(), 161.0F, 36.0F, 18, 18, 512, 256);
+            blit(pPoseStack, guiStartX + 4 + 18 * 4, guiStartY + 17 + 18 * 5, this.getBlitOffset(), 161.0F, 36.0F, 18, 18, 512, 256);
         }
 
 
