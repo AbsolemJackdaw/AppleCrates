@@ -20,8 +20,8 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private boolean isOwner;
 
-    private int guiStartX = (this.width - this.imageWidth) / 2;
-    private int guiStartY = (this.height - this.imageHeight) / 2;
+    private int guiStartX ;
+    private int guiStartY ;
 
     public CrateScreen(CrateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -39,6 +39,8 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     @Override
     protected void init() {
         super.init();
+        this.guiStartX = (this.width - this.imageWidth) / 2;
+        this.guiStartY = (this.height - this.imageHeight) / 2;
         if (isOwner) {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 138, (button) -> {
                 if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty()))
