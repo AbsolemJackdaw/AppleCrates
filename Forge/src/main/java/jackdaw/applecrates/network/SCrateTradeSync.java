@@ -28,17 +28,23 @@ public class SCrateTradeSync {
     public void handle(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             ServerPlayer player = context.get().getSender();
-            if (player.containerMenu instanceof CrateMenu menu) {
-                ItemStack give = menu.interactableSlots.getStackInSlot(0).copy();
-                ItemStack get = menu.interactableSlots.getStackInSlot(1).copy();
-                menu.priceAndSaleSlots.setStackInSlot(0, give.copy());
-                menu.priceAndSaleSlots.setStackInSlot(1, get.copy());
-                player.getInventory().add(give.copy());
-                player.getInventory().add(get.copy());
-                menu.interactableSlots.setStackInSlot(0, ItemStack.EMPTY);
-                menu.interactableSlots.setStackInSlot(1, ItemStack.EMPTY);
+            if (player.containerMenu instanceof CrateMenu menu && player != null) {
+                setSlot(menu, player, 0);
+                setSlot(menu, player, 1);
             }
         });
         context.get().setPacketHandled(true);
+        //Check the fcw for what client packets need, they may need an unsafeWhenRunOn
+    }
+
+    private static void setSlot(CrateMenu menu, ServerPlayer player, int slot){
+        ItemStack give = menu.interactableSlots.getStackInSlot(slot).copy();
+        //ItemStack get = menu.interactableSlots.getStackInSlot(1).copy();
+        menu.priceAndSaleSlots.setStackInSlot(slot, give.copy());
+        //menu.priceAndSaleSlots.setStackInSlot(1, get.copy());
+        player.getInventory().add(give.copy());
+        //player.getInventory().add(get.copy());
+        menu.interactableSlots.setStackInSlot(slot, ItemStack.EMPTY);
+       //menu.interactableSlots.setStackInSlot(1, ItemStack.EMPTY);
     }
 }

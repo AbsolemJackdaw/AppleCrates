@@ -13,9 +13,10 @@ public class CrateChannel {
             .serverAcceptedVersions(PROTOCOL::equals)
             .networkProtocolVersion(() -> PROTOCOL)
             .simpleChannel();
+    private static int id = 0;
 
     public static void init() {
-        int id = 0;
+
         CrateChannel.NETWORK.registerMessage(id++, SCrateTradeSync.class, SCrateTradeSync::encode, SCrateTradeSync::new, SCrateTradeSync::handle);
         CrateChannel.NETWORK.registerMessage(id++, SGetSale.class, SGetSale::encode, SGetSale::new, SGetSale::handle);
 

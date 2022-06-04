@@ -18,7 +18,8 @@ public class CrateStates extends BlockStateProvider {
         GeneralRegistry.BLOCK_MAP.forEach((woodType, block) ->
                 horizontalBlock(
                         block.get(),
-                        new ModelFile.ExistingModelFile(new ResourceLocation(AppleCrates.MODID, "block/" + woodType.name() + "_crate"), models().existingFileHelper)
+                        new ModelFile.ExistingModelFile(new ResourceLocation(AppleCrates.MODID, "block/" + woodType.name()
+                                + "_crate"), models().existingFileHelper)
                         , 180));
     }
 }

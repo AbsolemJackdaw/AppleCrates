@@ -117,6 +117,7 @@ public class CrateBlock extends BaseEntityBlock {
                             new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
                             new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
             return InteractionResult.CONSUME;//InteractionResult.sidedSuccess(pLevel.isClientSide);
+            //Eating a food item while interacting with the block played the eating animation. I dont know what interaction result is correct
         }
         return InteractionResult.FAIL;//super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
@@ -165,7 +166,7 @@ public class CrateBlock extends BaseEntityBlock {
     //only owner can break
     @Override
     public float getDestroyProgress(BlockState pState, Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
-        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pPlayer.getGameProfile().getId().equals(crate.getOwner()))
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && crate.isOwner(pPlayer))//pPlayer.getGameProfile().getId().equals(crate.getOwner()))
                 return super.getDestroyProgress(pState, pPlayer, pLevel, pPos);
         return 0;
     }

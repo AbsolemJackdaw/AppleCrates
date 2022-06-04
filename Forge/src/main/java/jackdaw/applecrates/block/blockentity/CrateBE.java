@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -87,6 +88,11 @@ public class CrateBE extends BlockEntity {
 
     public UUID getOwner() {
         return owner;
+    }
+
+    //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
+    public boolean isOwner(Player player){
+        return owner == null || player.getGameProfile().getId().equals(getOwner());
     }
 
     public void setOwner(ServerPlayer player) {
