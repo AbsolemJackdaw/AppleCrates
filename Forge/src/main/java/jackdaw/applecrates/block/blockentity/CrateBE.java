@@ -20,6 +20,10 @@ import java.util.UUID;
 
 public class CrateBE extends BlockEntity {
 
+    public static final String TAGOWNER = "owner";
+    public static final String TAGSTOCK = "cratestock";
+    public static final String TAGINTERACTABLE = "interactable";
+    public static final String TAGPRICESALE = "pricensale";
     public CrateStackHandler crateStock = new CrateStackHandler();
     public ItemStackHandler interactable = new ItemStackHandler(2);
     public ItemStackHandler priceAndSale = new ItemStackHandler(2);
@@ -42,7 +46,9 @@ public class CrateBE extends BlockEntity {
 
     }
 
-    //sync on login : getUpdateTag / handleUpdateTag
+    /**
+     * sync on login : getUpdateTag / handleUpdateTag
+     */
     @Override
     public CompoundTag getUpdateTag() {
         return saveCrateDataToTag(new CompoundTag());
@@ -50,11 +56,13 @@ public class CrateBE extends BlockEntity {
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
-        //super.handleUpdateTag(tag);//do not call super here. it uses the load mehtod from above, but we're not sending all the same data here !
+        //do not call super here. it uses the load mehtod from above, but we're not sending all the same data here !
         loadCrateDataFromTag(tag);
     }
 
-    //sync on data change
+    /**
+     * sync on data change
+     */
     @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
@@ -63,39 +71,37 @@ public class CrateBE extends BlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        //super.onDataPacket(net, pkt); // do not read super here, for the same reason as handleUpdateTag !!
+        // do not read super here, for the same reason as handleUpdateTag !!
         loadCrateDataFromTag(pkt.getTag());
     }
 
     private CompoundTag saveCrateDataToTag(CompoundTag tag) {
-//        tag.put("pricensale", priceAndSale.serializeNBT()); //only send price and sale inventory, this is the one that is used client side for rendering in the besr
-        tag.put("cratestock", crateStock.serializeNBT());
-        // Move all these strings to constants, this prevents mistakes/typos and is better practise
-        tag.put("interactable", interactable.serializeNBT());
-        tag.put("pricensale", priceAndSale.serializeNBT());
+        tag.put(TAGSTOCK, crateStock.serializeNBT());
+        tag.put(TAGINTERACTABLE, interactable.serializeNBT());
+        tag.put(TAGPRICESALE, priceAndSale.serializeNBT());
         if (owner != null)
-            tag.putUUID("owner", owner);
+            tag.putUUID(TAGOWNER, owner);
         return tag;
     }
 
     private void loadCrateDataFromTag(CompoundTag tag) {
-        crateStock.deserializeNBT((CompoundTag) tag.get("cratestock"));
-        interactable.deserializeNBT((CompoundTag) tag.get("interactable"));
-        priceAndSale.deserializeNBT((CompoundTag) tag.get("pricensale"));
-        if (tag.contains("owner"))
-            owner = tag.getUUID("owner");
+        crateStock.deserializeNBT((CompoundTag) tag.get(TAGSTOCK));
+        interactable.deserializeNBT((CompoundTag) tag.get(TAGINTERACTABLE));
+        priceAndSale.deserializeNBT((CompoundTag) tag.get(TAGPRICESALE));
+        if (tag.contains(TAGOWNER))
+            owner = tag.getUUID(TAGOWNER);
     }
 
     public UUID getOwner() {
         return owner;
     }
 
-    //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
-    public boolean isOwner(Player player){
-        return owner == null || player.getGameProfile().getId().equals(getOwner());
-    }
-
     public void setOwner(ServerPlayer player) {
         this.owner = player.getGameProfile().getId();
+    }
+
+    //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
+    public boolean isOwner(Player player) {
+        return owner == null || player != null && owner.equals(player.getGameProfile().getId());
     }
 }
