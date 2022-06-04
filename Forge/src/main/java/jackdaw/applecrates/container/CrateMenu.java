@@ -16,6 +16,8 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
+import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
+
 public class CrateMenu extends AbstractContainerMenu {
 
     public boolean isOwner = false;
@@ -103,21 +105,25 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     private ItemStack pickUpPayment() {
-        ItemStack inSlotCopy = crateStock.getStackInSlot(29).copy();
-        int amount = inSlotCopy.getOrCreateTag().contains("stocked") ? inSlotCopy.getOrCreateTag().getInt("stocked") : 0;
-        if (amount > 0) {
-            CompoundTag tag = inSlotCopy.getTag();
-            tag.remove("stocked");
-            ItemStack copy = inSlotCopy.copy();
-            int pickUp = Math.min(amount, copy.getMaxStackSize());
-            copy.setCount(pickUp);
-            crateStock.getStackInSlot(29).getOrCreateTag().putInt("stocked", crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") - pickUp);
-            if (crateStock.getStackInSlot(29).getOrCreateTag().getInt("stocked") <= 0)
+        ItemStack original = crateStock.getStackInSlot(29); //do not modify originals !
+        int amount = original.hasTag() ? original.getTag().contains(TAGSTOCK) ? original.getTag().getInt(TAGSTOCK) : 0 : 0;
+
+        if (amount > 0 && original.hasTag()) { //Redundant double check, but better safe then sorry
+            ItemStack prepPickup = original.copy();
+            CompoundTag tag = prepPickup.getTag();
+            tag.remove(TAGSTOCK);
+            int pickUp = Math.min(amount, prepPickup.getMaxStackSize());
+            prepPickup.setCount(pickUp);
+
+            int updatedAmount = amount - pickUp;
+            if (updatedAmount <= 0) {
                 crateStock.setStackInSlot(29, ItemStack.EMPTY);
-            if (tag.isEmpty())
-                tag = null;
-            copy.setTag(tag);
-            return copy;
+            } else {
+                ItemStack prepUpdate = original.copy();
+                prepUpdate.getTag().putInt(TAGSTOCK, updatedAmount);
+                crateStock.setStackInSlot(29, prepUpdate);
+            }
+            return prepPickup;
         }
         return ItemStack.EMPTY;
     }
@@ -236,7 +242,9 @@ public class CrateMenu extends AbstractContainerMenu {
             if (pIndex >= 4 && pIndex <= 32 || pIndex < 2)
                 if (this.moveItemStackTo(slots.get(pIndex).getItem(), 34, 70, false)) { //player inv
                     if (pIndex == 1) {
-                        interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
+                        ItemStack prepPayChange = interactableSlots.getStackInSlot(0).copy();
+                        prepPayChange.shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
+                        interactableSlots.setStackInSlot(0, prepPayChange);
                         crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
                     }
                 } else return ItemStack.EMPTY;
