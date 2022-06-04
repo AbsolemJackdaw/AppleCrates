@@ -79,6 +79,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
                 inSlot.setCount(pay);
             }
         }
+        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
     }
 
 

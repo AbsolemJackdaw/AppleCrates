@@ -14,7 +14,7 @@ version="${file.jarVersion}" #mandatory
 
 displayName="Apple Crates" #mandatory
 
-displayURL="" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/apple-crates" #optional
 
 logoFile="icon.png" #optional
 
