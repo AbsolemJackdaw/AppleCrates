@@ -27,6 +27,6 @@ public class CrateLanguage extends LanguageProvider {
 
         add("container.crate", "Crate");
         add("container.crate.owner", "My Crate Shop");
-
+        add("cannot.switch.trade", "To switch payment item, your green payout slot has to be empty");
     }
 }
