@@ -3,6 +3,7 @@ package jackdaw.applecrates.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.network.CrateChannel;
 import jackdaw.applecrates.network.SCrateTradeSync;
 import jackdaw.applecrates.network.SGetSale;
@@ -55,25 +56,26 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 
-        int offSet = isOwner ? 0 : -140 + 19;
-        renderTrade(0, guiStartX, guiStartY + offSet);
-        renderTrade(1, guiStartX, guiStartY + offSet);
         RenderSystem.enableBlend();
         if (isOwner && !(menu.priceAndSaleSlots.getStackInSlot(0).isEmpty() && menu.priceAndSaleSlots.getStackInSlot(1).isEmpty()) && menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+        int offSet = isOwner ? 0 : -140 + 19;
         if (menu.outOfStock() && !isOwner)
             blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
         else
             blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
+        renderTrade(0, guiStartX, guiStartY + offSet);
+        renderTrade(1, guiStartX, guiStartY + offSet);
 
         if (!menu.crateStock.getStackInSlot(29).isEmpty() && isOwner) {
             ItemStack inSlot = menu.crateStock.getStackInSlot(29);
-            if (inSlot.getOrCreateTag().contains("stocked")) {
-                int pay = inSlot.getOrCreateTag().getInt("stocked");
+            if (inSlot.getOrCreateTag().contains(CrateStackHandler.TAGSTOCK)) {
+                int pay = inSlot.getOrCreateTag().getInt(CrateStackHandler.TAGSTOCK);
                 //set inSlot's itemcount to the nbt ammount, but only on client side
                 //this is visual
                 inSlot.setCount(pay);
