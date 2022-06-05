@@ -16,8 +16,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class CrateBESR implements BlockEntityRenderer<CrateBE> {
 
-    private static final Quaternion POS_OFFSET = new Quaternion(-45.0f + 22.5f, 180.0f, 0.0f, true);
-
     public CrateBESR(BlockEntityRendererProvider.Context context) {
     }
 
@@ -44,7 +42,7 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                 float xAngle = (90.0f - 22.5f) * (xfront == 0 ? (zfront * (zfront < 0 ? 2f : -2f)) : (xfront * (xfront < 0 ? 2f : -2f)));
 
                 stack.mulPose(new Quaternion(0f, blockRotation + (angleSimp % 2 == 0 ? 180.0f : 0f), 0f, true));
-                stack.mulPose(new Quaternion(xAngle, 0, 0, true));//do not merge quaternions
+                stack.mulPose(new Quaternion(xAngle, 0, 0, true));//do not merge quaternions!!!!
 
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
