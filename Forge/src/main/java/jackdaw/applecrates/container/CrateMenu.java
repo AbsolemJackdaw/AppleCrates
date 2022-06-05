@@ -86,8 +86,8 @@ public class CrateMenu extends AbstractContainerMenu {
             if (ClickType.PICKUP.equals(click) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
                 interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
                 crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
+                updateSellItem();
             }
-            updateSellItem();
         } else if (slotID == 33 && this.getCarried().isEmpty()) {
             if (click.equals(ClickType.PICKUP)) {
                 this.setCarried(pickUpPayment());
@@ -212,8 +212,8 @@ public class CrateMenu extends AbstractContainerMenu {
             for (int i = 34; i < (34 + (9 * 4)); ++i) {
                 ItemStack stackinSlot = this.slots.get(i).getItem();
                 if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(give, stackinSlot)) {
-                    ItemStack payementSlot = this.interactableSlots.getStackInSlot(0);
-                    int j = payementSlot.isEmpty() ? 0 : payementSlot.getCount();
+                    ItemStack paymentSlot = this.interactableSlots.getStackInSlot(0);
+                    int j = paymentSlot.isEmpty() ? 0 : paymentSlot.getCount();
                     int k = Math.min(give.getMaxStackSize() - j, stackinSlot.getCount());
                     ItemStack copy = stackinSlot.copy();
                     int l = j + k;
@@ -252,6 +252,10 @@ public class CrateMenu extends AbstractContainerMenu {
                         prepPayChange.shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
                         interactableSlots.setStackInSlot(0, prepPayChange);
                         crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
+                        if (!interactableSlots.getStackInSlot(0).isEmpty()) {
+                            updateSellItem();
+                            return priceAndSaleSlots.getStackInSlot(1).copy(); //keep looping till pay is empty
+                        }
                     }
                     if (pIndex == 0)
                         updateSellItem();
