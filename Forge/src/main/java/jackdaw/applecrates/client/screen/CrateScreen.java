@@ -12,14 +12,15 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
+    private static final Component CANNOT_SWITCH = new TranslatableComponent("cannot.switch.trade");
     private boolean isOwner;
-
     private int guiStartX;
     private int guiStartY;
 
@@ -43,8 +44,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         this.guiStartY = (this.height - this.imageHeight) / 2;
         if (isOwner) {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 138, (button) -> {
-                if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty()))
-                    CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
+                if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())) {
+                    if (menu.crateStock.getStackInSlot(29).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
+                        CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
+                    }
+                }
             }));
         } else {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 17, (button) -> {
@@ -52,6 +56,20 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
                     CrateChannel.NETWORK.sendToServer(new SGetSale());
             }));
         }
+    }
+
+    private boolean isSamePayout() {
+        ItemStack payout = menu.crateStock.getStackInSlot(29).copy();
+        ItemStack give = menu.interactableSlots.getStackInSlot(0).copy();
+        if (give.isEmpty() || payout.isEmpty())
+            return true;
+
+        if (payout.hasTag() && payout.getTag().contains(CrateStackHandler.TAGSTOCK)) {
+            payout.removeTagKey(CrateStackHandler.TAGSTOCK);
+            if (payout.getTag() != null && payout.getTag().isEmpty())
+                payout.setTag(null);
+        }
+        return ItemStack.isSameItemSameTags(payout, give);
     }
 
     @Override
@@ -62,6 +80,8 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         RenderSystem.enableBlend();
         if (isOwner && !(menu.priceAndSaleSlots.getStackInSlot(0).isEmpty() && menu.priceAndSaleSlots.getStackInSlot(1).isEmpty()) && menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
+        if (!isSamePayout())
+            RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         int offSet = isOwner ? 0 : -140 + 19;
@@ -69,6 +89,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
         else
             blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         renderTrade(0, guiStartX, guiStartY + offSet);
         renderTrade(1, guiStartX, guiStartY + offSet);
 
@@ -130,7 +151,9 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
         public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
             if (this.isHovered) {
-                if (pMouseX < this.x + 20) {
+                if (!isSamePayout()) {
+                    CrateScreen.this.renderTooltip(pPoseStack, CANNOT_SWITCH, pMouseX, pMouseY);
+                } else if (pMouseX < this.x + 20) {
                     doRenderTip(pPoseStack, pMouseX, pMouseY, 0);
                 } else if (pMouseX > this.x + 65) {
                     doRenderTip(pPoseStack, pMouseX, pMouseY, 1);
