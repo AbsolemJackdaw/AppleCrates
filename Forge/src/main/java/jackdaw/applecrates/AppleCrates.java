@@ -24,6 +24,26 @@ public class AppleCrates {
         AppleCrateAPI.registerForCrate(brazier, "orange", "woods/orange/");
         AppleCrateAPI.registerForCrate(brazier, "apple", "woods/apple/");
 
+        String botaniaModId = "botania";
+        AppleCrateAPI.registerForCrate(botaniaModId, "dreamwood", "");
+        AppleCrateAPI.registerForCrate(botaniaModId, "livingwood", "");
+        AppleCrateAPI.registerForCrate(botaniaModId, "shimmerwood", "");
+        AppleCrateAPI.registerForCrate(botaniaModId, "mossy_dreamwood", "");
+        AppleCrateAPI.registerForCrate(botaniaModId, "mossy_livingwood", "");
+
+        String integratedDynamicsModId = "integrateddynamics";
+        AppleCrateAPI.registerForCrate(integratedDynamicsModId, "menril", "");
+
+        String solarforgeModId = "solarforge";
+        AppleCrateAPI.registerForCrate(solarforgeModId, "radiant", "");
+        AppleCrateAPI.registerForCrate(solarforgeModId, "runic", "");
+
+        String tinkersconstructmodid = "tconstruct";
+        AppleCrateAPI.registerForCrate(tinkersconstructmodid, "nahuatl", "");
+        AppleCrateAPI.registerForCrate(tinkersconstructmodid, "greenheart", "greenheart/");
+        AppleCrateAPI.registerForCrate(tinkersconstructmodid, "skyroot", "skyroot/");
+        AppleCrateAPI.registerForCrate(tinkersconstructmodid, "bloodshroom", "bloodshroom/");
+
         Stream<WoodType> woodType = WoodType.values();
         //call after mod compat so it can register new WoodTypes
         GeneralRegistry.prepareMaps();

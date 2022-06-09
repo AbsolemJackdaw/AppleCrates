@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "solarforge:block/radiant_planks",
+    "0": "solarforge:block/radiant_planks"
+  }
+}
