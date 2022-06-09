@@ -23,8 +23,9 @@ public class CrateRecipes extends RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
 
         WoodType.values().forEach(woodType -> {
+            String mod = GeneralRegistry.modidFromWood.getOrDefault(woodType.name(), "minecraft");
             ShapedRecipeBuilder.shaped(GeneralRegistry.BLOCK_MAP.get(woodType).get())
-                    .define('p', Registry.BLOCK.get(new ResourceLocation(woodType.name() + "_planks")))
+                    .define('p', Registry.BLOCK.get(new ResourceLocation(mod, woodType.name() + "_planks")))
                     .define('S', Items.STICK)
                     .pattern("S S").pattern("ppp").group("boat").unlockedBy("has_planks", has(ItemTags.PLANKS)).save(pFinishedRecipeConsumer);
 

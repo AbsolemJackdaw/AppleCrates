@@ -123,7 +123,6 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
 
-
         blit(pPoseStack, guiStartX, guiStartY, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
         //hide second slot
         blit(pPoseStack, guiStartX + 161, guiStartY + 36, this.getBlitOffset(), 161.0F, 15.0F, 18, 18, 512, 256);

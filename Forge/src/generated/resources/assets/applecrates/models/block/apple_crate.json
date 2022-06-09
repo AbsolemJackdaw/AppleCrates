@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "projectbrazier:block/woods/apple/apple_planks",
+    "0": "projectbrazier:block/woods/apple/apple_planks"
+  }
+}
