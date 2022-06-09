@@ -34,9 +34,6 @@ public class GeneralRegistry {
     public static Map<WoodType, RegistryObject<Block>> BLOCK_MAP;
     public static Map<WoodType, RegistryObject<Item>> ITEM_MAP;
     public static Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> BE_MAP;
-    /***/
-    public static Map<String, String> modidFromWood = new HashMap<>();
-    public static Map<String, String> pathFromWood = new HashMap<>();
 
     public static void prepareMaps() {
         BLOCK_MAP = Util.make(() -> {
@@ -63,16 +60,6 @@ public class GeneralRegistry {
 
             return blockEntityMap;
         });
-    }
-
-    public static void addModSupport(String modId, String woodName, String pathToTexture) {
-        if (ModList.get().isLoaded(modId)) {
-            if (!WoodType.values().anyMatch(woodType -> woodType.name().equals(woodName))) {
-                WoodType.register(WoodType.create(woodName));
-                modidFromWood.put(woodName, modId);
-                pathFromWood.put(woodName, pathToTexture);
-            }
-        }
     }
 
     public static void startup() {

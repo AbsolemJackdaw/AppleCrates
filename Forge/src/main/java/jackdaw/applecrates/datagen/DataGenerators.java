@@ -1,6 +1,7 @@
 package jackdaw.applecrates.datagen;
 
 import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.compat.api.datagen.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,8 +29,6 @@ public class DataGenerators {
             generator.addProvider(new CrateLanguage(generator, "de_de"));
             generator.addProvider(new CrateLanguage(generator, "en_ca"));
             generator.addProvider(new CrateLanguage(generator, "fr_ca"));
-
-
         }
     }
 }

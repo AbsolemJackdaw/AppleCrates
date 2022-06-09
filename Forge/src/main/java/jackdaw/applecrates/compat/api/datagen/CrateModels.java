@@ -1,6 +1,7 @@
-package jackdaw.applecrates.datagen;
+package jackdaw.applecrates.compat.api.datagen;
 
 import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.compat.api.AppleCrateAPI;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -18,8 +19,8 @@ public class CrateModels extends BlockModelProvider {
     @Override
     protected void registerModels() {
         GeneralRegistry.BLOCK_MAP.forEach((woodType, block) -> {
-            String mod = GeneralRegistry.modidFromWood.getOrDefault(woodType.name(), "minecraft");
-            String path = GeneralRegistry.pathFromWood.getOrDefault(woodType.name(), "");
+            String mod = AppleCrateAPI.getModidFromWood().getOrDefault(woodType.name(), "minecraft");
+            String path = AppleCrateAPI.getPathFromWood().getOrDefault(woodType.name(), "");
 
             ResourceLocation plank = new ResourceLocation(mod, String.format("block/%s%s_planks", path, woodType.name()));
             existingFileHelper.trackGenerated(plank, TEXTURE); //trick datagen into thinking that the file is definitly present

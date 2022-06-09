@@ -1,6 +1,7 @@
 package jackdaw.applecrates;
 
 import jackdaw.applecrates.compat.SectionProtection;
+import jackdaw.applecrates.compat.api.AppleCrateAPI;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.fml.ModList;
@@ -19,11 +20,12 @@ public class AppleCrates {
             SectionProtection.init();
 
         //test for wood
-        GeneralRegistry.addModSupport("projectbrazier", "orange", "woods/orange/");
-        GeneralRegistry.addModSupport("projectbrazier", "apple", "woods/apple/");
+        String brazier = "projectbrazier";
+        AppleCrateAPI.registerForCrate(brazier, "orange", "woods/orange/");
+        AppleCrateAPI.registerForCrate(brazier, "apple", "woods/apple/");
 
         Stream<WoodType> woodType = WoodType.values();
-        //call after mod compat so it can reg new WoodTypes
+        //call after mod compat so it can register new WoodTypes
         GeneralRegistry.prepareMaps();
     }
 }

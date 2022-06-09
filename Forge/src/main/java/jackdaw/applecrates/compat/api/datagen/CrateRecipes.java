@@ -1,5 +1,6 @@
-package jackdaw.applecrates.datagen;
+package jackdaw.applecrates.compat.api.datagen;
 
+import jackdaw.applecrates.compat.api.AppleCrateAPI;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
@@ -23,7 +24,7 @@ public class CrateRecipes extends RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
 
         WoodType.values().forEach(woodType -> {
-            String mod = GeneralRegistry.modidFromWood.getOrDefault(woodType.name(), "minecraft");
+            String mod = AppleCrateAPI.getModidFromWood().getOrDefault(woodType.name(), "minecraft");
             ShapedRecipeBuilder.shaped(GeneralRegistry.BLOCK_MAP.get(woodType).get())
                     .define('p', Registry.BLOCK.get(new ResourceLocation(mod, woodType.name() + "_planks")))
                     .define('S', Items.STICK)
