@@ -3,7 +3,6 @@ buildscript {
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
         maven { url = 'https://maven.parchmentmc.org' }
-
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
@@ -62,7 +61,7 @@ minecraft {
         data {
             workingDirectory project.file('run')
             ideaModule "${rootProject.name}.${project.name}.main"
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', mod_id, "projectbrazier", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
             taskName 'Data'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
@@ -81,6 +80,34 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
+    //maty's portection mod compat
+    compileOnly fg.deobf('com.matyrobbrt.mc.sectionprotection:sectionprotection-1.18.2-api:0.8.0')
+
+    //adding crates compat
+    runtimeOnly fg.deobf("curse.maven:project-brazier-238326:3723511")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-69")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.7.0")
+    runtimeOnly fg.deobf("vazkii.botania:Botania:1.18.2-433")
+
+}
+
+repositories { //all of these are for adding crates compat
+    mavenLocal()
+    maven { //brazier needs this
+        name = 'Dark Roleplay Maven'
+        url = 'https://maven.dark-roleplay.net'
+    }
+    maven {
+        name = 'Curse Maven'
+        url = 'https://cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
+    maven { url 'https://maven.blamejared.com' } //botania
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
 }
 
 tasks.withType(JavaCompile) {

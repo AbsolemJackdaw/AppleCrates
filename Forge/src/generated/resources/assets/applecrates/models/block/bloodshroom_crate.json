@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "tconstruct:block/bloodshroom/bloodshroom_planks",
+    "0": "tconstruct:block/bloodshroom/bloodshroom_planks"
+  }
+}

@@ -1,15 +1,27 @@
 {
   "replace": false,
   "values": [
-    "applecrates:oak_crate",
-    "applecrates:crimson_crate",
-    "applecrates:dark_oak_crate",
-    "applecrates:apple_crate",
-    "applecrates:acacia_crate",
-    "applecrates:jungle_crate",
+    "applecrates:runic_crate",
+    "applecrates:dreamwood_crate",
     "applecrates:orange_crate",
+    "applecrates:greenheart_crate",
+    "applecrates:apple_crate",
+    "applecrates:mossy_livingwood_crate",
+    "applecrates:mossy_dreamwood_crate",
+    "applecrates:bloodshroom_crate",
+    "applecrates:acacia_crate",
+    "applecrates:oak_crate",
+    "applecrates:nahuatl_crate",
+    "applecrates:dark_oak_crate",
+    "applecrates:warped_crate",
+    "applecrates:skyroot_crate",
     "applecrates:spruce_crate",
+    "applecrates:shimmerwood_crate",
+    "applecrates:crimson_crate",
+    "applecrates:radiant_crate",
     "applecrates:birch_crate",
-    "applecrates:warped_crate"
+    "applecrates:jungle_crate",
+    "applecrates:livingwood_crate",
+    "applecrates:menril_crate"
   ]
 }
