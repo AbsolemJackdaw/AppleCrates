@@ -1,17 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "boat",
+  "group": "crates",
   "pattern": [
     "S S",
     "ppp"
   ],
   "key": {
-    "p": [],
+    "p": {
+      "item": "byg:pine_planks"
+    },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "applecrates:byg_palo_verde_crate"
+    "item": "applecrates:byg_pine_crate"
   }
 }

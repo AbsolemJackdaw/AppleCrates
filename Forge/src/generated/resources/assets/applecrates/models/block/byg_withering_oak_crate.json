@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "byg:block/withering_oak_planks",
-    "0": "byg:block/withering_oak_planks"
-  }
-}
