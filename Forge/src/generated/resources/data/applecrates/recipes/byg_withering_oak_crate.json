@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "S S",
+    "ppp"
+  ],
+  "key": {
+    "p": [],
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "applecrates:byg_withering_oak_crate"
+  }
+}

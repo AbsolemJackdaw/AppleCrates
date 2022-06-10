@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "integrateddynamics:block/menril_planks",
-    "0": "integrateddynamics:block/menril_planks"
-  }
-}

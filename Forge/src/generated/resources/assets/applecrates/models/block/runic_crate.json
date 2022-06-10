@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "solarforge:block/runic_planks",
-    "0": "solarforge:block/runic_planks"
-  }
-}
