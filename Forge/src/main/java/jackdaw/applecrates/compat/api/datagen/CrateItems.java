@@ -15,7 +15,7 @@ public class CrateItems extends ItemModelProvider {
     @Override
     protected void registerModels() {
         GeneralRegistry.ITEM_MAP.forEach((woodType, item) -> {
-            withExistingParent(item.get().getRegistryName().getPath(), new ResourceLocation(modid, "block/" + woodType.name() + "_crate"));
+            withExistingParent(item.get().getRegistryName().getPath(), new ResourceLocation(AppleCrates.MODID, "block/" + woodType.fullName() + "_crate"));
         });
     }
 }

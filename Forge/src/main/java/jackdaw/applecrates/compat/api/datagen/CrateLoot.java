@@ -2,12 +2,12 @@ package jackdaw.applecrates.compat.api.datagen;
 
 import com.mojang.datafixers.util.Pair;
 import jackdaw.applecrates.registry.GeneralRegistry;
+import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
@@ -39,12 +39,12 @@ public class CrateLoot extends LootTableProvider {
 
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return WoodType.values().map(woodType -> GeneralRegistry.BLOCK_MAP.get(woodType).get()).collect(Collectors.toList());
+            return CrateWoodType.values().map(woodType -> GeneralRegistry.BLOCK_MAP.get(woodType).get()).collect(Collectors.toList());
         }
 
         @Override
         protected void addTables() {
-            WoodType.values().map(woodType -> GeneralRegistry.BLOCK_MAP.get(woodType).get()).forEach(this::dropSelf);
+            CrateWoodType.values().map(woodType -> GeneralRegistry.BLOCK_MAP.get(woodType).get()).forEach(this::dropSelf);
         }
     }
 }

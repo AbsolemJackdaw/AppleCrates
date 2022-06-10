@@ -16,13 +16,13 @@ public class CrateLanguage extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        GeneralRegistry.BLOCK_MAP.forEach((woodType, blockRegistryObject) -> {
+        GeneralRegistry.BLOCK_MAP.forEach((woodType, block) -> {
             String capitalized = Stream.of((woodType.name() + "_crate").replace("_", " ").trim().split("\\s"))
                     .filter(word -> word.length() > 0)
                     .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
                     .collect(Collectors.joining(" "));
 
-            add(blockRegistryObject.get(), capitalized);
+            add(block.get(), capitalized);
         });
 
         add("container.crate", "Crate");

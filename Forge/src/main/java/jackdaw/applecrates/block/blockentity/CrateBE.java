@@ -2,6 +2,7 @@ package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.registry.GeneralRegistry;
+import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -29,7 +30,7 @@ public class CrateBE extends BlockEntity {
     public ItemStackHandler priceAndSale = new ItemStackHandler(2);
     private UUID owner;
 
-    public CrateBE(WoodType type, BlockPos pos, BlockState state) {
+    public CrateBE(CrateWoodType type, BlockPos pos, BlockState state) {
         super(GeneralRegistry.BE_MAP.get(type).get(), pos, state);
     }
 

@@ -19,14 +19,13 @@ public class CrateModels extends BlockModelProvider {
     @Override
     protected void registerModels() {
         GeneralRegistry.BLOCK_MAP.forEach((woodType, block) -> {
-            String mod = AppleCrateAPI.getModidFromWood().getOrDefault(woodType.name(), "minecraft");
             String path = AppleCrateAPI.getPathFromWood().getOrDefault(woodType.name(), "");
 
-            ResourceLocation plank = new ResourceLocation(mod, String.format("block/%s%s_planks", path, woodType.name()));
-            existingFileHelper.trackGenerated(plank, TEXTURE); //trick datagen into thinking that the file is definitly present
+            ResourceLocation existingTexture = new ResourceLocation(woodType.modId(), String.format("block/%s%s_planks", path, woodType.name()));
+            existingFileHelper.trackGenerated(existingTexture, TEXTURE); //trick datagen into thinking that the file is definitly present
 
             withExistingParent(block.get().getRegistryName().getPath(),
-                    modLoc("block/applecrate")).texture("particle", plank).texture("0", plank);
+                    modLoc("block/applecrate")).texture("particle", existingTexture).texture("0", existingTexture);
         });
     }
 }

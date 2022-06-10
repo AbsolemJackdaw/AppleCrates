@@ -5,13 +5,12 @@ import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.item.CrateItem;
+import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.Util;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,17 +28,17 @@ public class GeneralRegistry {
     public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, false)));
     public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, true)));
     /**
-     * filled on mod startup. not in final declaration, because race condition related to WoodType registry
+     * filled on mod startup. not in final declaration, because race condition related to CrateWoodType registry
      */
-    public static Map<WoodType, RegistryObject<Block>> BLOCK_MAP;
-    public static Map<WoodType, RegistryObject<Item>> ITEM_MAP;
-    public static Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> BE_MAP;
+    public static Map<CrateWoodType, RegistryObject<Block>> BLOCK_MAP;
+    public static Map<CrateWoodType, RegistryObject<Item>> ITEM_MAP;
+    public static Map<CrateWoodType, RegistryObject<BlockEntityType<CrateBE>>> BE_MAP;
 
     public static void prepareMaps() {
         BLOCK_MAP = Util.make(() -> {
             Map blockMap = new HashMap<>();
-            WoodType.values().forEach(woodType -> {
-                blockMap.put(woodType, BLOCKS.register(woodType.name() + "_crate", () -> new CrateBlock(woodType)));
+            CrateWoodType.values().forEach(woodType -> {
+                blockMap.put(woodType, BLOCKS.register(woodType.fullName() + "_crate", () -> new CrateBlock(woodType)));
             });
             return blockMap;
         });
@@ -47,14 +46,14 @@ public class GeneralRegistry {
         {
             Map itemMap = new HashMap<>();
             BLOCK_MAP.forEach((woodType, block) -> {
-                itemMap.put(woodType, ITEMS.register(woodType.name() + "_crate", () -> new CrateItem(block.get())));
+                itemMap.put(woodType, ITEMS.register(woodType.fullName() + "_crate", () -> new CrateItem(block.get())));
             });
             return itemMap;
         });
         BE_MAP = Util.make(() -> {
-            Map<WoodType, RegistryObject<BlockEntityType<CrateBE>>> blockEntityMap = new HashMap<>();
+            Map<CrateWoodType, RegistryObject<BlockEntityType<CrateBE>>> blockEntityMap = new HashMap<>();
             BLOCK_MAP.forEach((woodType, block) -> {
-                blockEntityMap.put(woodType, BLOCK_ENTITIES.register(woodType.name() + "_crate_be", () ->
+                blockEntityMap.put(woodType, BLOCK_ENTITIES.register(woodType.fullName() + "_crate_be", () ->
                         BlockEntityType.Builder.of((pos, state) -> new CrateBE(woodType, pos, state), block.get()).build(null)));
             });
 
