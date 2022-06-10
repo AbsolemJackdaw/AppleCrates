@@ -26,7 +26,7 @@ public class CrateRecipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(GeneralRegistry.BLOCK_MAP.get(woodType).get())
                     .define('p', Registry.BLOCK.get(new ResourceLocation(woodType.modId(), woodType.name() + "_planks")))
                     .define('S', Items.STICK)
-                    .pattern("S S").pattern("ppp").group("boat").unlockedBy("has_planks", has(ItemTags.PLANKS)).save(pFinishedRecipeConsumer);
+                    .pattern("S S").pattern("ppp").group("crates").unlockedBy("has_planks", has(ItemTags.PLANKS)).save(pFinishedRecipeConsumer);
 
         });
 

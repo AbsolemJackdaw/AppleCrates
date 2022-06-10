@@ -2,7 +2,6 @@ package jackdaw.applecrates.util;
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.compat.api.exception.WoodException;
-import net.minecraft.world.level.block.state.properties.WoodType;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -11,7 +10,17 @@ public class CrateWoodType {
     private static final Set<CrateWoodType> VALUES = new ObjectArraySet<>();
 
     static {
-        WoodType.values().forEach(woodType -> register(new CrateWoodType(woodType.name())));
+        // WoodType.values().forEach(woodType -> register(new CrateWoodType(woodType.name())));
+        //dont do this, its assumed this is vanilla, but it isn't. mods can fill it with their own woods.
+
+        register(new CrateWoodType("oak"));
+        register(new CrateWoodType("spruce"));
+        register(new CrateWoodType("birch"));
+        register(new CrateWoodType("acacia"));
+        register(new CrateWoodType("jungle"));
+        register(new CrateWoodType("dark_oak"));
+        register(new CrateWoodType("crimson"));
+        register(new CrateWoodType("warped"));
     }
 
     private final ModWood wood;
@@ -50,7 +59,12 @@ public class CrateWoodType {
     }
 
     public String fullName() {
-        return this.modId() + "_" + this.name();
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.modId());
+        if (!this.modId().isEmpty())
+            builder.append("_");
+        builder.append(this.name());
+        return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
     }
 
     @Override

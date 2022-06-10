@@ -7,7 +7,7 @@ public class ModWood {
     private String woodName;
 
     public ModWood(String modId, String woodName) {
-        this.modId = modId;
+        this.modId = modId.equals("minecraft") ? "" : modId;
         this.woodName = woodName;
     }
 

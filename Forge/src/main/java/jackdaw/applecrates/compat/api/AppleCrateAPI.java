@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class AppleCrateAPI {
-    public static boolean isDev = true;
     /***/
     private static List<ModWood> modWoods = new ArrayList<>();
     private static Map<String, String> pathFromWood = new HashMap<>();
@@ -29,7 +28,7 @@ public class AppleCrateAPI {
      * @throws WoodException when the given wood paired with modid is already registered
      */
     public static void registerForCrate(@Nonnull String modId, @Nonnull String woodName, @Nonnull String pathToTexture) {
-        if (ModList.get().isLoaded(modId) || isDev) {
+        if (ModList.get().isLoaded(modId)) {
             if (!CrateWoodType.values().anyMatch(woodType -> woodType.name().equals(woodName) && woodType.modId().equals(modId))) {
                 CrateWoodType.register(CrateWoodType.create(modId, woodName));
                 if (!pathToTexture.isBlank()) pathFromWood.put(woodName, pathToTexture);

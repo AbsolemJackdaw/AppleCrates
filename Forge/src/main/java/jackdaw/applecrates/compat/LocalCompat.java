@@ -34,8 +34,8 @@ public enum LocalCompat {
 
         String bygModId = "byg";
         String[] bygWoods = {"aspen", "baobab", "blue_enchanted", "bulbis", "cherry", "cika", "cypress", "ebony", "embur", "ether", "fir", "green_enchanted",
-                "holly", "imparius", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade", "palm", "palo_verde", "prine", "rainbow_eucalyptus",
-                "redwood", "skyris", "sythian", "willow", "witch_hazel", "withering_oak", "zelkova"};
+                "holly", "imparius", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade", "palm", "pine", "rainbow_eucalyptus",
+                "redwood", "skyris", "sythian", "willow", "witch_hazel", "zelkova"};
         for (String woodName : bygWoods)
             AppleCrateAPI.registerForCrate(bygModId, woodName);
 
@@ -47,9 +47,10 @@ public enum LocalCompat {
         AppleCrateAPI.registerForCrate(malum, "runewood");
         AppleCrateAPI.registerForCrate(malum, "soulwood");
 
-        String abundance = "abundance";
-        AppleCrateAPI.registerForCrate(abundance, "jacaranda");
-        AppleCrateAPI.registerForCrate(abundance, "redbud");
+//mod stuck in 1.16
+//        String abundance = "abundance";
+//        AppleCrateAPI.registerForCrate(abundance, "jacaranda");
+//        AppleCrateAPI.registerForCrate(abundance, "redbud");
 
         String forbidden_arcanus = "forbidden_arcanus";
         AppleCrateAPI.registerForCrate(forbidden_arcanus, "cherrywood");
