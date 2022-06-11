@@ -6,6 +6,7 @@ import jackdaw.applecrates.compat.api.exception.WoodException;
 import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,24 +21,21 @@ public class AppleCrateAPI {
         return pathFromWood;
     }
 
-    /**
-     * Call in @mod-file constructor.
-     *
-     * @throws WoodException when the given wood paired with modid is already registered
-     */
     protected static void registerForCrate(AppleCrateBuilder builder) {
-        try {
-            if (ModList.get().isLoaded(builder.modId)) {
-                CrateWoodType wood = CrateWoodType.create(builder.modId, builder.woodName);
-                if (!CrateWoodType.values().anyMatch(wood::equals)) {
-                    CrateWoodType.register(wood);
-                    pathFromWood.put(wood, builder.getTextureResourceLocation());
-                } else throw WoodException.INSTANCE.alreadyInList(wood);
+        //only add 'vanilla' crates to the list if we're not datagenning or skip them when we are
+        if ((((!AppleCrates.VANILLAWOODSLIST.contains(builder.woodName) && FMLLoader.getLaunchHandler().isData()) || AppleCrates.GEN_VANILLA_CRATES) || !FMLLoader.getLaunchHandler().isData())) {
+            try {
+                if (ModList.get().isLoaded(builder.modId)) {
+                    CrateWoodType wood = CrateWoodType.create(builder.modId, builder.woodName);
+                    if (!CrateWoodType.values().anyMatch(wood::equals)) {
+                        CrateWoodType.register(wood);
+                        pathFromWood.put(wood, builder.getTextureResourceLocation());
+                    } else throw WoodException.INSTANCE.alreadyInList(wood);
+                }
+            } catch (WoodException e) {
+                LogUtils.getLogger().error(e.getMessage());
             }
-        } catch (WoodException e) {
-            LogUtils.getLogger().error(e.getMessage());
         }
-
     }
 
     public static class AppleCrateBuilder {

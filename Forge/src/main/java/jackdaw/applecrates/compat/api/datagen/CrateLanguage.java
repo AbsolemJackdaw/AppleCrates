@@ -25,8 +25,10 @@ public class CrateLanguage extends LanguageProvider {
             add(block.get(), capitalized);
         });
 
-        add("container.crate", "Crate");
-        add("container.crate.owner", "My Crate Shop");
-        add("cannot.switch.trade", "To switch payment item, your green payout slot has to be empty");
+        if(AppleCrates.GEN_VANILLA_CRATES){
+            add("container.crate", "Crate");
+            add("container.crate.owner", "My Crate Shop");
+            add("cannot.switch.trade", "To switch payment item, your green payout slot has to be empty");
+        }
     }
 }

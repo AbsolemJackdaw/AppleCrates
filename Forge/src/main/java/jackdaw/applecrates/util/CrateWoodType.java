@@ -2,9 +2,7 @@ package jackdaw.applecrates.util;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.compat.api.exception.WoodException;
-import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -33,12 +31,6 @@ public class CrateWoodType {
     }
 
     public static Stream<CrateWoodType> values() {
-        if (FMLLoader.getLaunchHandler().isData()) {
-            Set<CrateWoodType> copy = new ObjectArraySet<>();
-            copy.addAll(VALUES);
-            copy.removeIf(crateWoodType -> AppleCrates.VANILLAWOODSLIST.contains(crateWoodType.wood) && crateWoodType.modId().equals("minecraft"));
-            return copy.stream();
-        }
         return VALUES.stream();
     }
 
