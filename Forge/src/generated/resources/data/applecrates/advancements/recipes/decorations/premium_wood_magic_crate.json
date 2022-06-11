@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "applecrates:projectbrazier_orange_crate"
+      "applecrates:premium_wood_magic_crate"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "applecrates:projectbrazier_orange_crate"
+        "recipe": "applecrates:premium_wood_magic_crate"
       }
     }
   },

@@ -6,12 +6,14 @@
     "ppp"
   ],
   "key": {
-    "p": [],
+    "p": {
+      "item": "premium_wood:maple_planks"
+    },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "applecrates:projectbrazier_orange_crate"
+    "item": "applecrates:premium_wood_maple_crate"
   }
 }

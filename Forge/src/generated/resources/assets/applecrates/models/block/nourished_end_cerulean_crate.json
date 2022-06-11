@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "nourished_end:blocks/cerulean_planks",
+    "0": "nourished_end:blocks/cerulean_planks"
+  }
+}
