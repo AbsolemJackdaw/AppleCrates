@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "malum:block/runewood_planks",
+    "0": "malum:block/runewood_planks"
+  }
+}

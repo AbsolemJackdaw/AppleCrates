@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "byg:block/cika_planks",
+    "0": "byg:block/cika_planks"
+  }
+}

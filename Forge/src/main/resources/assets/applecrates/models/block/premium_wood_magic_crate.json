@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "premium_wood:block/magic/magic_planks",
+    "0": "premium_wood:block/magic/magic_planks"
+  }
+}

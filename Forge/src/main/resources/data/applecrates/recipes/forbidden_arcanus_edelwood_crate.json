@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "crates",
+  "pattern": [
+    "S S",
+    "ppp"
+  ],
+  "key": {
+    "p": {
+      "item": "forbidden_arcanus:edelwood_planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "applecrates:forbidden_arcanus_edelwood_crate"
+  }
+}
