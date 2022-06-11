@@ -1,5 +1,6 @@
 package jackdaw.applecrates.util;
 
+import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.compat.api.exception.WoodException;
 
@@ -9,34 +10,24 @@ import java.util.stream.Stream;
 public class CrateWoodType {
     private static final Set<CrateWoodType> VALUES = new ObjectArraySet<>();
 
-    static {
-        // WoodType.values().forEach(woodType -> register(new CrateWoodType(woodType.name())));
-        //dont do this, its assumed this is vanilla, but it isn't. mods can fill it with their own woods.
-
-        register(new CrateWoodType("oak"));
-        register(new CrateWoodType("spruce"));
-        register(new CrateWoodType("birch"));
-        register(new CrateWoodType("acacia"));
-        register(new CrateWoodType("jungle"));
-        register(new CrateWoodType("dark_oak"));
-        register(new CrateWoodType("crimson"));
-        register(new CrateWoodType("warped"));
-    }
-
     private final ModWood wood;
 
-    protected CrateWoodType(String pName) {
-        this("minecraft", pName);
+    protected CrateWoodType(String name) {
+        this("minecraft", name);
     }
 
     protected CrateWoodType(String modId, String name) {
         wood = new ModWood(modId, name);
     }
 
-    public static CrateWoodType register(CrateWoodType pWoodType) {
-        if (!VALUES.add(pWoodType))
-            throw new WoodException(pWoodType.modId(), pWoodType.name());
-        return pWoodType;
+    public static CrateWoodType register(CrateWoodType woodType) {
+        try {
+            if (!VALUES.add(woodType))
+                throw WoodException.INSTANCE.alreadyInList(woodType);
+        } catch (WoodException e) {
+            LogUtils.getLogger().error(e.getMessage());
+        }
+        return woodType;
     }
 
     public static Stream<CrateWoodType> values() {
