@@ -58,6 +58,10 @@ public class AppleCrateAPI {
         /**
          * Call in @mod-file constructor.
          * <p>
+         * If you do not plan on using the shipped generation files, you only need to use this constructor <p>
+         * please do note however that you need to add recipes, blockstate, blockmodel, language file, tool tags, itemmodel and lootable yourself
+         * <p>
+         * <p>
          * When running the shipped datagen:<p>
          * Block registry is scanned, matching 'woodname' for recipes.
          * ModId is used to :<p>
