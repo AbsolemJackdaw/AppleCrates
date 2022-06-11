@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "malum:block/soulwood_planks",
-    "0": "malum:block/soulwood_planks"
-  }
-}

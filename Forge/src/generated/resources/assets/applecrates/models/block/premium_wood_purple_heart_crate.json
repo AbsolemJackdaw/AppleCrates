@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "premium_wood:block/purple_heart/purple_heart_planks",
-    "0": "premium_wood:block/purple_heart/purple_heart_planks"
-  }
-}
