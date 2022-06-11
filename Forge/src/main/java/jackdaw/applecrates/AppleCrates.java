@@ -6,9 +6,14 @@ import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Mod(AppleCrates.MODID)
 public class AppleCrates {
     public static final String MODID = "applecrates";
+    public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"};
+    public static final List<String> VANILLAWOODSLIST = Arrays.asList(AppleCrates.VANILLAWOODS);
 
     public AppleCrates() {
         GeneralRegistry.startup();

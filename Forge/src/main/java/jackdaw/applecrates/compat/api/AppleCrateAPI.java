@@ -1,6 +1,7 @@
 package jackdaw.applecrates.compat.api;
 
 import com.mojang.logging.LogUtils;
+import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.compat.api.exception.WoodException;
 import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.resources.ResourceLocation;
@@ -42,8 +43,7 @@ public class AppleCrateAPI {
     public static class AppleCrateBuilder {
 
         static {
-            String[] vanilla = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"};
-            for (String wood : vanilla)
+            for (String wood : AppleCrates.VANILLAWOODS)
                 new AppleCrateAPI.AppleCrateBuilder(wood).register();
         }
 
