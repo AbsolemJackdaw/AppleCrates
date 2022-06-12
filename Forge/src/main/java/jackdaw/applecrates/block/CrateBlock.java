@@ -125,12 +125,12 @@ public class CrateBlock extends BaseEntityBlock {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
                 if (pPlayer instanceof ServerPlayer sp)
-                    NetworkHooks.openGui(sp, new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
-                            new CrateMenu(
-                                    owner ? crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_OWNER.get() :
-                                            crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_BUYER.get(),
-                                    pContainerId, pInventory, crate, owner),
-                            new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
+                    NetworkHooks.openGui(sp, new SimpleMenuProvider((id, inv, player) ->
+                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))), buf -> {
+                        //buffer to read client side
+                        buf.writeBoolean(owner);
+                        buf.writeBoolean(crate.isUnlimitedShop);
+                    });
                 pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
             return InteractionResult.sidedSuccess(pLevel.isClientSide);

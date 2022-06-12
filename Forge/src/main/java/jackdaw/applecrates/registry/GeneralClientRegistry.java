@@ -15,10 +15,7 @@ public class GeneralClientRegistry {
     @SubscribeEvent
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event) {
         GeneralRegistry.BE_MAP.forEach((woodType, blockEntity) -> event.registerBlockEntityRenderer(blockEntity.get(), CrateBESR::new));
-        MenuScreens.register(GeneralRegistry.CRATE_MENU_OWNER.get(), CrateScreen::forOwner);
-        MenuScreens.register(GeneralRegistry.CRATE_MENU_BUYER.get(), CrateScreen::new);
-        MenuScreens.register(GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get(), CrateScreen::forOwner);
-        MenuScreens.register(GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get(), CrateScreen::new);
+        MenuScreens.register(GeneralRegistry.CRATE_MENU.get(), CrateScreen::new);
     }
 
 }

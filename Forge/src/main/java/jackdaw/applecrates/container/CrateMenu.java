@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,27 +29,39 @@ public class CrateMenu extends AbstractContainerMenu {
     private BlockPos volatilePos;
 
     //Registry overload for menu type registry
-    public CrateMenu(int id, Inventory inv, boolean isOwner, boolean isUnlimitedShop) {
-        this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), isOwner);
-        this.isUnlimitedShop = isUnlimitedShop;
+//    public CrateMenu(int id, Inventory inv, boolean isOwner, boolean isUnlimitedShop) {
+//        this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), isOwner);
+//        this.isUnlimitedShop = isUnlimitedShop;
+//    }
+//
+//    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, CrateBE crate, boolean isOwner) {
+//        this(isOwner ? crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_OWNER.get() :
+//                        crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_BUYER.get(),
+//                id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, isOwner);
+//        volatileLevel = crate.getLevel();
+//        volatilePos = crate.getBlockPos();
+//        isUnlimitedShop = crate.isUnlimitedShop;
+//    }
+
+    //Registry overload for menu type registry //client
+    public CrateMenu(int id, Inventory inventory, boolean owner, boolean unlimited) {
+        this(id, inventory, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), owner, unlimited);
     }
 
-    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, CrateBE crate, boolean isOwner) {
-        this(isOwner ? crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_OWNER.get() :
-                        crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_BUYER.get(),
-                id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, isOwner);
-        volatileLevel = crate.getLevel();
-        volatilePos = crate.getBlockPos();
-        isUnlimitedShop = crate.isUnlimitedShop;
+    public CrateMenu(int id, Inventory inventory, CrateBE crate, boolean owner, boolean unlimited) {
+        this(id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, owner, unlimited);
+
     }
 
-    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean isOwner) {
-        super(type, id);
+    public CrateMenu(int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean owner, boolean ul) {
+        super(GeneralRegistry.CRATE_MENU.get(), id);
 
         this.interactableSlots = interaction;
         this.priceAndSaleSlots = trade;
         this.crateStock = stock;
-        this.isOwner = isOwner;
+
+        this.isOwner = owner;
+        this.isUnlimitedShop = ul;
 
         this.addSlot(new SlotItemHandler(interactableSlots, 0, 136, 37));
         this.addSlot(new SlotItemHandler(interactableSlots, 1, 220, 38) {
