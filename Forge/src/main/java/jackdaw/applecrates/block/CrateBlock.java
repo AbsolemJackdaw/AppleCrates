@@ -18,6 +18,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DebugStickItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -115,14 +116,23 @@ public class CrateBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
+            if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
+                crate.isUnlimitedShop = true;
+                pPlayer.displayClientMessage(new TranslatableComponent("Crate set to creative shop"), true);
+                //pLevel.sendBlockUpdated(pPos, pState, pState, 3);
+                crate.setChanged();
+            } else {
+                boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
-            boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
-
-            if (pPlayer instanceof ServerPlayer sp)
-                NetworkHooks.openGui(sp, new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
-                        new CrateMenu(owner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), pContainerId, pInventory, crate, owner),
-                        new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
-            pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                if (pPlayer instanceof ServerPlayer sp)
+                    NetworkHooks.openGui(sp, new SimpleMenuProvider((pContainerId, pInventory, pPlayer1) ->
+                            new CrateMenu(
+                                    owner ? crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_OWNER.get() :
+                                            crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_BUYER.get(),
+                                    pContainerId, pInventory, crate, owner),
+                            new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))));
+                pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
             return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
         return InteractionResult.FAIL;

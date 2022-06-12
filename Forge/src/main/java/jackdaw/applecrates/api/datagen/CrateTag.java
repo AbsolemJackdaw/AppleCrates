@@ -1,4 +1,4 @@
-package jackdaw.applecrates.compat.api.datagen;
+package jackdaw.applecrates.api.datagen;
 
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.registry.GeneralRegistry;

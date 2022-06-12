@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +27,7 @@ public class CrateBE extends BlockEntity {
     public CrateStackHandler crateStock = new CrateStackHandler();
     public ItemStackHandler interactable = new ItemStackHandler(2);
     public ItemStackHandler priceAndSale = new ItemStackHandler(2);
+    public boolean isUnlimitedShop = false;
     private UUID owner;
 
     public CrateBE(CrateWoodType type, BlockPos pos, BlockState state) {
@@ -80,6 +80,7 @@ public class CrateBE extends BlockEntity {
         tag.put(TAGSTOCK, crateStock.serializeNBT());
         tag.put(TAGINTERACTABLE, interactable.serializeNBT());
         tag.put(TAGPRICESALE, priceAndSale.serializeNBT());
+        tag.putBoolean("isUnlimited", isUnlimitedShop);
         if (owner != null)
             tag.putUUID(TAGOWNER, owner);
         return tag;
@@ -89,6 +90,8 @@ public class CrateBE extends BlockEntity {
         crateStock.deserializeNBT((CompoundTag) tag.get(TAGSTOCK));
         interactable.deserializeNBT((CompoundTag) tag.get(TAGINTERACTABLE));
         priceAndSale.deserializeNBT((CompoundTag) tag.get(TAGPRICESALE));
+        if (tag.contains("isUnlimited"))
+            isUnlimitedShop = tag.getBoolean("isUnlimited");
         if (tag.contains(TAGOWNER))
             owner = tag.getUUID(TAGOWNER);
     }

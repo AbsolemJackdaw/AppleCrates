@@ -25,19 +25,23 @@ public class CrateMenu extends AbstractContainerMenu {
     public CrateStackHandler crateStock;
     public ItemStackHandler interactableSlots;
     public ItemStackHandler priceAndSaleSlots;
-
+    public boolean isUnlimitedShop = false;
     private Level volatileLevel;
     private BlockPos volatilePos;
 
     //Registry overload for menu type registry
-    public CrateMenu(int id, Inventory inv, boolean isOwner) {
+    public CrateMenu(int id, Inventory inv, boolean isOwner, boolean isUnlimitedShop) {
         this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), isOwner);
+        this.isUnlimitedShop = isUnlimitedShop;
     }
 
     public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, CrateBE crate, boolean isOwner) {
-        this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, isOwner);
+        this(isOwner ? crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_OWNER.get() :
+                        crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_BUYER.get(),
+                id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, isOwner);
         volatileLevel = crate.getLevel();
         volatilePos = crate.getBlockPos();
+        isUnlimitedShop = crate.isUnlimitedShop;
     }
 
     public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean isOwner) {
@@ -85,7 +89,7 @@ public class CrateMenu extends AbstractContainerMenu {
             //if the pickup slot had content, then there was payment enough
             if (ClickType.PICKUP.equals(click) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
                 interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
-                crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
+                crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getStackInSlot(0), isUnlimitedShop);
                 updateSellItem();
             }
         } else if (slotID == 33 && this.getCarried().isEmpty()) {
@@ -151,7 +155,7 @@ public class CrateMenu extends AbstractContainerMenu {
         }
     }
 
-    public void tryMovePayementToInteraction() {
+    public void tryMovePaymentToInteraction() {
         //if there's a stack that isnt payment in the slot, put it back in the inventory, then pop in new items that are payment
         ItemStack itemstack = this.interactableSlots.getStackInSlot(0);
         if (!itemstack.isEmpty()) {
@@ -187,23 +191,26 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     private void movefromStockToSaleSlot(ItemStack get) {
-        if (!get.isEmpty() && !outOfStock()) {
-            for (int i = 4; i < 34; ++i) {
-                ItemStack stackinSlot = this.slots.get(i).getItem();
-                if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(get, stackinSlot)) {
-                    ItemStack pickupSlot = this.interactableSlots.getStackInSlot(1);
-                    int j = pickupSlot.isEmpty() ? 0 : pickupSlot.getCount();
-                    int k = Math.min(get.getCount() - j, stackinSlot.getCount());
-                    ItemStack copy = stackinSlot.copy();
-                    int l = j + k;
-                    stackinSlot.shrink(k);
-                    copy.setCount(l);
-                    this.interactableSlots.setStackInSlot(1, copy);
-                    if (l >= get.getCount()) {
-                        break;
+        if (!get.isEmpty() && (!outOfStock() || isUnlimitedShop)) {
+            if (isUnlimitedShop)
+                this.interactableSlots.setStackInSlot(1, get.copy());
+            else
+                for (int i = 4; i < 34; ++i) {
+                    ItemStack stackinSlot = this.slots.get(i).getItem();
+                    if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(get, stackinSlot)) {
+                        ItemStack pickupSlot = this.interactableSlots.getStackInSlot(1);
+                        int j = pickupSlot.isEmpty() ? 0 : pickupSlot.getCount();
+                        int k = Math.min(get.getCount() - j, stackinSlot.getCount());
+                        ItemStack copy = stackinSlot.copy();
+                        int l = j + k;
+                        stackinSlot.shrink(k);
+                        copy.setCount(l);
+                        this.interactableSlots.setStackInSlot(1, copy);
+                        if (l >= get.getCount()) {
+                            break;
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -251,7 +258,7 @@ public class CrateMenu extends AbstractContainerMenu {
                         ItemStack prepPayChange = interactableSlots.getStackInSlot(0).copy();
                         prepPayChange.shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
                         interactableSlots.setStackInSlot(0, prepPayChange);
-                        crateStock.updateStackInPayementSlot(priceAndSaleSlots.getStackInSlot(0));
+                        crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getStackInSlot(0), isUnlimitedShop);
                         if (!interactableSlots.getStackInSlot(0).isEmpty()) {
                             updateSellItem();
                             return priceAndSaleSlots.getStackInSlot(1).copy(); //keep looping till pay is empty

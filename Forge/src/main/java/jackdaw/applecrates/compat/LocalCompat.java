@@ -1,6 +1,6 @@
 package jackdaw.applecrates.compat;
 
-import jackdaw.applecrates.compat.api.AppleCrateAPI.AppleCrateBuilder;
+import jackdaw.applecrates.api.AppleCrateAPI.AppleCrateBuilder;
 
 public enum LocalCompat {
 
@@ -73,7 +73,5 @@ public enum LocalCompat {
         new AppleCrateBuilder(biomesoplenty, "redwood").register();
         new AppleCrateBuilder(biomesoplenty, "umbran").register();
         new AppleCrateBuilder(biomesoplenty, "willow").register();
-
-
     }
 }

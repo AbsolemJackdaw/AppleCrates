@@ -21,6 +21,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private static final Component CANNOT_SWITCH = new TranslatableComponent("cannot.switch.trade");
     private boolean isOwner;
+    private boolean isUnlimitedShop;
     private int guiStartX;
     private int guiStartY;
 
@@ -29,6 +30,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         this.isOwner = pMenu.isOwner;
         this.imageWidth = 276;
         this.inventoryLabelX = 107;
+        this.isUnlimitedShop = pMenu.isUnlimitedShop;
     }
 
     public static CrateScreen forOwner(CrateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -52,7 +54,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             }));
         } else {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 17, (button) -> {
-                if (!menu.outOfStock())
+                if (isUnlimitedShop || !menu.outOfStock())
                     CrateChannel.NETWORK.sendToServer(new SGetSale());
             }));
         }
@@ -85,7 +87,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         int offSet = isOwner ? 0 : -140 + 19;
-        if (menu.outOfStock() && !isOwner)
+        if (menu.outOfStock() && !isOwner && !isUnlimitedShop)
             blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
         else
             blit(pPoseStack, guiStartX + 60, guiStartY + 144 + offSet, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
@@ -139,6 +141,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             fill(pPoseStack, guiStartX + 4, guiStartY + 37, guiStartX + 97 + 4, guiStartY + 122 + 37, 0xffc6c6c6);
             int scrollSpotLength = 5;
             blit(pPoseStack, guiStartX + 4, guiStartY + 37, this.getBlitOffset(), 4.0F, 158.0F - (float) scrollSpotLength, 97, 5 + scrollSpotLength, 512, 256);
+        }
+
+        if (isUnlimitedShop) {
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            blit(pPoseStack, guiStartX + 185, guiStartY + 36, this.getBlitOffset(), 276.0F, 0.0F, 25, 20, 512, 256);
         }
     }
 

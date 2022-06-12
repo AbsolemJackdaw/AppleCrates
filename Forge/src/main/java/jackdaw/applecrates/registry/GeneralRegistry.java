@@ -25,8 +25,11 @@ public class GeneralRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AppleCrates.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, AppleCrates.MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, AppleCrates.MODID);
-    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, false)));
-    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, true)));
+    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, false, false)));
+    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_BUYER_UNLIMITED = MENU_TYPES.register("crate_menu_buyer_unlimited", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, false, true)));
+    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, true, false)));
+    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU_OWNER_UNLIMITED = MENU_TYPES.register("crate_menu_owner_unlimited", () -> new MenuType<>((id, inv) -> new CrateMenu(id, inv, true, true)));
+
     /**
      * filled on mod startup. not in final declaration, because race condition related to CrateWoodType registry
      */

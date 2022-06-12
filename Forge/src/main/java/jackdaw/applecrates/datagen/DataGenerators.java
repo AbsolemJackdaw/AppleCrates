@@ -1,7 +1,7 @@
 package jackdaw.applecrates.datagen;
 
 import jackdaw.applecrates.AppleCrates;
-import jackdaw.applecrates.compat.api.datagen.*;
+import jackdaw.applecrates.api.datagen.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

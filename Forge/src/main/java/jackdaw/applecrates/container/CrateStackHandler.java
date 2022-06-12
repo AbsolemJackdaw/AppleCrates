@@ -12,7 +12,10 @@ public class CrateStackHandler extends ItemStackHandler {
         super(30);
     }
 
-    public boolean updateStackInPayementSlot(ItemStack payment) {
+    public boolean updateStackInPaymentSlot(ItemStack payment, boolean isUnlimitedShop) {
+        if (isUnlimitedShop)
+            return true;
+
         ItemStack prepPay = payment.copy();
 
         if (getStackInSlot(29).isEmpty()) {

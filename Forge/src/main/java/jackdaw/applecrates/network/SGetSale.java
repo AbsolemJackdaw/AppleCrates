@@ -27,7 +27,7 @@ public class SGetSale {
         context.get().enqueueWork(() -> {
             ServerPlayer player = context.get().getSender();
             if (player.containerMenu instanceof CrateMenu menu) {
-                menu.tryMovePayementToInteraction();
+                menu.tryMovePaymentToInteraction();
             }
         });
         context.get().setPacketHandled(true);

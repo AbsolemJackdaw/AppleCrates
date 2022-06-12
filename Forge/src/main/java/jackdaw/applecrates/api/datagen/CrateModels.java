@@ -1,9 +1,9 @@
-package jackdaw.applecrates.compat.api.datagen;
+package jackdaw.applecrates.api.datagen;
 
 import com.mojang.logging.LogUtils;
 import jackdaw.applecrates.AppleCrates;
-import jackdaw.applecrates.compat.api.AppleCrateAPI;
-import jackdaw.applecrates.compat.api.exception.WoodException;
+import jackdaw.applecrates.api.AppleCrateAPI;
+import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;

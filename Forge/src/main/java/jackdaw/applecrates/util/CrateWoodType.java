@@ -2,32 +2,33 @@ package jackdaw.applecrates.util;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import jackdaw.applecrates.compat.api.exception.WoodException;
+import jackdaw.applecrates.api.exception.WoodException;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
 public class CrateWoodType {
     private static final Set<CrateWoodType> VALUES = new ObjectArraySet<>();
 
-    private final ModWood wood;
+    private final String modId;
+    private final String woodName;
 
-    protected CrateWoodType(String name) {
-        this("minecraft", name);
+    protected CrateWoodType(String modId, String woodName) {
+        this.modId = modId.equals("minecraft") ? "" : modId;
+        this.woodName = woodName;
     }
 
-    protected CrateWoodType(String modId, String name) {
-        wood = new ModWood(modId, name);
-    }
-
-    public static CrateWoodType register(CrateWoodType woodType) {
+    /**
+     * @throws WoodException : when a duplicate is present in the registry
+     */
+    public static void register(CrateWoodType woodType) {
         try {
             if (!VALUES.add(woodType))
                 throw WoodException.INSTANCE.alreadyInList(woodType);
         } catch (WoodException e) {
             LogUtils.getLogger().error(e.getMessage());
         }
-        return woodType;
     }
 
     public static Stream<CrateWoodType> values() {
@@ -42,11 +43,11 @@ public class CrateWoodType {
     }
 
     public String name() {
-        return this.wood.getWoodName();
+        return this.woodName;
     }
 
     public String modId() {
-        return this.wood.getModId();
+        return this.modId;
     }
 
     public String fullName() {
@@ -60,11 +61,11 @@ public class CrateWoodType {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.wood.equals(that.wood);
+        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.modId().equals(that.modId());
     }
 
     @Override
     public int hashCode() {
-        return wood.hashCode();
+        return Objects.hash(modId, woodName);
     }
 }

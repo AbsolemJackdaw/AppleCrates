@@ -1,8 +1,9 @@
-package jackdaw.applecrates.compat.api;
+package jackdaw.applecrates.api;
 
 import com.mojang.logging.LogUtils;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.AppleCrates;
-import jackdaw.applecrates.compat.api.exception.WoodException;
+import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
@@ -10,8 +11,10 @@ import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class AppleCrateAPI {
+    private static final Set<AppleCrateBuilder> VALUES = new ObjectArraySet<>();
     private static Map<CrateWoodType, ResourceLocation> pathFromWood = new HashMap<>();
 
     /**
@@ -129,6 +132,9 @@ public class AppleCrateAPI {
             return new ResourceLocation(modOrMinecraftDirectory, parentFolder.concat(subFolder).concat(texureName).concat(planksSuffix));
         }
 
+        /**
+         * Call at the very end to register the Builder with its info to the mod for the mod to handle and register the blocks
+         */
         public void register() {
             registerForCrate(this);
         }

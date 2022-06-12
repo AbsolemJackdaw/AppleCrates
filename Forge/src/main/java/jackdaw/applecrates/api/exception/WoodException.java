@@ -1,4 +1,4 @@
-package jackdaw.applecrates.compat.api.exception;
+package jackdaw.applecrates.api.exception;
 
 import jackdaw.applecrates.util.CrateWoodType;
 
