@@ -38,7 +38,7 @@ Sell your stuff in fancy crates!
     versionRange="[1.18.2,1.19)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.dicemcmm]]
+[[dependencies.applecrates]]
     modId="sectionprotection"
     mandatory=false
     versionRange="[0.8.0,)"

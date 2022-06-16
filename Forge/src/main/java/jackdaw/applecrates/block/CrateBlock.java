@@ -119,7 +119,6 @@ public class CrateBlock extends BaseEntityBlock {
             if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
                 crate.isUnlimitedShop = true;
                 pPlayer.displayClientMessage(new TranslatableComponent("Crate set to creative shop"), true);
-                //pLevel.sendBlockUpdated(pPos, pState, pState, 3);
                 crate.setChanged();
             } else {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
