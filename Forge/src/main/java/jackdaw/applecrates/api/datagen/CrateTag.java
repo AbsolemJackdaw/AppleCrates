@@ -15,8 +15,8 @@ public class CrateTag extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
-        GeneralRegistry.BLOCK_MAP.forEach((woodType, blockRegistryObject) -> tag(BlockTags.MINEABLE_WITH_AXE).add(blockRegistryObject.get()));
-        GeneralRegistry.BLOCK_MAP.forEach((woodType, blockRegistryObject) -> tag(BlockTags.NON_FLAMMABLE_WOOD).add(blockRegistryObject.get()));
+        GeneralRegistry.BLOCK_MAP.forEach((woodType, blockRegistryObject) -> tag(BlockTags.MINEABLE_WITH_AXE).addOptional(blockRegistryObject.get().getRegistryName()));
+        GeneralRegistry.BLOCK_MAP.forEach((woodType, blockRegistryObject) -> tag(BlockTags.NON_FLAMMABLE_WOOD).addOptional(blockRegistryObject.get().getRegistryName()));
 
     }
 }

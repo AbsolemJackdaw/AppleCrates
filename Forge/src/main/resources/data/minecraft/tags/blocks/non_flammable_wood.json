@@ -1,75 +1,285 @@
 {
   "replace": false,
   "values": [
-    "applecrates:byg_nightshade_crate",
-    "applecrates:premium_wood_magic_crate",
-    "applecrates:biomesoplenty_fir_crate",
-    "applecrates:forbidden_arcanus_cherrywood_crate",
-    "applecrates:biomesoplenty_magic_crate",
-    "applecrates:forbidden_arcanus_mysterywood_crate",
-    "applecrates:premium_wood_silverbell_crate",
-    "applecrates:byg_green_enchanted_crate",
-    "applecrates:dark_oak_crate",
-    "applecrates:oak_crate",
-    "applecrates:biomesoplenty_jacaranda_crate",
-    "applecrates:spruce_crate",
-    "applecrates:byg_mahogany_crate",
-    "applecrates:biomesoplenty_redwood_crate",
-    "applecrates:botania_mossy_livingwood_crate",
-    "applecrates:byg_jacaranda_crate",
-    "applecrates:nourished_end_verdant_crate",
-    "applecrates:byg_pine_crate",
-    "applecrates:biomesoplenty_dead_crate",
-    "applecrates:byg_ether_crate",
-    "applecrates:byg_skyris_crate",
-    "applecrates:malum_soulwood_crate",
-    "applecrates:nourished_end_cerulean_crate",
-    "applecrates:byg_sythian_crate",
-    "applecrates:byg_lament_crate",
-    "applecrates:botania_livingwood_crate",
-    "applecrates:byg_mangrove_crate",
-    "applecrates:crimson_crate",
-    "applecrates:botania_mossy_dreamwood_crate",
-    "applecrates:biomesoplenty_palm_crate",
-    "applecrates:byg_baobab_crate",
-    "applecrates:byg_blue_enchanted_crate",
-    "applecrates:nourished_end_seldge_crate",
-    "applecrates:byg_willow_crate",
-    "applecrates:forbidden_arcanus_edelwood_crate",
-    "applecrates:biomesoplenty_cherry_crate",
-    "applecrates:forbidden_arcanus_fungyss_crate",
-    "applecrates:biomesoplenty_umbran_crate",
-    "applecrates:byg_rainbow_eucalyptus_crate",
-    "applecrates:acacia_crate",
-    "applecrates:botania_dreamwood_crate",
-    "applecrates:malum_runewood_crate",
-    "applecrates:byg_aspen_crate",
-    "applecrates:botania_shimmerwood_crate",
-    "applecrates:premium_wood_purple_heart_crate",
-    "applecrates:byg_imparius_crate",
-    "applecrates:byg_bulbis_crate",
-    "applecrates:byg_redwood_crate",
-    "applecrates:byg_cypress_crate",
-    "applecrates:byg_fir_crate",
-    "applecrates:byg_cika_crate",
-    "applecrates:biomesoplenty_mahogany_crate",
-    "applecrates:byg_embur_crate",
-    "applecrates:premium_wood_maple_crate",
-    "applecrates:byg_witch_hazel_crate",
-    "applecrates:premium_wood_willow_crate",
-    "applecrates:byg_palm_crate",
-    "applecrates:byg_ebony_crate",
-    "applecrates:byg_zelkova_crate",
-    "applecrates:birch_crate",
-    "applecrates:premium_wood_tiger_crate",
-    "applecrates:biomesoplenty_willow_crate",
-    "applecrates:byg_cherry_crate",
-    "applecrates:fruittrees_cherry_crate",
-    "applecrates:warped_crate",
-    "applecrates:jungle_crate",
-    "applecrates:biomesoplenty_hellbark_crate",
-    "applecrates:byg_maple_crate",
-    "applecrates:fruittrees_citrus_crate",
-    "applecrates:byg_holly_crate"
+    {
+      "id": "applecrates:byg_nightshade_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:premium_wood_magic_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_fir_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:forbidden_arcanus_cherrywood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_magic_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:forbidden_arcanus_mysterywood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:premium_wood_silverbell_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_green_enchanted_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:dark_oak_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:oak_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_jacaranda_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:spruce_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_mahogany_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_redwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:botania_mossy_livingwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_jacaranda_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:nourished_end_verdant_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_pine_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_dead_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_ether_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_skyris_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:malum_soulwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:nourished_end_cerulean_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_sythian_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_lament_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:botania_livingwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_mangrove_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:crimson_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:botania_mossy_dreamwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_palm_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_baobab_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_blue_enchanted_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:nourished_end_seldge_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_willow_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:forbidden_arcanus_edelwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_cherry_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:forbidden_arcanus_fungyss_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_umbran_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_rainbow_eucalyptus_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:acacia_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:botania_dreamwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:malum_runewood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_aspen_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:botania_shimmerwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:premium_wood_purple_heart_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_imparius_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_bulbis_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_redwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_cypress_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_fir_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_cika_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_mahogany_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_embur_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:premium_wood_maple_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_witch_hazel_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:premium_wood_willow_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_palm_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_ebony_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_zelkova_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:birch_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:premium_wood_tiger_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_willow_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_cherry_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:fruittrees_cherry_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:warped_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:jungle_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_hellbark_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_maple_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:fruittrees_citrus_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:byg_holly_crate",
+      "required": false
+    }
   ]
 }
