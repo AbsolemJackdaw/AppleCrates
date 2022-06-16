@@ -24,6 +24,7 @@ public class CrateBE extends BlockEntity {
     public static final String TAGSTOCK = "cratestock";
     public static final String TAGINTERACTABLE = "interactable";
     public static final String TAGPRICESALE = "pricensale";
+    public static final String TAGUNLIMITED = "isUnlimited";
     public CrateStackHandler crateStock = new CrateStackHandler();
     public ItemStackHandler interactable = new ItemStackHandler(2);
     public ItemStackHandler priceAndSale = new ItemStackHandler(2);
@@ -80,7 +81,7 @@ public class CrateBE extends BlockEntity {
         tag.put(TAGSTOCK, crateStock.serializeNBT());
         tag.put(TAGINTERACTABLE, interactable.serializeNBT());
         tag.put(TAGPRICESALE, priceAndSale.serializeNBT());
-        tag.putBoolean("isUnlimited", isUnlimitedShop);
+        tag.putBoolean(TAGUNLIMITED, isUnlimitedShop);
         if (owner != null)
             tag.putUUID(TAGOWNER, owner);
         return tag;
@@ -90,8 +91,8 @@ public class CrateBE extends BlockEntity {
         crateStock.deserializeNBT((CompoundTag) tag.get(TAGSTOCK));
         interactable.deserializeNBT((CompoundTag) tag.get(TAGINTERACTABLE));
         priceAndSale.deserializeNBT((CompoundTag) tag.get(TAGPRICESALE));
-        if (tag.contains("isUnlimited"))
-            isUnlimitedShop = tag.getBoolean("isUnlimited");
+        if (tag.contains(TAGUNLIMITED))
+            isUnlimitedShop = tag.getBoolean(TAGUNLIMITED);
         if (tag.contains(TAGOWNER))
             owner = tag.getUUID(TAGOWNER);
     }
