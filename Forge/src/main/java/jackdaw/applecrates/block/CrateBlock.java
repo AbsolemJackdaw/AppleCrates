@@ -6,7 +6,7 @@ import jackdaw.applecrates.registry.GeneralRegistry;
 import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -118,14 +118,14 @@ public class CrateBlock extends BaseEntityBlock {
         if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
             if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
                 crate.isUnlimitedShop = true;
-                pPlayer.displayClientMessage(new TranslatableComponent("Crate set to creative shop"), true);
+                pPlayer.displayClientMessage(Component.translatable("Crate set to creative shop"), true);
                 crate.setChanged();
             } else {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
                 if (pPlayer instanceof ServerPlayer sp)
                     NetworkHooks.openGui(sp, new SimpleMenuProvider((id, inv, player) ->
-                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), new TranslatableComponent("container.crate" + (owner ? ".owner" : ""))), buf -> {
+                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), Component.translatable("container.crate" + (owner ? ".owner" : ""))), buf -> {
                         //buffer to read client side
                         buf.writeBoolean(owner);
                         buf.writeBoolean(crate.isUnlimitedShop);

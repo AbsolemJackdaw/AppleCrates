@@ -19,8 +19,8 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 archivesBaseName = "${mod_name}-forge-${minecraft_version}"
 
 minecraft {
-    //mappings channel: 'official', version: minecraft_version
-    mappings channel: 'parchment', version: '2022.05.22-1.18.2'
+    mappings channel: 'official', version: minecraft_version
+//    mappings channel: 'parchment', version: '1.18.2-2022.06.5-1.19'
 
     if (project.hasProperty('forge_ats_enabled') && project.findProperty('forge_ats_enabled').toBoolean()) {
         // This location is hardcoded in Forge and can not be changed.
@@ -81,6 +81,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
     //maty's portection mod compat
+
+    //TODO readd when maty updates SP
     compileOnly fg.deobf('com.matyrobbrt.mc.sectionprotection:sectionprotection-1.18.2-api:0.8.0')
 
     //adding crates compat

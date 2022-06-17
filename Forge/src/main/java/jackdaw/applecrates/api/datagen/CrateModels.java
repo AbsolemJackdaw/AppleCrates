@@ -5,6 +5,7 @@ import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.registry.GeneralRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -27,7 +28,7 @@ public class CrateModels extends BlockModelProvider {
                 if (existingTexture == null)
                     throw WoodException.INSTANCE.resLocNotFound(woodType);
                 existingFileHelper.trackGenerated(existingTexture, TEXTURE); //trick datagen into thinking that the file is definitly present
-                withExistingParent(block.get().getRegistryName().getPath(),
+                withExistingParent(Registry.BLOCK.getKey(block.get()).getPath(),
                         modLoc("block/applecrate")).texture("particle", existingTexture).texture("0", existingTexture);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());
