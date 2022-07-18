@@ -171,4 +171,9 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
                 CrateScreen.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }
     }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+    }
 }

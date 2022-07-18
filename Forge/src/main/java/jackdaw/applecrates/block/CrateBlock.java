@@ -124,7 +124,7 @@ public class CrateBlock extends BaseEntityBlock {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
                 if (pPlayer instanceof ServerPlayer sp)
-                    NetworkHooks.openGui(sp, new SimpleMenuProvider((id, inv, player) ->
+                    NetworkHooks.openScreen(sp, new SimpleMenuProvider((id, inv, player) ->
                             new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), Component.translatable("container.crate" + (owner ? ".owner" : ""))), buf -> {
                         //buffer to read client side
                         buf.writeBoolean(owner);

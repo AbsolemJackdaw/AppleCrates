@@ -3,9 +3,9 @@ package jackdaw.applecrates.datagen;
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.api.datagen.*;
 import net.minecraft.data.DataGenerator;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod.EventBusSubscriber(modid = AppleCrates.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {

@@ -88,21 +88,21 @@ dependencies {
     //adding crates compat
     //reenable to use datagen
     //libs
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-69")
-//    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.7.0")
-//    runtimeOnly fg.deobf("curse.maven:terrablender-563928:3816497")
-//    runtimeOnly fg.deobf("curse.maven:ortuslib-616457:3768197")
-//    runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3768769")
-//    runtimeOnly fg.deobf("curse.maven:kiwi-303657:3827373")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-75")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19-5.1.0.4")
+    runtimeOnly fg.deobf("curse.maven:terrablender-563928:3863493")
+//    runtimeOnly fg.deobf("curse.maven:ortuslib-616457:3768197") no 1.19 so far
+//    runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3843952")
+//    runtimeOnly fg.deobf("curse.maven:kiwi-303657:3827373") no 1.19
 
     //mods
 //    runtimeOnly fg.deobf("vazkii.botania:Botania:1.18.2-433")
-//    runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:3825944")
+    runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:3873157")
 //    runtimeOnly fg.deobf("curse.maven:malum-484064:3788643")
-//    runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:3768779")
-//    runtimeOnly fg.deobf("curse.maven:premium-wood-353515:3781130")
+  //  runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:3844093")
+//    runtimeOnly fg.deobf("curse.maven:premium-wood-353515:3838113")
 //    runtimeOnly fg.deobf("curse.maven:enlightened-end-502786:3821676")
-//    runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:3827434")
+    runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:3871421")
 //    runtimeOnly fg.deobf("curse.maven:fruit-trees-355467:3756371")
 
     //runtimeOnly fg.deobf("curse.maven:-:")
@@ -128,6 +128,7 @@ tasks.withType(JavaCompile) {
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from project(":Common").sourceSets.main.resources
 }
 

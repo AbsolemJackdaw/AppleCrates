@@ -58,7 +58,7 @@ public class CrateBE extends BlockEntity {
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
-        //do not call super here. it uses the load mehtod from above, but we're not sending all the same data here !
+        //do not call super here. it uses the load method from above, but we're not sending all the same data here !
         loadCrateDataFromTag(tag);
     }
 
