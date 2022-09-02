@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "applecrates:block/byg_cherry_crate",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "applecrates:block/byg_cherry_crate"
+    },
+    "facing=south": {
+      "model": "applecrates:block/byg_cherry_crate",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "applecrates:block/byg_cherry_crate",
+      "y": 270
+    }
+  }
+}

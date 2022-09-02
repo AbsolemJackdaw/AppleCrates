@@ -8,9 +8,9 @@ public enum LocalCompat {
 
     public void init() {
         String tinkersconstructmodid = "tconstruct";
-        new AppleCrateBuilder(tinkersconstructmodid, "nahuatl").register();
-        new AppleCrateBuilder(tinkersconstructmodid, "greenheart").withSubfolder("greenheart/").register();
-        new AppleCrateBuilder(tinkersconstructmodid, "skyroot").withSubfolder("skyroot/").register();
-        new AppleCrateBuilder(tinkersconstructmodid, "bloodshroom").withSubfolder("bloodshroom/").register();
+        new AppleCrateBuilder(tinkersconstructmodid, "nahuatl").withSubfolder("wood/").withSuffix("").register();
+        new AppleCrateBuilder(tinkersconstructmodid, "greenheart").withTextureName("planks").withSuffix("").withSubfolder("wood/greenheart/").register();
+        new AppleCrateBuilder(tinkersconstructmodid, "skyroot").withTextureName("planks").withSuffix("").withSubfolder("wood/skyroot/").register();
+        new AppleCrateBuilder(tinkersconstructmodid, "bloodshroom").withTextureName("planks").withSuffix("").withSubfolder("wood/bloodshroom/").register();
     }
 }

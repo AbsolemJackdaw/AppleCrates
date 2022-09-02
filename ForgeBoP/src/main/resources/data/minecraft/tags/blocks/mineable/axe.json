@@ -1,0 +1,49 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "applecrates:biomesoplenty_fir_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_magic_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_jacaranda_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_redwood_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_dead_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_palm_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_cherry_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_umbran_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_mahogany_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_willow_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:biomesoplenty_hellbark_crate",
+      "required": false
+    }
+  ]
+}

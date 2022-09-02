@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "crates",
+  "pattern": [
+    "S S",
+    "ppp"
+  ],
+  "key": {
+    "p": {
+      "item": "biomesoplenty:willow_planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "applecrates:biomesoplenty_willow_crate"
+  }
+}

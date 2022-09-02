@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "crates",
+  "pattern": [
+    "S S",
+    "ppp"
+  ],
+  "key": {
+    "p": {
+      "item": "tconstruct:skyroot_planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "applecrates:tconstruct_skyroot_crate"
+  }
+}

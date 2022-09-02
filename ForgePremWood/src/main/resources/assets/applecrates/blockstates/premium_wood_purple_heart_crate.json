@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "applecrates:block/premium_wood_purple_heart_crate"
+    },
+    "facing=south": {
+      "model": "applecrates:block/premium_wood_purple_heart_crate",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "applecrates:block/premium_wood_purple_heart_crate",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "applecrates:block/premium_wood_purple_heart_crate",
+      "y": 90
+    }
+  }
+}

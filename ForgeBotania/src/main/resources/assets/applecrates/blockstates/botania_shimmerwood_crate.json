@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "applecrates:block/botania_shimmerwood_crate"
+    },
+    "facing=south": {
+      "model": "applecrates:block/botania_shimmerwood_crate",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "applecrates:block/botania_shimmerwood_crate",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "applecrates:block/botania_shimmerwood_crate",
+      "y": 90
+    }
+  }
+}

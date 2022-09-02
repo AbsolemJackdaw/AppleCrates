@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "biomesoplenty:block/cherry_planks",
+    "0": "biomesoplenty:block/cherry_planks"
+  }
+}
