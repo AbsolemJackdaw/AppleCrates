@@ -13,7 +13,8 @@ pluginManagement {
 }
 
 rootProject.name = 'AppleCrates'
-include("Common", "Fabric", "Forge")
+include 'Common'
+include 'Forge'
 include 'ForgeBoP'
 include 'ForgeBotania'
 include 'ForgeByG'
@@ -23,4 +24,7 @@ include 'ForgeTcon'
 include 'ForgeNourishedEnd'
 include 'ForgeMalum'
 include 'ForgeFruit'
+include 'ForgeSolar'
+include 'ForgeIntegratedDynamics'
+
 

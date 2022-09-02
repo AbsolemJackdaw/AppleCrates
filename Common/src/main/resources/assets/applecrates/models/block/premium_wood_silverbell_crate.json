@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "premium_wood:block/silverbell/silverbell_planks",
-    "0": "premium_wood:block/silverbell/silverbell_planks"
-  }
-}

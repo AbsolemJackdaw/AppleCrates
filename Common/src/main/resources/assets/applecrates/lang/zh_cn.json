@@ -1,13 +1,14 @@
 {
-  "block.applecrates.acacia_crate": "金合欢木箱",
-  "block.applecrates.birch_crate": "桦木箱",
-  "block.applecrates.crimson_crate": "绯红木箱",
-  "block.applecrates.dark_oak_crate": "深色橡木箱",
-  "block.applecrates.jungle_crate": "丛林木箱",
-  "block.applecrates.oak_crate": "橡木箱",
-  "block.applecrates.spruce_crate": "云杉木箱",
-  "block.applecrates.warped_crate": "诡异木箱",
-  "cannot.switch.trade": "要切换付款项目，您的绿色付款槽必须为空",
-  "container.crate": "箱",
-  "container.crate.owner": "我的摊位箱"
+  "block.applecrates.acacia_crate": "Acacia Crate",
+  "block.applecrates.birch_crate": "Birch Crate",
+  "block.applecrates.crimson_crate": "Crimson Crate",
+  "block.applecrates.dark_oak_crate": "Dark Oak Crate",
+  "block.applecrates.jungle_crate": "Jungle Crate",
+  "block.applecrates.mangrove_crate": "Mangrove Crate",
+  "block.applecrates.oak_crate": "Oak Crate",
+  "block.applecrates.spruce_crate": "Spruce Crate",
+  "block.applecrates.warped_crate": "Warped Crate",
+  "cannot.switch.trade": "To switch payment item, your green payout slot has to be empty",
+  "container.crate": "Crate",
+  "container.crate.owner": "My Crate Shop"
 }

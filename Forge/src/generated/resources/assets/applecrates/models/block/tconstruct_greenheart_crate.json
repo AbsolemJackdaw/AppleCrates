@@ -1,7 +1,0 @@
-{
-  "parent": "applecrates:block/applecrate",
-  "textures": {
-    "particle": "tconstruct:block/wood/greenheart/planks",
-    "0": "tconstruct:block/wood/greenheart/planks"
-  }
-}
