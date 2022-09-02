@@ -81,29 +81,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
     //maty's portection mod compat
-
     //TODO re-add when maty updates SP
 //    compileOnly fg.deobf('com.matyrobbrt.mc.sectionprotection:sectionprotection-1.18.2-api:0.8.0')
-
-    //adding crates compat
-    //reenable to use datagen
-    //libs
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19.2-76")
-//    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.19.2-5.1.1.0")
-//    runtimeOnly fg.deobf("curse.maven:terrablender-563928:3868697")
-//    runtimeOnly fg.deobf("curse.maven:ortuslib-616457:3768197") no 1.19 so far
-//    runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3843952")
-//    runtimeOnly fg.deobf("curse.maven:kiwi-303657:3827373") no 1.19
-
-    //mods
-//    runtimeOnly fg.deobf("vazkii.botania:Botania:1.18.2-433")
-   // runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:3947710")
-//    runtimeOnly fg.deobf("curse.maven:malum-484064:3788643")
-  //  runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:3844093")
-//    runtimeOnly fg.deobf("curse.maven:premium-wood-353515:3838113")
-//    runtimeOnly fg.deobf("curse.maven:enlightened-end-502786:3821676")
-   // runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:3871421")
-//    runtimeOnly fg.deobf("curse.maven:fruit-trees-355467:3756371")
 
     //runtimeOnly fg.deobf("curse.maven:-:")
 }

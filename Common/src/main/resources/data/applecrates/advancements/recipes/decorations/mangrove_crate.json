@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "applecrates:birch_crate"
+        "recipe": "applecrates:mangrove_crate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "applecrates:birch_crate"
+      "applecrates:mangrove_crate"
     ]
   }
 }

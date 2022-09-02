@@ -1,6 +1,21 @@
 {
-  "replace": false,
   "values": [
+    {
+      "id": "applecrates:warped_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:birch_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:jungle_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:mangrove_crate",
+      "required": false
+    },
     {
       "id": "applecrates:dark_oak_crate",
       "required": false
@@ -10,7 +25,7 @@
       "required": false
     },
     {
-      "id": "applecrates:spruce_crate",
+      "id": "applecrates:acacia_crate",
       "required": false
     },
     {
@@ -18,19 +33,7 @@
       "required": false
     },
     {
-      "id": "applecrates:acacia_crate",
-      "required": false
-    },
-    {
-      "id": "applecrates:birch_crate",
-      "required": false
-    },
-    {
-      "id": "applecrates:warped_crate",
-      "required": false
-    },
-    {
-      "id": "applecrates:jungle_crate",
+      "id": "applecrates:spruce_crate",
       "required": false
     }
   ]

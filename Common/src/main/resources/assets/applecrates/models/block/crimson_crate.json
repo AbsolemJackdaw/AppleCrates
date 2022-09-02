@@ -1,7 +1,7 @@
 {
   "parent": "applecrates:block/applecrate",
   "textures": {
-    "particle": "minecraft:block/crimson_planks",
-    "0": "minecraft:block/crimson_planks"
+    "0": "minecraft:block/crimson_planks",
+    "particle": "minecraft:block/crimson_planks"
   }
 }

@@ -42,6 +42,9 @@ public class AppleCrateAPI {
     }
 
     public static class AppleCrateBuilder {
+        public static void classLoader() { //loads the class so the static vanilla crate initializer can be called.
+            //FIXME , this classloader is a hack, not a fix. please fix this
+        }
 
         static {
             for (String wood : AppleCrates.VANILLAWOODS)

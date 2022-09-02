@@ -1,1 +1,10 @@
-// 1.19.2	2022-09-03T00:31:59.6824222	LootTables
+// 1.19.2	2022-09-03T00:46:23.2728466	LootTables
+37478a8e0b89a1084f7f502d6bfddfe7932c35a1 data/applecrates/loot_tables/blocks/acacia_crate.json
+2627f5903f774830f9693e496f4d2bca32ed5b72 data/applecrates/loot_tables/blocks/birch_crate.json
+917283fc0ec8e1a6d0ad59f159c2130a506d8a51 data/applecrates/loot_tables/blocks/crimson_crate.json
+0bec0992a7d26e3cd4dd058f490af522f6652898 data/applecrates/loot_tables/blocks/dark_oak_crate.json
+26b8240fdb2ae8de08349ec9acb052797e2038c1 data/applecrates/loot_tables/blocks/jungle_crate.json
+72f4edadb63c1bd0e394f2edc8da6db79a1b0328 data/applecrates/loot_tables/blocks/mangrove_crate.json
+37ec9f89d70541dbeb0fa4974a8216bc337f25ee data/applecrates/loot_tables/blocks/oak_crate.json
+a6791138bcbee1bca62e2c26eda1def467a9beea data/applecrates/loot_tables/blocks/spruce_crate.json
+2a34c8f502be7dbbeed76067d2e870fd36c98324 data/applecrates/loot_tables/blocks/warped_crate.json
