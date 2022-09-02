@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "applecrates:fruittrees_cherry_crate",
+      "required": false
+    },
+    {
+      "id": "applecrates:fruittrees_citrus_crate",
+      "required": false
+    }
+  ]
+}
