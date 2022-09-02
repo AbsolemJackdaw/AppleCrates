@@ -12,5 +12,16 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'MultiLoader'
+rootProject.name = 'AppleCrates'
 include("Common", "Fabric", "Forge")
+include 'ForgeBoP'
+include 'ForgeBotania:ForgeBotania'
+findProject(':ForgeBotania:ForgeBotania')?.name = 'ForgeBotania'
+include 'ForgeBotania'
+include 'ByG'
+include 'ForgeByG'
+findProject(':ForgeByG')?.name = 'ForgeByg'
+include 'ForgePremWood'
+include 'ForgeForbArc'
+include 'ForgeTcon'
+
