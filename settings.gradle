@@ -24,4 +24,5 @@ findProject(':ForgeByG')?.name = 'ForgeByg'
 include 'ForgePremWood'
 include 'ForgeForbArc'
 include 'ForgeTcon'
+include 'ForgeNourishedEnd'
 
