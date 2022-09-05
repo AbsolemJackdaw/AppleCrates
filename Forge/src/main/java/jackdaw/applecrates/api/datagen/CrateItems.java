@@ -9,8 +9,8 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class CrateItems extends ItemModelProvider {
-    public CrateItems(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, AppleCrates.MODID, existingFileHelper);
+    public CrateItems(String modid, DataGenerator generator, ExistingFileHelper existingFileHelper) {
+        super(generator, modid, existingFileHelper);
     }
 
     @Override

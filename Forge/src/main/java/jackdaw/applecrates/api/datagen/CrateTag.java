@@ -1,17 +1,15 @@
 package jackdaw.applecrates.api.datagen;
 
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.registry.GeneralRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 public class CrateTag extends BlockTagsProvider {
-    public CrateTag(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
-        super(generator, AppleCrates.MODID, existingFileHelper);
+    public CrateTag(String modid, DataGenerator generator, ExistingFileHelper existingFileHelper) {
+        super(generator, modid, existingFileHelper);
     }
 
     @Override

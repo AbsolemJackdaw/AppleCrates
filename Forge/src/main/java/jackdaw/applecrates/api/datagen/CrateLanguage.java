@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CrateLanguage extends LanguageProvider {
-    public CrateLanguage(DataGenerator gen, String locale) {
-        super(gen, AppleCrates.MODID, locale);
+    public CrateLanguage(String modid, DataGenerator generator, String locale) {
+        super(generator, modid, locale);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class CrateLanguage extends LanguageProvider {
             add(block.get(), capitalized);
         });
 
-        if(AppleCrates.GEN_VANILLA_CRATES){
+        if (AppleCrates.GEN_VANILLA_CRATES) {
             add("container.crate", "Crate");
             add("container.crate.owner", "My Crate Shop");
             add("cannot.switch.trade", "To switch payment item, your green payout slot has to be empty");

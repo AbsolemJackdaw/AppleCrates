@@ -12,21 +12,24 @@ public class DataGenerators {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
+        generatedCrates(AppleCrates.MODID, event);
+    }
 
+    public static void generatedCrates(String modid, GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
         //datapack  server
-        generator.addProvider(event.includeServer(), new CrateTag(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new CrateTag(modid, generator, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new CrateRecipes(generator));
         generator.addProvider(event.includeServer(), new CrateLoot(generator));
         //resourcepack  client
-        generator.addProvider(event.includeClient(), new CrateModels(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeClient(), new CrateStates(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeClient(), new CrateItems(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeClient(), new CrateLanguage(generator, "en_uk"));
-        generator.addProvider(event.includeClient(), new CrateLanguage(generator, "en_us"));
-        generator.addProvider(event.includeClient(), new CrateLanguage(generator, "fr_fr"));
-        generator.addProvider(event.includeClient(), new CrateLanguage(generator, "de_de"));
-        generator.addProvider(event.includeClient(), new CrateLanguage(generator, "en_ca"));
-        generator.addProvider(event.includeClient(), new CrateLanguage(generator, "fr_ca"));
+        generator.addProvider(event.includeClient(), new CrateModels(modid, generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new CrateStates(modid, generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new CrateItems(modid, generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new CrateLanguage(modid, generator, "en_uk"));
+        generator.addProvider(event.includeClient(), new CrateLanguage(modid, generator, "en_us"));
+        generator.addProvider(event.includeClient(), new CrateLanguage(modid, generator, "fr_fr"));
+        generator.addProvider(event.includeClient(), new CrateLanguage(modid, generator, "de_de"));
+        generator.addProvider(event.includeClient(), new CrateLanguage(modid, generator, "en_ca"));
+        generator.addProvider(event.includeClient(), new CrateLanguage(modid, generator, "fr_ca"));
     }
 }

@@ -20,6 +20,10 @@ public class CrateModels extends BlockModelProvider {
         super(generator, AppleCrates.MODID, existingFileHelper);
     }
 
+    public CrateModels(String modid, DataGenerator generator, ExistingFileHelper existingFileHelper) {
+        super(generator, modid, existingFileHelper);
+    }
+
     @Override
     protected void registerModels() {
         GeneralRegistry.BLOCK_MAP.forEach((woodType, block) -> {
