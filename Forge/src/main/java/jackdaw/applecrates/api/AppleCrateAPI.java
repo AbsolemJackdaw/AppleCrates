@@ -30,7 +30,7 @@ public class AppleCrateAPI {
             try {
                 if (ModList.get().isLoaded(builder.modId)) {
                     CrateWoodType wood = CrateWoodType.create(builder.modId, builder.woodName);
-                    if (!CrateWoodType.values().anyMatch(wood::equals)) {
+                    if (CrateWoodType.values().noneMatch(wood::equals)) {
                         CrateWoodType.register(wood);
                         pathFromWood.put(wood, builder.getTextureResourceLocation());
                     } else throw WoodException.INSTANCE.alreadyInList(wood);

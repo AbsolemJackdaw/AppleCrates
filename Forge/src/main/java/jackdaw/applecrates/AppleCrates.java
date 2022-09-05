@@ -14,7 +14,7 @@ public class AppleCrates {
     public static final String MODID = "applecrates";
     public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped", "mangrove"};
     public static final List<String> VANILLAWOODSLIST = Arrays.asList(AppleCrates.VANILLAWOODS);
-    public static final boolean GEN_VANILLA_CRATES = false;
+    public static final boolean GEN_VANILLA_CRATES = true;
 
     public AppleCrates() {
         GeneralRegistry.startup();
