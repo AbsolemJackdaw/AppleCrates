@@ -16,7 +16,7 @@ displayName="Apple Crates" #mandatory
 
 displayURL="https://www.curseforge.com/minecraft/mc-mods/apple-crates" #optional
 
-logoFile= "../../../../../Common/src/main/resources/icon.png" #optional
+logoFile= "logo.png" #optional
 
 credits="MMD for helping out, Geegor for extensively bugtesting the pre-release" #optional
 
@@ -44,3 +44,64 @@ Sell your stuff in fancy crates!
     versionRange="[0.8.0,)"
     ordering="NONE"
     side="SERVER"
+
+[[dependencies.applecrates]]
+modId = "applecrates_byg"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_bop"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_botania"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_intdyn"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_premwood"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_solarforge"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_fruit"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_malum"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_nourished"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"
+[[dependencies.applecrates]]
+modId = "applecrates_tcon"
+mandatory = false
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"

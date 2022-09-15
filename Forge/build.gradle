@@ -1,3 +1,4 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
@@ -9,6 +10,9 @@ buildscript {
         classpath 'org.parchmentmc:librarian:1.+'
 
     }
+}
+plugins {
+    id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle'
@@ -128,4 +132,28 @@ publishing {
             url "file://" + System.getenv("local_maven")
         }
     }
+}
+task publishCurseForge(type: TaskPublishCurseForge) {
+
+    apiToken = "${api_token_paintings}"
+
+    // The main file to upload
+    def mainFile = upload(670332, jar)
+    mainFile.releaseType = 'release'
+    mainFile.changelog = "${changelog}"
+    mainFile.changelogType = 'markdown'
+    mainFile.addJavaVersion('Java 17')
+    mainFile.addModLoader('Forge')
+    mainFile.addOptional('section-protection')
+    mainFile.addOptional('byg-crates')
+    mainFile.addOptional('plenty-crates')
+    mainFile.addOptional('dynamic-crates')
+    mainFile.addOptional('botanical-crates')
+    mainFile.addOptional('malumian-crates')
+    mainFile.addOptional('premium-crates')
+    mainFile.addOptional('fruit-crates')
+    mainFile.addOptional('enlightened-crates')
+    mainFile.addOptional('solar-crates')
+    mainFile.addOptional('construct-crates')
+
 }
