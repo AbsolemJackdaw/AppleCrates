@@ -144,7 +144,7 @@ task publishCurseForge(type: TaskPublishCurseForge) {
     mainFile.changelogType = 'markdown'
     mainFile.addJavaVersion('Java 17')
     mainFile.addModLoader('Forge')
-    mainFile.addOptional('section-protection')
+    mainFile.addOptional('sectionprotection')
     mainFile.addOptional('byg-crates')
     mainFile.addOptional('plenty-crates')
     mainFile.addOptional('dynamic-crates')
