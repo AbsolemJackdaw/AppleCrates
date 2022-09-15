@@ -139,12 +139,13 @@ task publishCurseForge(type: TaskPublishCurseForge) {
     apiToken = "${api_token_paintings}"
 
     // The main file to upload
-    def mainFile = upload(670332, jar)
+    def mainFile = upload(630726, jar)
     mainFile.releaseType = 'release'
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'
     mainFile.addJavaVersion('Java 17')
-    mainFile.addOptional('section-protection')
+    mainFile.addModLoader('Forge')
+    mainFile.addOptional('sectionprotection')
     mainFile.addOptional('byg-crates')
     mainFile.addOptional('plenty-crates')
     mainFile.addOptional('dynamic-crates')
