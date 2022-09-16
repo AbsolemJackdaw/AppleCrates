@@ -1,19 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "crates",
   "pattern": [
-    "S S",
+    "s s",
     "ppp"
   ],
   "key": {
     "p": {
-      "item": "minecraft:crimson_planks"
+      "item": "minecraft:jungle_planks"
     },
-    "S": {
+    "s": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "applecrates:crimson_crate"
+    "item": "applecrates:jungle_crate"
   }
 }

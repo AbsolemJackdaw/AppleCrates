@@ -20,15 +20,15 @@ public class DataGenerators {
         if (event.includeServer()) {
             //datapack  server
             generator.addProvider(new CrateTag(generator, event.getExistingFileHelper()));
-            generator.addProvider(new CrateRecipes(generator));
+            generator.addProvider(new CrateRecipes(modid, generator));
             generator.addProvider(new CrateLoot(generator));
         }
 
         if (event.includeClient()) {
             //resourcepack  client
-            generator.addProvider(new CrateModels(generator, event.getExistingFileHelper()));
-            generator.addProvider(new CrateStates(generator, event.getExistingFileHelper()));
-            generator.addProvider(new CrateItems(generator, event.getExistingFileHelper()));
+            generator.addProvider(new CrateModels(modid, generator, event.getExistingFileHelper()));
+            generator.addProvider(new CrateStates(modid, generator, event.getExistingFileHelper()));
+            generator.addProvider(new CrateItems(modid, generator, event.getExistingFileHelper()));
             generator.addProvider(new CrateLanguage(modid, generator, "en_uk"));
             generator.addProvider(new CrateLanguage(modid, generator, "en_us"));
             generator.addProvider(new CrateLanguage(modid, generator, "fr_fr"));

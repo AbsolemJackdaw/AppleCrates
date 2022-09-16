@@ -24,6 +24,7 @@ public class AppleCrates {
 
         AppleCrateAPI.AppleCrateBuilder.classLoader();
         //call after mod compat so it can register new WoodTypes
-        GeneralRegistry.prepareMaps();
+        GeneralRegistry.prepareForRegistry("", GeneralRegistry.BLOCKS, GeneralRegistry.ITEMS, GeneralRegistry.BLOCK_ENTITY_TYPES);
+
     }
 }

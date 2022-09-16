@@ -16,8 +16,8 @@ public class CrateModels extends BlockModelProvider {
     public static final String MINDIR = "$minecraft:$";
     protected static final ExistingFileHelper.ResourceType TEXTURE = new ExistingFileHelper.ResourceType(PackType.CLIENT_RESOURCES, ".png", "textures");
 
-    public CrateModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, AppleCrates.MODID, existingFileHelper);
+    public CrateModels(String modid, DataGenerator generator, ExistingFileHelper existingFileHelper) {
+        super(generator, modid, existingFileHelper);
     }
 
     @Override
@@ -27,9 +27,10 @@ public class CrateModels extends BlockModelProvider {
                 ResourceLocation existingTexture = AppleCrateAPI.getPathFromWood().get(woodType);
                 if (existingTexture == null)
                     throw WoodException.INSTANCE.resLocNotFound(woodType);
-                existingFileHelper.trackGenerated(existingTexture, TEXTURE); //trick datagen into thinking that the file is definitly present
-                withExistingParent(Registry.BLOCK.getKey(block.get()).getPath(),
-                        modLoc("block/applecrate")).texture("particle", existingTexture).texture("0", existingTexture);
+                existingFileHelper.trackGenerated(existingTexture, TEXTURE); //trick datagen into thinking that the file is definitely present
+                withExistingParent(
+                        Registry.BLOCK.getKey(block.get()).getPath(),
+                        new ResourceLocation(AppleCrates.MODID, "block/applecrate")).texture("particle", existingTexture).texture("0", existingTexture);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());
             }

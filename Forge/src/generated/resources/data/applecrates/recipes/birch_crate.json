@@ -1,19 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "crates",
   "pattern": [
-    "S S",
+    "s s",
     "ppp"
   ],
   "key": {
     "p": {
-      "item": "minecraft:spruce_planks"
+      "item": "minecraft:birch_planks"
     },
-    "S": {
+    "s": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "applecrates:spruce_crate"
+    "item": "applecrates:birch_crate"
   }
 }
