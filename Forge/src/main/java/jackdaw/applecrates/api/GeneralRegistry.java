@@ -1,11 +1,10 @@
-package jackdaw.applecrates.registry;
+package jackdaw.applecrates.api;
 
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.item.CrateItem;
-import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -15,9 +14,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GeneralRegistry {
 
@@ -32,34 +28,15 @@ public class GeneralRegistry {
     }));
 
     /**
-     * filled on mod startup. not in final declaration, because race condition related to CrateWoodType registry
+     * @param modId filter through all registered crates. Use the mod id the original wood comes from
      */
-    public static final Map<CrateWoodType, RegistryObject<Block>> BLOCK_MAP = new HashMap<>();
-    public static final Map<CrateWoodType, RegistryObject<Item>> ITEM_MAP = new HashMap<>();
-    public static final Map<CrateWoodType, RegistryObject<BlockEntityType<CrateBE>>> BE_MAP = new HashMap<>();
+    public static void prepareForRegistry(String modId, DeferredRegister<Block> blockRegistry, DeferredRegister<Item> itemRegistry, DeferredRegister<BlockEntityType<?>> beRegistry) {
 
-    /**
-     * @param modId : filter through all registered crates. Use the mod id the original wood comes from
-     */
-    public static void prepareForRegistry(
-            String modId,
-            DeferredRegister<Block> blockRegistry,
-            DeferredRegister<Item> itemRegistry,
-            DeferredRegister<BlockEntityType<?>> beRegistry) {
+        CrateWoodType.values().filter(crateWoodType -> crateWoodType.compatModId().equals(modId)).forEach(crateWoodType -> {
+            RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
+            itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
+            beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBE(crateWoodType, pos, state), block.get()).build(null));
 
-        CrateWoodType.values().filter(crateWoodType -> crateWoodType.modId().equals(modId)).forEach(woodType -> {
-            BLOCK_MAP.put(woodType, blockRegistry.register(woodType.fullName() + "_crate", () -> new CrateBlock(woodType)));
-        });
-
-        BLOCK_MAP.forEach((woodType, block) -> {
-            if (woodType.modId().equals(modId))
-                ITEM_MAP.put(woodType, itemRegistry.register(woodType.fullName() + "_crate", () -> new CrateItem(block.get())));
-        });
-
-        BLOCK_MAP.forEach((woodType, block) -> {
-            if (woodType.modId().equals(modId))
-                BE_MAP.put(woodType, beRegistry.register(woodType.fullName() + "_crate_be", () ->
-                        BlockEntityType.Builder.of((pos, state) -> new CrateBE(woodType, pos, state), block.get()).build(null)));
         });
     }
 

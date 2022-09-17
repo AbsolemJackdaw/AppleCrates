@@ -44,5 +44,5 @@ bf2068cb9c45d297912c7d24e6c7f6e320aea901 data/applecrates/recipes/crimson_crate.
 a65e21b77db5431c34935b099c1a8b9357da8a42 data/applecrates/recipes/oak_crate.json
 dd8ba6547a2beade1d99451cc59441810004a536 data/applecrates/recipes/spruce_crate.json
 e5bf9fddbc16460484848c9c4dac1e61f081dd94 data/applecrates/recipes/warped_crate.json
-403bfd9053dee576db27f80ae989e09d8f676cba data/minecraft/tags/blocks/mineable/axe.json
-403bfd9053dee576db27f80ae989e09d8f676cba data/minecraft/tags/blocks/non_flammable_wood.json
+052d98a428ea11bcebc567751af67f22f4df9aa0 data/minecraft/tags/blocks/mineable/axe.json
+052d98a428ea11bcebc567751af67f22f4df9aa0 data/minecraft/tags/blocks/non_flammable_wood.json

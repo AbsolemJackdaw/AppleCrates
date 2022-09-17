@@ -1,7 +1,7 @@
 package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.block.blockentity.CrateBE;
-import jackdaw.applecrates.registry.GeneralRegistry;
+import jackdaw.applecrates.api.GeneralRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;

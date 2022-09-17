@@ -1,7 +1,6 @@
-package jackdaw.applecrates.api.datagen;
+package jackdaw.applecrates.datagen;
 
-import jackdaw.applecrates.registry.GeneralRegistry;
-import net.minecraft.core.Registry;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -14,8 +13,8 @@ public class CrateItems extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        GeneralRegistry.ITEM_MAP.forEach((woodType, item) -> {
-            withExistingParent(Registry.ITEM.getKey(item.get()).getPath(), new ResourceLocation(modid, "block/" + woodType.fullName() + "_crate"));
+        CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).forEach(crateWoodType -> {
+            withExistingParent(crateWoodType.getBlockRegistryName(), new ResourceLocation(modid, "block/" + crateWoodType.getBlockRegistryName()));
         });
     }
 }

@@ -1,8 +1,7 @@
-package jackdaw.applecrates.api.datagen;
+package jackdaw.applecrates.datagen;
 
 import com.mojang.datafixers.util.Pair;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import jackdaw.applecrates.util.CrateWoodType;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.loot.LootTableProvider;
@@ -23,8 +22,11 @@ import java.util.stream.Collectors;
 
 public class CrateLoot extends LootTableProvider {
 
-    public CrateLoot(DataGenerator pGenerator) {
+    private final String modid;
+
+    public CrateLoot(String modid, DataGenerator pGenerator) {
         super(pGenerator);
+        this.modid = modid;
     }
 
     @Override
@@ -35,16 +37,16 @@ public class CrateLoot extends LootTableProvider {
         return Collections.singletonList(Pair.of(CrateLootTable::new, LootContextParamSets.BLOCK));
     }
 
-    private static class CrateLootTable extends BlockLoot {
+    private class CrateLootTable extends BlockLoot {
 
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return CrateWoodType.values().map(woodType -> GeneralRegistry.BLOCK_MAP.get(woodType).get()).collect(Collectors.toList());
+            return CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).map(CrateWoodType::getBlock).collect(Collectors.toList());
         }
 
         @Override
         protected void addTables() {
-            CrateWoodType.values().map(woodType -> GeneralRegistry.BLOCK_MAP.get(woodType).get()).forEach(this::dropSelf);
+            CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).map(CrateWoodType::getBlock).forEach(this::dropSelf);
         }
     }
 }

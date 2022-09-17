@@ -2,8 +2,7 @@ package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import jackdaw.applecrates.util.CrateWoodType;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
@@ -97,7 +96,7 @@ public class CrateBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return GeneralRegistry.BE_MAP.get(type).get().create(pos, state);
+        return CrateWoodType.getBlockEntityType(type).create(pos, state);
     }
 
     @Override

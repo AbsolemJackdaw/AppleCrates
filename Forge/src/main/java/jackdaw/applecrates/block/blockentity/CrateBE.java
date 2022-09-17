@@ -1,8 +1,7 @@
 package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.container.CrateStackHandler;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import jackdaw.applecrates.util.CrateWoodType;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -32,7 +31,7 @@ public class CrateBE extends BlockEntity {
     private UUID owner;
 
     public CrateBE(CrateWoodType type, BlockPos pos, BlockState state) {
-        super(GeneralRegistry.BE_MAP.get(type).get(), pos, state);
+        super(CrateWoodType.getBlockEntityType(type), pos, state);
     }
 
     @Override

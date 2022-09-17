@@ -1,6 +1,6 @@
 package jackdaw.applecrates.api.exception;
 
-import jackdaw.applecrates.util.CrateWoodType;
+import jackdaw.applecrates.api.CrateWoodType;
 
 public class WoodException extends RuntimeException {
     public static final WoodException INSTANCE = new WoodException();
@@ -13,18 +13,18 @@ public class WoodException extends RuntimeException {
     }
 
     public WoodException existsError(CrateWoodType wood) {
-        return new WoodException(String.format("The %s for %s was already registered ! Skipping.", wood.name(), wood.modId()));
+        return new WoodException(String.format("The %s for %s was already registered ! Skipping.", wood.name(), wood.compatModId()));
     }
 
     public WoodException resLocNotFound(CrateWoodType wood) {
-        return new WoodException(String.format("No ResourceLocation found for %s:%s.", wood.modId(), wood.name()));
+        return new WoodException(String.format("No ResourceLocation found for %s:%s.", wood.compatModId(), wood.name()));
     }
 
     public WoodException noSuchBlockError(CrateWoodType wood) {
-        return new WoodException(String.format("The %s for %s was not found in the block registry ! Skipping.", wood.name(), wood.modId()));
+        return new WoodException(String.format("The %s for %s was not found in the block registry ! Skipping.", wood.name(), wood.compatModId()));
     }
 
     public WoodException alreadyInList(CrateWoodType wood) {
-        return new WoodException(String.format("The %s for %s was already registered to the CrateWoodType ! Skipping.", wood.name(), wood.modId()));
+        return new WoodException(String.format("The %s for %s was already registered to the CrateWoodType ! Skipping.", wood.name(), wood.compatModId()));
     }
 }

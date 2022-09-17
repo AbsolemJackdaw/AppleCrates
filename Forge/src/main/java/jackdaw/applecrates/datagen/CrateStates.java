@@ -1,6 +1,6 @@
-package jackdaw.applecrates.api.datagen;
+package jackdaw.applecrates.datagen;
 
-import jackdaw.applecrates.registry.GeneralRegistry;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -13,10 +13,8 @@ public class CrateStates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        GeneralRegistry.BLOCK_MAP.forEach((woodType, block) ->
-                horizontalBlock(
-                        block.get(),
-                        new ModelFile.ExistingModelFile(modLoc("block/" + woodType.fullName() + "_crate"), models().existingFileHelper)
-                        , 180));
+        CrateWoodType.values().forEach(crateWoodType -> {
+            horizontalBlock(CrateWoodType.getBlock(crateWoodType), new ModelFile.ExistingModelFile(modLoc("block/" + crateWoodType.getBlockRegistryName()), models().existingFileHelper), 180);
+        });
     }
 }

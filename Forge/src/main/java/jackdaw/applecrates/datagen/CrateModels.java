@@ -1,11 +1,10 @@
-package jackdaw.applecrates.api.datagen;
+package jackdaw.applecrates.datagen;
 
 import com.mojang.logging.LogUtils;
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.exception.WoodException;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import net.minecraft.core.Registry;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -22,15 +21,15 @@ public class CrateModels extends BlockModelProvider {
 
     @Override
     protected void registerModels() {
-        GeneralRegistry.BLOCK_MAP.forEach((woodType, block) -> {
+
+        CrateWoodType.values().forEach(crateWoodType -> {
             try {
-                ResourceLocation existingTexture = AppleCrateAPI.getPathFromWood().get(woodType);
+                ResourceLocation existingTexture = AppleCrateAPI.getTexturePathFromWood().get(crateWoodType);
                 if (existingTexture == null)
-                    throw WoodException.INSTANCE.resLocNotFound(woodType);
-                existingFileHelper.trackGenerated(existingTexture, TEXTURE); //trick datagen into thinking that the file is definitely present
-                withExistingParent(
-                        Registry.BLOCK.getKey(block.get()).getPath(),
-                        new ResourceLocation(AppleCrates.MODID, "block/applecrate")).texture("particle", existingTexture).texture("0", existingTexture);
+                    throw WoodException.INSTANCE.resLocNotFound(crateWoodType);
+                existingFileHelper.trackGenerated(existingTexture, TEXTURE);
+                var appleCrateModel = new ResourceLocation(AppleCrates.MODID, "block/applecrate");
+                withExistingParent(crateWoodType.getBlockRegistryName(), appleCrateModel).texture("particle", existingTexture).texture("0", existingTexture);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());
             }

@@ -1,7 +1,7 @@
-package jackdaw.applecrates.datagen;
+package jackdaw.applecrates.api;
 
 import jackdaw.applecrates.AppleCrates;
-import jackdaw.applecrates.api.datagen.*;
+import jackdaw.applecrates.datagen.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,9 +19,9 @@ public class DataGenerators {
         DataGenerator generator = event.getGenerator();
         if (event.includeServer()) {
             //datapack  server
-            generator.addProvider(new CrateTag(generator, event.getExistingFileHelper()));
+            generator.addProvider(new CrateTag(modid, generator, event.getExistingFileHelper()));
             generator.addProvider(new CrateRecipes(modid, generator));
-            generator.addProvider(new CrateLoot(generator));
+            generator.addProvider(new CrateLoot(modid, generator));
         }
 
         if (event.includeClient()) {

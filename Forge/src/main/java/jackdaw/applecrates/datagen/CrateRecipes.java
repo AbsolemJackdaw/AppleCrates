@@ -1,10 +1,10 @@
-package jackdaw.applecrates.api.datagen;
+package jackdaw.applecrates.datagen;
 
 import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
+import jackdaw.applecrates.api.AppleCrateAPI;
+import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.exception.WoodException;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -35,12 +35,8 @@ public class CrateRecipes extends RecipeProvider {
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
 
-        GeneralRegistry.BLOCK_MAP.forEach((crateWoodType, blockRegistryObject) -> {
-
-        });
         CrateWoodType.values().forEach(woodType -> {
-            ResourceLocation planksResLoc = new ResourceLocation(woodType.modId(), woodType.name() + "_planks");
-            Block plankBlock = Registry.BLOCK.get(planksResLoc);
+            Block plankBlock = Registry.BLOCK.get(AppleCrateAPI.getPlanksResourceLocation().get(woodType));
             try {
                 if (plankBlock.equals(Blocks.AIR))
                     throw WoodException.INSTANCE.noSuchBlockError(woodType);
@@ -48,10 +44,9 @@ public class CrateRecipes extends RecipeProvider {
                 Map<Character, Ingredient> define = new HashMap<>();
                 define.put('p', Ingredient.of(plankBlock));
                 define.put('s', Ingredient.of(Items.STICK));
-                Block crate = GeneralRegistry.BLOCK_MAP.get(woodType).get();
                 pFinishedRecipeConsumer.accept(shaped(
-                        crate.getRegistryName(),
-                        Item.byBlock(crate),
+                        woodType.getFullRegistryResLoc(),
+                        Item.byBlock(CrateWoodType.getBlock(woodType)),
                         1,
                         Arrays.stream(new String[]{"s s", "ppp"}).toList(),
                         define));
