@@ -149,6 +149,11 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         }
     }
 
+    @Override
+    public void onClose() {
+        super.onClose();
+    }
+
     class SaleButton extends Button {
 
         public SaleButton(int x, int y, Button.OnPress press) {
@@ -172,10 +177,5 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             if (!stack.isEmpty())
                 CrateScreen.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
     }
 }

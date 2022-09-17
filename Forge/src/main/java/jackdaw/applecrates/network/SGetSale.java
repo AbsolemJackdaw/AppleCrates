@@ -15,11 +15,11 @@ public class SGetSale {
         decode(read);
     }
 
-    public void encode(FriendlyByteBuf buf) {
+    public void decode(FriendlyByteBuf buf) {
 
     }
 
-    public void decode(FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
 
     }
 

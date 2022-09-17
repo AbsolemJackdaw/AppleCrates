@@ -35,16 +35,26 @@ public class CrateWoodType {
         resourceLocationBe = new ResourceLocation(yourModId, getBeRegistryName());
     }
 
-    public String getYourModId() {
-        return yourModId;
+    public String getBlockRegistryName() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.compatModId());
+        if (!this.compatModId().isEmpty())
+            builder.append("_");
+        builder.append(this.name());
+        builder.append("_crate");
+        return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
     }
 
     public String getBeRegistryName() {
         return beName;
     }
 
-    public boolean isFrom(String modId) {
-        return this.getYourModId().equals(modId);
+    public String compatModId() {
+        return this.compatModId;
+    }
+
+    public String name() {
+        return this.woodName;
     }
 
     /**
@@ -71,6 +81,10 @@ public class CrateWoodType {
         return new CrateWoodType(compatModId, name, yourModId);
     }
 
+    public static Block getBlock(CrateWoodType type) {
+        return Registry.BLOCK.get(type.getFullRegistryResLoc());
+    }
+
     /**
      * yourmodid : modid + woodname + _crate
      */
@@ -78,43 +92,29 @@ public class CrateWoodType {
         return resourceLocation;
     }
 
-    public ResourceLocation getFullBeRegistryResLoc() {
-        return resourceLocationBe;
-    }
-
-    public String name() {
-        return this.woodName;
-    }
-
-    public String compatModId() {
-        return this.compatModId;
-    }
-
-    public String getBlockRegistryName() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.compatModId());
-        if (!this.compatModId().isEmpty())
-            builder.append("_");
-        builder.append(this.name());
-        builder.append("_crate");
-        return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
-    }
-
-    public static Block getBlock(CrateWoodType type) {
-        return Registry.BLOCK.get(type.getFullRegistryResLoc());
-    }
-
     public static BlockEntityType<CrateBE> getBlockEntityType(CrateWoodType type) {
         return (BlockEntityType<CrateBE>) Registry.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.compatModId().equals(that.compatModId()) && this.getYourModId().equals(that.getYourModId());
+    public ResourceLocation getFullBeRegistryResLoc() {
+        return resourceLocationBe;
+    }
+
+    public boolean isFrom(String modId) {
+        return this.getYourModId().equals(modId);
+    }
+
+    public String getYourModId() {
+        return yourModId;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(compatModId, woodName, yourModId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.compatModId().equals(that.compatModId()) && this.getYourModId().equals(that.getYourModId());
     }
 }

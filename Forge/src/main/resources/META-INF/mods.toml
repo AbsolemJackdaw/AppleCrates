@@ -1,49 +1,49 @@
-modLoader="javafml" #mandatory
+modLoader = "javafml" #mandatory
 
-loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion = "[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 
-license="gnu v3"
+license = "gnu v3"
 
-issueTrackerURL="https://github.com/ArtixAllMighty/AppleCrates/issues" #optional
+issueTrackerURL = "https://github.com/ArtixAllMighty/AppleCrates/issues" #optional
 
 [[mods]] #mandatory
 
-modId="applecrates" #mandatory
+modId = "applecrates" #mandatory
 
-version="${file.jarVersion}" #mandatory
+version = "${file.jarVersion}" #mandatory
 
-displayName="Apple Crates" #mandatory
+displayName = "Apple Crates" #mandatory
 
-displayURL="https://www.curseforge.com/minecraft/mc-mods/apple-crates" #optional
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/apple-crates" #optional
 
-logoFile= "logo.png" #optional
+logoFile = "logo.png" #optional
 
-credits="MMD for helping out, Geegor for extensively bugtesting the pre-release" #optional
+credits = "MMD for helping out, Geegor for extensively bugtesting the pre-release" #optional
 
-authors="Absolem Jackdaw" #optional
+authors = "Absolem Jackdaw" #optional
 
-description='''
+description = '''
 Sell your stuff in fancy crates!
 '''
 
 [[dependencies.applecrates]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[40,)" #mandatory
-    ordering="NONE"
-    side="BOTH"
+modId = "forge" #mandatory
+mandatory = true #mandatory
+versionRange = "[40,)" #mandatory
+ordering = "NONE"
+side = "BOTH"
 [[dependencies.applecrates]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.18.2,)"
-    ordering="NONE"
-    side="BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
 [[dependencies.applecrates]]
-    modId="sectionprotection"
-    mandatory=false
-    versionRange="[0.8.0,)"
-    ordering="NONE"
-    side="SERVER"
+modId = "sectionprotection"
+mandatory = false
+versionRange = "[0.8.0,)"
+ordering = "NONE"
+side = "SERVER"
 
 [[dependencies.applecrates]]
 modId = "applecrates_byg"

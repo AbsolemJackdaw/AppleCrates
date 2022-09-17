@@ -1,4 +1,5 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }

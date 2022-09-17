@@ -1,8 +1,8 @@
 package jackdaw.applecrates;
 
 import jackdaw.applecrates.api.AppleCrateAPI;
-import jackdaw.applecrates.compat.SectionProtection;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.compat.SectionProtection;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 

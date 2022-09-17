@@ -30,23 +30,23 @@ public class CrateLoot extends LootTableProvider {
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext tracker) { /*NOOP*/ }
-
-    @Override
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
         return Collections.singletonList(Pair.of(CrateLootTable::new, LootContextParamSets.BLOCK));
     }
 
-    private class CrateLootTable extends BlockLoot {
+    @Override
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext tracker) { /*NOOP*/ }
 
-        @Override
-        protected Iterable<Block> getKnownBlocks() {
-            return CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).map(CrateWoodType::getBlock).collect(Collectors.toList());
-        }
+    private class CrateLootTable extends BlockLoot {
 
         @Override
         protected void addTables() {
             CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).map(CrateWoodType::getBlock).forEach(this::dropSelf);
+        }
+
+        @Override
+        protected Iterable<Block> getKnownBlocks() {
+            return CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).map(CrateWoodType::getBlock).collect(Collectors.toList());
         }
     }
 }

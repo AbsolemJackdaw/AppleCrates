@@ -44,10 +44,6 @@ public class AppleCrateAPI {
     }
 
     public static class AppleCrateBuilder {
-        public static void registerVanilla() { //loads the class so the static vanilla crate initializer can be called.
-            //when called multiple times, will only init vanilla crates once, so they can't be double registered
-        }
-
         static {
             for (String wood : AppleCrates.VANILLAWOODS)
                 new AppleCrateAPI.AppleCrateBuilder(wood).register(AppleCrates.MODID);
@@ -60,7 +56,6 @@ public class AppleCrateAPI {
         protected String modOrMinecraftDirectory = "minecraft";
         protected String planksSuffix = "_planks";
         protected String textureName = "";
-
         /**
          * Call in @mod-file constructor.
          * <p>
@@ -86,6 +81,10 @@ public class AppleCrateAPI {
         protected AppleCrateBuilder(String woodName) {
             this.woodName = woodName;
             this.textureName = woodName;
+        }
+
+        public static void registerVanilla() { //loads the class so the static vanilla crate initializer can be called.
+            //when called multiple times, will only init vanilla crates once, so they can't be double registered
         }
 
         /**
