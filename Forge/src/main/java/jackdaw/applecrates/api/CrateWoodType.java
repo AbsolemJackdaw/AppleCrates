@@ -37,9 +37,9 @@ public class CrateWoodType {
 
     public String getBlockRegistryName() {
         StringBuilder builder = new StringBuilder();
-        builder.append(this.compatModId());
-        if (!this.compatModId().isEmpty())
-            builder.append("_");
+//        builder.append(this.compatModId());
+//        if (!this.compatModId().isEmpty())
+//            builder.append("_");
         builder.append(this.name());
         builder.append("_crate");
         return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
