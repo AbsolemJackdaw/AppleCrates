@@ -86,8 +86,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
     //maty's portection mod compat
-    //TODO re-add when maty updates SP
-//    compileOnly fg.deobf('com.matyrobbrt.mc.sectionprotection:sectionprotection-1.18.2-api:0.8.0')
+    compileOnly fg.deobf("curse.maven:sectionprotection-624049:3983626")
 
     //runtimeOnly fg.deobf("curse.maven:-:")
 }
@@ -156,5 +155,6 @@ task publishCurseForge(type: TaskPublishCurseForge) {
     mainFile.addOptional('enlightened-crates')
     mainFile.addOptional('solar-crates')
     mainFile.addOptional('construct-crates')
+//    mainFile.addOptional('forbidden-crates')
 
 }
