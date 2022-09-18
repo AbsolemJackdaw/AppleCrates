@@ -5,7 +5,7 @@ import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -33,6 +33,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
 
@@ -132,14 +134,14 @@ public class CrateBlock extends BaseEntityBlock {
         if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
             if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
                 crate.isUnlimitedShop = true;
-                pPlayer.displayClientMessage(new TextComponent("Crate set to creative shop"), true);
+                pPlayer.displayClientMessage(Component.translatable("crate.set.creative"), true);
                 crate.setChanged();
             } else {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
                 if (pPlayer instanceof ServerPlayer sp)
-                    NetworkHooks.openGui(sp, new SimpleMenuProvider((id, inv, player) ->
-                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), new TextComponent("container.crate" + (owner ? ".owner" : ""))), buf -> {
+                    NetworkHooks.openScreen(sp, new SimpleMenuProvider((id, inv, player) ->
+                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), Component.translatable("container.crate" + (owner ? ".owner" : ""))), buf -> {
                         //buffer to read client side
                         buf.writeBoolean(owner);
                         buf.writeBoolean(crate.isUnlimitedShop);

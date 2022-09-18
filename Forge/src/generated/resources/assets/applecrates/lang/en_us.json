@@ -9,5 +9,6 @@
   "block.applecrates.warped_crate": "Warped Crate",
   "cannot.switch.trade": "To switch payment item, your green payout slot has to be empty",
   "container.crate": "Crate",
-  "container.crate.owner": "My Crate Shop"
+  "container.crate.owner": "My Crate Shop",
+  "crate.set.creative": "Crate set to creative shop"
 }

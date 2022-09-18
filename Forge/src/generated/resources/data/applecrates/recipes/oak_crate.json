@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "s s",
-    "ppp"
-  ],
   "key": {
     "p": {
       "item": "minecraft:oak_planks"
@@ -12,6 +8,10 @@
       "item": "minecraft:stick"
     }
   },
+  "pattern": [
+    "s s",
+    "ppp"
+  ],
   "result": {
     "item": "applecrates:oak_crate"
   }

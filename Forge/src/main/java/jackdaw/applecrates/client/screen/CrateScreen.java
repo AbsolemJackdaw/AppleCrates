@@ -11,22 +11,20 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
-    private static final Component CANNOT_SWITCH = new TextComponent("cannot.switch.trade");
+    private static final Component CANNOT_SWITCH = Component.translatable("cannot.switch.trade");
     private boolean isOwner;
     private boolean isUnlimitedShop;
     private int guiStartX;
     private int guiStartY;
 
     public CrateScreen(CrateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, new TranslatableComponent(pTitle.getString()));
+        super(pMenu, pPlayerInventory, Component.translatable(pTitle.getString()));
         this.isOwner = pMenu.isOwner;
         this.imageWidth = 276;
         this.inventoryLabelX = 107;
@@ -157,7 +155,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     class SaleButton extends Button {
 
         public SaleButton(int x, int y, Button.OnPress press) {
-            super(x, y, 91, 20, TextComponent.EMPTY, press);
+            super(x, y, 91, 20, Component.empty(), press);
         }
 
         public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
