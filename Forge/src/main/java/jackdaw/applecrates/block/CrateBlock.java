@@ -1,12 +1,11 @@
 package jackdaw.applecrates.block;
 
+import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -50,59 +49,17 @@ public class CrateBlock extends BaseEntityBlock {
         this.type = type;
     }
 
-    private static boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
-        return false;
-    }
-
     private static Boolean never(BlockState state, BlockGetter getter, BlockPos pos, EntityType<?> type) {
         return false;
     }
 
-
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
-
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateDef) {
-        stateDef.add(FACING);
+    private static boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return false;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
         return this.defaultBlockState().setValue(FACING, placeContext.getHorizontalDirection());
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return GeneralRegistry.BE_MAP.get(type).get().create(pos, state);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
     }
 
     @Override
@@ -114,27 +71,19 @@ public class CrateBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
-            if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
-                crate.isUnlimitedShop = true;
-                pPlayer.displayClientMessage(Component.translatable("Crate set to creative shop"), true);
-                crate.setChanged();
-            } else {
-                boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateDef) {
+        stateDef.add(FACING);
+    }
 
-                if (pPlayer instanceof ServerPlayer sp)
-                    NetworkHooks.openScreen(sp, new SimpleMenuProvider((id, inv, player) ->
-                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), Component.translatable("container.crate" + (owner ? ".owner" : ""))), buf -> {
-                        //buffer to read client side
-                        buf.writeBoolean(owner);
-                        buf.writeBoolean(crate.isUnlimitedShop);
-                    });
-                pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
-            }
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
-        }
-        return InteractionResult.FAIL;
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return CrateWoodType.getBlockEntityType(type).create(pos, state);
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -176,6 +125,55 @@ public class CrateBlock extends BaseEntityBlock {
 
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
         }
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
+            if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
+                crate.isUnlimitedShop = true;
+                pPlayer.displayClientMessage(new TextComponent("Crate set to creative shop"), true);
+                crate.setChanged();
+            } else {
+                boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
+
+                if (pPlayer instanceof ServerPlayer sp)
+                    NetworkHooks.openGui(sp, new SimpleMenuProvider((id, inv, player) ->
+                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), new TextComponent("container.crate" + (owner ? ".owner" : ""))), buf -> {
+                        //buffer to read client side
+                        buf.writeBoolean(owner);
+                        buf.writeBoolean(crate.isUnlimitedShop);
+                    });
+                pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getVisualShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     //only owner can break

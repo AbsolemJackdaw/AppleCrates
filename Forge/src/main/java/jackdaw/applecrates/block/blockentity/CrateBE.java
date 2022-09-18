@@ -1,8 +1,7 @@
 package jackdaw.applecrates.block.blockentity;
 
+import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.container.CrateStackHandler;
-import jackdaw.applecrates.registry.GeneralRegistry;
-import jackdaw.applecrates.util.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -32,7 +31,7 @@ public class CrateBE extends BlockEntity {
     private UUID owner;
 
     public CrateBE(CrateWoodType type, BlockPos pos, BlockState state) {
-        super(GeneralRegistry.BE_MAP.get(type).get(), pos, state);
+        super(CrateWoodType.getBlockEntityType(type), pos, state);
     }
 
     @Override
@@ -49,20 +48,6 @@ public class CrateBE extends BlockEntity {
     }
 
     /**
-     * sync on login : getUpdateTag / handleUpdateTag
-     */
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveCrateDataToTag(new CompoundTag());
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        //do not call super here. it uses the load method from above, but we're not sending all the same data here !
-        loadCrateDataFromTag(tag);
-    }
-
-    /**
      * sync on data change
      */
     @Nullable
@@ -71,10 +56,12 @@ public class CrateBE extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);// just defers to getUpdateTag
     }
 
+    /**
+     * sync on login : getUpdateTag / handleUpdateTag
+     */
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        // do not read super here, for the same reason as handleUpdateTag !!
-        loadCrateDataFromTag(pkt.getTag());
+    public CompoundTag getUpdateTag() {
+        return saveCrateDataToTag(new CompoundTag());
     }
 
     private CompoundTag saveCrateDataToTag(CompoundTag tag) {
@@ -95,6 +82,18 @@ public class CrateBE extends BlockEntity {
             isUnlimitedShop = tag.getBoolean(TAGUNLIMITED);
         if (tag.contains(TAGOWNER))
             owner = tag.getUUID(TAGOWNER);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        // do not read super here, for the same reason as handleUpdateTag !!
+        loadCrateDataFromTag(pkt.getTag());
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        //do not call super here. it uses the load method from above, but we're not sending all the same data here !
+        loadCrateDataFromTag(tag);
     }
 
     public UUID getOwner() {

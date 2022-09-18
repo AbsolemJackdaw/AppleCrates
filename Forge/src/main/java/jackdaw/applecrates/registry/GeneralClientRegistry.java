@@ -1,6 +1,8 @@
 package jackdaw.applecrates.registry;
 
 import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.api.CrateWoodType;
+import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.client.besr.CrateBESR;
 import jackdaw.applecrates.client.screen.CrateScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -14,8 +16,10 @@ public class GeneralClientRegistry {
 
     @SubscribeEvent
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        GeneralRegistry.BE_MAP.forEach((woodType, blockEntity) -> event.registerBlockEntityRenderer(blockEntity.get(), CrateBESR::new));
+
+        CrateWoodType.values().forEach(crateWoodType -> {
+            event.registerBlockEntityRenderer(CrateWoodType.getBlockEntityType(crateWoodType), CrateBESR::new);
+        });
         MenuScreens.register(GeneralRegistry.CRATE_MENU.get(), CrateScreen::new);
     }
-
 }

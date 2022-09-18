@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate",
+  "textures": {
+    "particle": "minecraft:block/birch_planks",
+    "0": "minecraft:block/birch_planks"
+  }
+}
