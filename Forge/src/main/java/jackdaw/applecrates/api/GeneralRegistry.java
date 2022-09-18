@@ -28,11 +28,11 @@ public class GeneralRegistry {
     }));
 
     /**
-     * @param modId filter through all registered crates. Use the mod id the original wood comes from
+     * @param modId filter through all registered crates. Use your own modid
      */
     public static void prepareForRegistry(String modId, DeferredRegister<Block> blockRegistry, DeferredRegister<Item> itemRegistry, DeferredRegister<BlockEntityType<?>> beRegistry) {
 
-        CrateWoodType.values().filter(crateWoodType -> crateWoodType.compatModId().equals(modId)).forEach(crateWoodType -> {
+        CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
             RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
             beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBE(crateWoodType, pos, state), block.get()).build(null));

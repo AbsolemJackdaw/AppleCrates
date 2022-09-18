@@ -139,7 +139,7 @@ task publishCurseForge(type: TaskPublishCurseForge) {
 
     // The main file to upload
     def mainFile = upload(630726, jar)
-    mainFile.releaseType = 'release'
+    mainFile.releaseType = 'alpha'
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'
     mainFile.addJavaVersion('Java 17')

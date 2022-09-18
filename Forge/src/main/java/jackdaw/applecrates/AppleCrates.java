@@ -13,7 +13,6 @@ import java.util.List;
 public class AppleCrates {
     public static final String MODID = "applecrates";
     public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"};
-    public static final List<String> VANILLAWOODSLIST = Arrays.asList(AppleCrates.VANILLAWOODS);
     public static final boolean GEN_VANILLA_CRATES = false;
 
     public AppleCrates() {

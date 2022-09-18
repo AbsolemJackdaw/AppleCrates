@@ -16,19 +16,19 @@ import java.util.stream.Stream;
 public class CrateWoodType {
     private static final Set<CrateWoodType> VALUES = new ObjectArraySet<>();
 
-    private final String compatModId;
     private final String woodName;
     private final String yourModId;
+    private final String compatId;
 
     private String beName;
     private ResourceLocation resourceLocation;
     private ResourceLocation resourceLocationBe;
 
 
-    protected CrateWoodType(String modId, String woodName, String yourModId) {
-        this.compatModId = modId.equals("minecraft") ? "" : modId;
+    protected CrateWoodType(String yourModId, String compatId, String woodName) {
         this.woodName = woodName;
         this.yourModId = yourModId;
+        this.compatId = compatId;
 
         beName = getBlockRegistryName() + "_be";
         resourceLocation = new ResourceLocation(yourModId, getBlockRegistryName());
@@ -37,20 +37,17 @@ public class CrateWoodType {
 
     public String getBlockRegistryName() {
         StringBuilder builder = new StringBuilder();
-//        builder.append(this.compatModId());
-//        if (!this.compatModId().isEmpty())
-//            builder.append("_");
         builder.append(this.name());
         builder.append("_crate");
         return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
     }
 
-    public String getBeRegistryName() {
-        return beName;
+    public String getCompatId() {
+        return compatId;
     }
 
-    public String compatModId() {
-        return this.compatModId;
+    public String getBeRegistryName() {
+        return beName;
     }
 
     public String name() {
@@ -77,8 +74,8 @@ public class CrateWoodType {
     /**
      * Use this to create a new {@link CrateWoodType}.
      */
-    public static CrateWoodType create(String compatModId, String name, String yourModId) {
-        return new CrateWoodType(compatModId, name, yourModId);
+    public static CrateWoodType create(String compatId, String yourModId, String woodName) {
+        return new CrateWoodType(compatId, yourModId, woodName);
     }
 
     public static Block getBlock(CrateWoodType type) {
@@ -110,11 +107,11 @@ public class CrateWoodType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(compatModId, woodName, yourModId);
+        return Objects.hash(compatId, woodName, yourModId);
     }
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.compatModId().equals(that.compatModId()) && this.getYourModId().equals(that.getYourModId());
+        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.compatId.equals(that.compatId) && this.getYourModId().equals(that.getYourModId());
     }
 }

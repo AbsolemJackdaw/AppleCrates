@@ -5,8 +5,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.api.exception.WoodException;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,18 +23,16 @@ public class AppleCrateAPI {
         return originalPlankBlockForWood;
     }
 
-    protected static void registerForCrate(AppleCrateBuilder builder, String yourModId) {
+    protected static void registerForCrate(AppleCrateBuilder builder) {
         //only add 'vanilla' crates to the list if we're not datagenning or skip them when we are
-        if ((((!AppleCrates.VANILLAWOODSLIST.contains(builder.woodName) && FMLLoader.getLaunchHandler().isData()) || AppleCrates.GEN_VANILLA_CRATES) || !FMLLoader.getLaunchHandler().isData())) {
+        if (!builder.yourModId.equals(AppleCrates.MODID) || AppleCrates.GEN_VANILLA_CRATES) {
             try {
-                if (ModList.get().isLoaded(builder.modId)) {
-                    CrateWoodType wood = CrateWoodType.create(builder.modId, builder.woodName, yourModId);
-                    if (CrateWoodType.values().noneMatch(wood::equals)) {
-                        CrateWoodType.register(wood);
-                        texturePathFromWood.put(wood, builder.getTextureResourceLocation());
-                        originalPlankBlockForWood.put(wood, builder.getPlanksResourceLocation());
-                    } else throw WoodException.INSTANCE.alreadyInList(wood);
-                }
+                CrateWoodType wood = CrateWoodType.create(builder.compatModId, builder.yourModId, builder.woodName);
+                if (CrateWoodType.values().noneMatch(wood::equals)) {
+                    CrateWoodType.register(wood);
+                    texturePathFromWood.put(wood, builder.getTextureResourceLocation());
+                    originalPlankBlockForWood.put(wood, builder.getPlanksResourceLocation());
+                } else throw WoodException.INSTANCE.alreadyInList(wood);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());
             }
@@ -46,16 +42,19 @@ public class AppleCrateAPI {
     public static class AppleCrateBuilder {
         static {
             for (String wood : AppleCrates.VANILLAWOODS)
-                new AppleCrateAPI.AppleCrateBuilder(wood).register(AppleCrates.MODID);
+                new AppleCrateAPI.AppleCrateBuilder(AppleCrates.MODID, wood).register();
         }
 
-        protected String modId = "minecraft";
-        protected String woodName = "";
+        protected final String woodName;
+        protected final String yourModId;
+        protected final String compatModId;
         protected String subFolder = "";
         protected String parentFolder = "block/";
-        protected String modOrMinecraftDirectory = "minecraft";
         protected String planksSuffix = "_planks";
-        protected String textureName = "";
+        protected String textureName;
+        protected String plankRegistryName = "";
+        protected boolean optifineTextureOverride = false;
+
         /**
          * Call in @mod-file constructor.
          * <p>
@@ -72,16 +71,17 @@ public class AppleCrateAPI {
          * for those, use {@link #withSubfolder(String)}, {@link #withParentFolder(String)} {@link #withTextureName(String)}
          * Furthermore, it is assumed that your texture file ends with '_planks'. If this is not the case, change the suffix with {@link #withSuffix(String)}.
          */
-        public AppleCrateBuilder(String compatModId, String woodName) {
-            this(woodName);
-            this.modId = compatModId;
-            this.modOrMinecraftDirectory = compatModId;
-        }
-
-        protected AppleCrateBuilder(String woodName) {
+        public AppleCrateBuilder(String compatModId, String yourModId, String woodName) {
+            this.compatModId = compatModId;
             this.woodName = woodName;
+            this.yourModId = yourModId;
             this.textureName = woodName;
         }
+
+        protected AppleCrateBuilder(String yourModId, String woodName) {
+            this("minecraft", yourModId, woodName);
+        }
+
 
         public static void registerVanilla() { //loads the class so the static vanilla crate initializer can be called.
             //when called multiple times, will only init vanilla crates once, so they can't be double registered
@@ -110,7 +110,7 @@ public class AppleCrateAPI {
          * (very optional.)
          */
         public AppleCrateBuilder textureInMinecraftDirectory() {
-            this.modOrMinecraftDirectory = "minecraft";
+            this.optifineTextureOverride = true;
             return this;
         }
 
@@ -132,21 +132,34 @@ public class AppleCrateAPI {
             return this;
         }
 
+        /**
+         * If the block the Datagen is ran for does not follow conventions and its name is wildly different
+         * from its texture name, use this as a last resort to give the correct registry name for the block.
+         */
+        public AppleCrateBuilder withBlock(String registryName) {
+            this.plankRegistryName = registryName;
+            return this;
+        }
+
         public ResourceLocation getTextureResourceLocation() {
-            return new ResourceLocation(modOrMinecraftDirectory, parentFolder.concat(subFolder).concat(textureName).concat(planksSuffix));
+            return new ResourceLocation(optifineTextureOverride ? "minecraft" : compatModId, parentFolder.concat(subFolder).concat(textureName).concat(planksSuffix));
         }
 
         public ResourceLocation getPlanksResourceLocation() {
-            boolean same = woodName.equals(textureName);
-            String _plank = planksSuffix.isEmpty() ? same ? "" : "_planks" : planksSuffix;
-            return new ResourceLocation(modOrMinecraftDirectory, woodName.concat(_plank));
+            if (plankRegistryName.isEmpty()) { //try and determine a resourcelocation based on general practice 
+                boolean same = woodName.equals(textureName);
+                String _plank = planksSuffix.isEmpty() ? same ? "" : "_planks" : planksSuffix;
+                return new ResourceLocation(compatModId, woodName.concat(_plank));
+            } else { //if general practice failed, override with provided name
+                return new ResourceLocation(compatModId, plankRegistryName);
+            }
         }
 
         /**
          * Call at the very end to register the Builder with its info to the mod for the mod to handle and register the blocks
          */
-        public void register(String yourModID) {
-            registerForCrate(this, yourModID);
+        public void register() {
+            registerForCrate(this);
         }
     }
 }
