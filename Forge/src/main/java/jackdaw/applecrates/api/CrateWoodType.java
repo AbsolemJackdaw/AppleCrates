@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class CrateWoodType {
     private static final Set<CrateWoodType> VALUES = new ObjectArraySet<>();
 
-    private final String compatModId;
+    private final String compatId;
     private final String woodName;
     private final String yourModId;
 
@@ -25,8 +25,8 @@ public class CrateWoodType {
     private ResourceLocation resourceLocationBe;
 
 
-    protected CrateWoodType(String modId, String woodName, String yourModId) {
-        this.compatModId = modId.equals("minecraft") ? "" : modId;
+    protected CrateWoodType(String compatId, String yourModId, String woodName) {
+        this.compatId = compatId;
         this.woodName = woodName;
         this.yourModId = yourModId;
 
@@ -37,20 +37,17 @@ public class CrateWoodType {
 
     public String getBlockRegistryName() {
         StringBuilder builder = new StringBuilder();
-//        builder.append(this.compatModId());
-//        if (!this.compatModId().isEmpty())
-//            builder.append("_");
         builder.append(this.name());
         builder.append("_crate");
         return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
     }
 
-    public String getBeRegistryName() {
-        return beName;
+    public String getCompatId() {
+        return compatId;
     }
 
-    public String compatModId() {
-        return this.compatModId;
+    public String getBeRegistryName() {
+        return beName;
     }
 
     public String name() {
@@ -110,11 +107,11 @@ public class CrateWoodType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(compatModId, woodName, yourModId);
+        return Objects.hash(compatId, woodName, yourModId);
     }
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.compatModId().equals(that.compatModId()) && this.getYourModId().equals(that.getYourModId());
+        return o instanceof CrateWoodType that && this.name().equals(that.name()) && this.getCompatId().equals(that.getCompatId()) && this.getYourModId().equals(that.getYourModId());
     }
 }
