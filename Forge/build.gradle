@@ -156,5 +156,6 @@ task publishCurseForge(type: TaskPublishCurseForge) {
     mainFile.addOptional('solar-crates')
     mainFile.addOptional('construct-crates')
     mainFile.addOptional('forbidden-crates')
+    mainFile.addOptional('firma-crates')
 
 }

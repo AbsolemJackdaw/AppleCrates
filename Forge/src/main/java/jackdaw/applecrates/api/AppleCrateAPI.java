@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.api.exception.WoodException;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +25,8 @@ public class AppleCrateAPI {
     }
 
     protected static void registerForCrate(AppleCrateBuilder builder) {
-        //only add 'vanilla' crates to the list if we're not datagenning or skip them when we are
-        if (!builder.yourModId.equals(AppleCrates.MODID) || AppleCrates.GEN_VANILLA_CRATES) {
+        //when datagen for other mods is ran, vanilla crates shouldnt be registered. when the game is ran however, they should
+        if (!builder.yourModId.equals(AppleCrates.MODID) || AppleCrates.GEN_VANILLA_CRATES || !FMLLoader.getLaunchHandler().isData()) {
             try {
                 CrateWoodType wood = CrateWoodType.create(builder.compatModId, builder.yourModId, builder.woodName);
                 if (CrateWoodType.values().noneMatch(wood::equals)) {

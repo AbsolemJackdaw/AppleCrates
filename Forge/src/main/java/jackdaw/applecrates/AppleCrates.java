@@ -23,7 +23,7 @@ public class AppleCrates {
 
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
         //call after mod compat so it can register new WoodTypes
-        GeneralRegistry.prepareForRegistry("", GeneralRegistry.BLOCKS, GeneralRegistry.ITEMS, GeneralRegistry.BLOCK_ENTITY_TYPES);
+        GeneralRegistry.prepareForRegistry(MODID, GeneralRegistry.BLOCKS, GeneralRegistry.ITEMS, GeneralRegistry.BLOCK_ENTITY_TYPES);
 
     }
 }

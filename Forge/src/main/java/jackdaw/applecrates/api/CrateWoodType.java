@@ -25,10 +25,10 @@ public class CrateWoodType {
     private ResourceLocation resourceLocationBe;
 
 
-    protected CrateWoodType(String yourModId, String compatId, String woodName) {
+    protected CrateWoodType(String compatId, String yourModId, String woodName) {
         this.woodName = woodName;
         this.yourModId = yourModId;
-        this.compatId = compatId;
+        this.compatId = compatId; //compatId.equals("minecraft") ? "" :
 
         beName = getBlockRegistryName() + "_be";
         resourceLocation = new ResourceLocation(yourModId, getBlockRegistryName());
