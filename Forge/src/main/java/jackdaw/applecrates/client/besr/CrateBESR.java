@@ -11,23 +11,28 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public class CrateBESR implements BlockEntityRenderer<CrateBE> {
+    private static final int MAX_RENDERED_ITEMS = 9;
+    private static final int ITEMS_PER_ROW = 3;
 
     public CrateBESR(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
     public void render(CrateBE pBlockEntity, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-
-        Vec3 randomOffset = calculateOffset(pBlockEntity.getBlockPos());
         float blockRotation = pBlockEntity.getBlockState().getValue(CrateBlock.FACING).toYRot();
         ItemStack selling = pBlockEntity.priceAndSale.getStackInSlot(1);
 
-        if (!selling.isEmpty())
-            for (int i = 0; i < 3; i++) {
+        if (!selling.isEmpty()) {
+            int amount = pBlockEntity.isUnlimitedShop ?
+                    MAX_RENDERED_ITEMS :
+                    Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS);
+
+            for (int i = 0; i < amount; i++) {
                 stack.pushPose();
 
                 //prepare normalisation of crate rotation in shown itemstacks
@@ -47,12 +52,12 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
                 //or crate's left/right, up/down, and lower/higher
-                float randX = (float) calculateOffset(pBlockEntity.getBlockPos()).x();
-                float randZ = (float) calculateOffset(pBlockEntity.getBlockPos()).z();
+                float randX = (float) calculateOffset(pBlockEntity.getBlockPos().offset(i, 0, 0)).x();
+                float randZ = (float) calculateOffset(pBlockEntity.getBlockPos().offset(0, 0, i)).z();
 
                 stack.translate(
-                        (i == 0 ? 0.0f : randX / (float) i * (i == 1 ? -1 : 1)), // x or crate's left/right
-                        0.25f + (i == 0 ? 0.0f : randZ / (float) i), //z or crate's up/down
+                        (i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
+                        0.15f + ((float) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
                         0.1f + (float) i * 0.025 //y or crate's higher/lower. In general, don't touch this value
                 );
 
@@ -66,14 +71,20 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                         0);
                 stack.popPose();
             }
+        }
 
     }
 
-    private Vec3 calculateOffset(BlockPos pPos) {
+    private static Vec3 calculateOffset(BlockPos pPos) {
         long i = Mth.getSeed(pPos.getX(), 0, pPos.getZ());
         float horizontalOffset = 0.2f;
         double d0 = Mth.clamp((((i & 15L) / 15.0F)) * 0.5D, (-horizontalOffset), horizontalOffset);
         double d2 = Mth.clamp((((i >> 8 & 15L) / 15.0F)) * 0.5D, 0, 0.4);
         return new Vec3(d0, 0.0, d2);
+    }
+
+    private int getRenderedItemCount(int itemCount, int countPerSale) {
+        float countPlusSale = itemCount + countPerSale;
+        return (int) (((countPlusSale * countPlusSale) / (float) (countPerSale * countPerSale)) - 1f);
     }
 }
