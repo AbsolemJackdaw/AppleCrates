@@ -1,8 +1,10 @@
 package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.api.CrateWoodType;
+import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.container.CrateStackHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -12,7 +14,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -27,6 +34,7 @@ public class CrateBE extends BlockEntity {
     public CrateStackHandler crateStock = new CrateStackHandler();
     public ItemStackHandler interactable = new ItemStackHandler(2);
     public ItemStackHandler priceAndSale = new ItemStackHandler(2);
+    private LazyOptional<IItemHandler> crateStockHopper = LazyOptional.of(() -> this.crateStock);
     public boolean isUnlimitedShop = false;
     private UUID owner;
 
@@ -107,5 +115,19 @@ public class CrateBE extends BlockEntity {
     //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
     public boolean isOwner(Player player) {
         return owner == null || player != null && owner.equals(player.getGameProfile().getId());
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (getBlockState().getValue(CrateBlock.FACING).equals(side) && cap == ForgeCapabilities.ITEM_HANDLER) {
+            return crateStockHopper.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        crateStockHopper.invalidate();
+        super.invalidateCaps();
     }
 }
