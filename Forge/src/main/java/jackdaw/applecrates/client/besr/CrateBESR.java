@@ -57,8 +57,8 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
 
                 stack.translate(
                         (i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
-                        0.15f + ((float) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
-                        0.1f + (float) i * 0.025 //y or crate's higher/lower. In general, don't touch this value
+                        0.17f + ((int) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
+                        0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2)*0.01 //y or crate's higher/lower. In general, don't touch this value
                 );
 
                 Minecraft.getInstance().getItemRenderer().renderStatic(
@@ -83,8 +83,4 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
         return new Vec3(d0, 0.0, d2);
     }
 
-    private int getRenderedItemCount(int itemCount, int countPerSale) {
-        float countPlusSale = itemCount + countPerSale;
-        return (int) (((countPlusSale * countPlusSale) / (float) (countPerSale * countPerSale)) - 1f);
-    }
 }
