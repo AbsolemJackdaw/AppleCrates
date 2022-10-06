@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.client.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -28,9 +29,9 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
         ItemStack selling = pBlockEntity.priceAndSale.getStackInSlot(1);
 
         if (!selling.isEmpty()) {
-            int amount = pBlockEntity.isUnlimitedShop ?
+            int amount = ClientConfig.crateItemRendering.get() == ClientConfig.CrateItemRendering.THREE ? 3 : (pBlockEntity.isUnlimitedShop ?
                     MAX_RENDERED_ITEMS :
-                    Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS);
+                    Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
 
             for (int i = 0; i < amount; i++) {
                 stack.pushPose();
@@ -52,14 +53,23 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
                 //or crate's left/right, up/down, and lower/higher
-                float randX = (float) calculateOffset(pBlockEntity.getBlockPos().offset(i, 0, 0)).x();
-                float randZ = (float) calculateOffset(pBlockEntity.getBlockPos().offset(0, 0, i)).z();
+                var offset = calculateOffset(pBlockEntity.getBlockPos());
+                float randX = (float) offset.x();
+                float randZ = (float) offset.z();
 
-                stack.translate(
-                        (i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
-                        0.17f + ((int) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
-                        0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2)*0.01 //y or crate's higher/lower. In general, don't touch this value
-                );
+                if (ClientConfig.crateItemRendering.get() == ClientConfig.CrateItemRendering.THREE) {
+                    stack.translate(
+                            (i == 0 ? 0.0f : randX / (float) i * (i == 1 ? -1 : 1)), // x or crate's left/right
+                            0.25f + (i == 0 ? 0.0f : randZ / (float) i), //z or crate's up/down
+                            0.1f + (float) i * 0.025 //y or crate's higher/lower. In general, don't touch this value
+                    );
+                } else {
+                    stack.translate(
+                            (i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
+                            0.17f + ((int) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
+                            0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2) * 0.01 //y or crate's higher/lower. In general, don't touch this value
+                    );
+                }
 
                 Minecraft.getInstance().getItemRenderer().renderStatic(
                         selling,
