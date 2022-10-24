@@ -1,12 +1,12 @@
 {
     "schemaVersion": 1,
-    "id": "modid",
+    "id": "applecrates",
     "version": "${version}",
   
     "name": "Apple Crates",
-    "description": "This is an example description! Tell everyone what your mod is about!",
+    "description": "",
     "authors": [
-      "Me!"
+      "Absolem Jackdaw"
     ],
     "contact": {
       "homepage": "https://fabricmc.net/",
@@ -19,7 +19,7 @@
     "environment": "*",
     "entrypoints": {
       "main": [
-        "com.example.examplemod.ExampleMod"
+        "jackdaw.applecrates.FabricCrates"
       ]
     },
     "mixins": [
