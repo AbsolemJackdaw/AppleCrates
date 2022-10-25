@@ -3,14 +3,13 @@ package jackdaw.applecrates;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CrateStackHandler extends SimpleContainer {
+public class CrateStackHandler extends SimpleContainerNBT {
 
     public static final String TAGSTOCK = "stocked";
     private final Map<Item, Integer> itemCountCache = new HashMap<>();

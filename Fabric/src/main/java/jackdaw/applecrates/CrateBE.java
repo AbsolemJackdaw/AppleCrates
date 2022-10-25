@@ -2,13 +2,10 @@ package jackdaw.applecrates;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,12 +20,13 @@ public class CrateBE extends BlockEntity {
     public static final String TAGINTERACTABLE = "interactable";
     public static final String TAGPRICESALE = "pricensale";
     public static final String TAGUNLIMITED = "isUnlimited";
-    public Container crateStock = new CrateStackHandler();
-    public Container interactable = new SimpleContainer(2);
-    public Container priceAndSale = new SimpleContainer(2);
+    public CrateStackHandler crateStock = new CrateStackHandler();
+    public SimpleContainerNBT interactable = new SimpleContainerNBT(2);
+    public SimpleContainerNBT priceAndSale = new SimpleContainerNBT(2);
     //    private final LazyOptional<IItemHandler> crateStockHopper = LazyOptional.of(() -> this.crateStock);
     public boolean isUnlimitedShop = false;
     private UUID owner;
+
 
     public CrateBE(CrateWoodType type, BlockPos pos, BlockState state) {
         super(CrateWoodType.getBlockEntityType(type), pos, state);
@@ -65,9 +63,9 @@ public class CrateBE extends BlockEntity {
     }
 
     private CompoundTag saveCrateDataToTag(CompoundTag tag) {
-//        tag.put(TAGSTOCK, crateStock.serializeNBT());
-//        tag.put(TAGINTERACTABLE, interactable.serializeNBT());
-//        tag.put(TAGPRICESALE, priceAndSale.serializeNBT());
+        tag.put(TAGSTOCK, crateStock.serializeNBT());
+        tag.put(TAGINTERACTABLE, interactable.serializeNBT());
+        tag.put(TAGPRICESALE, priceAndSale.serializeNBT());
         tag.putBoolean(TAGUNLIMITED, isUnlimitedShop);
         if (owner != null)
             tag.putUUID(TAGOWNER, owner);
@@ -75,26 +73,26 @@ public class CrateBE extends BlockEntity {
     }
 
     private void loadCrateDataFromTag(CompoundTag tag) {
-//        crateStock.deserializeNBT((CompoundTag) tag.get(TAGSTOCK));
-//        interactable.deserializeNBT((CompoundTag) tag.get(TAGINTERACTABLE));
-//        priceAndSale.deserializeNBT((CompoundTag) tag.get(TAGPRICESALE));
+        crateStock.deserializeNBT((CompoundTag) tag.get(TAGSTOCK));
+        interactable.deserializeNBT((CompoundTag) tag.get(TAGINTERACTABLE));
+        priceAndSale.deserializeNBT((CompoundTag) tag.get(TAGPRICESALE));
         if (tag.contains(TAGUNLIMITED))
             isUnlimitedShop = tag.getBoolean(TAGUNLIMITED);
         if (tag.contains(TAGOWNER))
             owner = tag.getUUID(TAGOWNER);
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        // do not read super here, for the same reason as handleUpdateTag !!
-        loadCrateDataFromTag(pkt.getTag());
-    }
+//    @Override
+//    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+//        // do not read super here, for the same reason as handleUpdateTag !!
+//        loadCrateDataFromTag(pkt.getTag());
+//    }
 
-    @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        //do not call super here. it uses the load method from above, but we're not sending all the same data here !
-        loadCrateDataFromTag(tag);
-    }
+//    @Override
+//    public void handleUpdateTag(CompoundTag tag) {
+    //do not call super here. it uses the load method from above, but we're not sending all the same data here !
+//        loadCrateDataFromTag(tag);
+//    }
 
     public UUID getOwner() {
         return owner;

@@ -87,8 +87,6 @@ dependencies {
     compileOnly project(":Common")
     //maty's portection mod compat
     compileOnly fg.deobf("curse.maven:sectionprotection-624049:3983626")
-
-    //runtimeOnly fg.deobf("curse.maven:-:")
 }
 
 repositories { //all of these are for adding crates compat

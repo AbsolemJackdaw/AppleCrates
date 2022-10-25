@@ -1,39 +1,38 @@
 {
-    "schemaVersion": 1,
-    "id": "applecrates",
-    "version": "${version}",
-  
-    "name": "Apple Crates",
-    "description": "",
-    "authors": [
-      "Absolem Jackdaw"
+  "schemaVersion": 1,
+  "id": "applecrates",
+  "version": "${version}",
+  "name": "Apple Crates",
+  "description": "",
+  "authors": [
+    "Absolem Jackdaw"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "jackdaw.applecrates.FabricCrates"
     ],
-    "contact": {
-      "homepage": "https://fabricmc.net/",
-      "sources": "https://github.com/FabricMC/fabric-example-mod"
-    },
-  
-    "license": "CC0-1.0",
-    "icon": "assets/modid/icon.png",
-  
-    "environment": "*",
-    "entrypoints": {
-      "main": [
-        "jackdaw.applecrates.FabricCrates"
-      ]
-    },
-    "mixins": [
-      "modid.mixins.json"
-    ],
-  
-    "depends": {
-      "fabricloader": ">=0.14",
-      "fabric": "*",
-      "minecraft": "1.19.x",
-      "java": ">=17"
-    },
-    "suggests": {
-      "another-mod": "*"
-    }
+    "client": [
+      "jackdaw.applecrates.FabricCratesClient"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14",
+    "fabric": "*",
+    "minecraft": "1.19.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
   }
+}
   
