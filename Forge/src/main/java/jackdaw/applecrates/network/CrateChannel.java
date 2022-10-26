@@ -1,6 +1,7 @@
 package jackdaw.applecrates.network;
 
 import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.PacketId;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -15,9 +16,8 @@ public class CrateChannel {
             .simpleChannel();
 
     public static void init() {
-        int id = 0;
-        CrateChannel.NETWORK.registerMessage(id++, SCrateTradeSync.class, SCrateTradeSync::encode, SCrateTradeSync::new, SCrateTradeSync::handle);
-        CrateChannel.NETWORK.registerMessage(id++, SGetSale.class, SGetSale::encode, SGetSale::new, SGetSale::handle);
+        CrateChannel.NETWORK.registerMessage(PacketId.SPACKET_TRADE, SCrateTradeSync.class, SCrateTradeSync::encode, SCrateTradeSync::new, SCrateTradeSync::handle);
+        CrateChannel.NETWORK.registerMessage(PacketId.SPACKET_SALE, SGetSale.class, SGetSale::encode, SGetSale::new, SGetSale::handle);
 
     }
 }

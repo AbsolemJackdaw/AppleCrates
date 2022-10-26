@@ -1,4 +1,4 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.container;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;

@@ -1,6 +1,7 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.container;
 
 import io.netty.buffer.Unpooled;
+import jackdaw.applecrates.FabricCrates;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

@@ -1,7 +1,8 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.api;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import jackdaw.applecrates.Constants;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;

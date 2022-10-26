@@ -1,5 +1,7 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.container;
 
+import jackdaw.applecrates.*;
+import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import static jackdaw.applecrates.CrateStackHandler.TAGSTOCK;
+import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
 
 public class CrateMenu extends AbstractContainerMenu {
 

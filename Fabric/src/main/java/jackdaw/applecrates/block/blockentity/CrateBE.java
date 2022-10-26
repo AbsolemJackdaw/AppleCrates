@@ -1,5 +1,8 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.block.blockentity;
 
+import jackdaw.applecrates.api.CrateWoodType;
+import jackdaw.applecrates.container.CrateStackHandler;
+import jackdaw.applecrates.container.SimpleContainerNBT;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -13,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class CrateBE extends BlockEntity {
+public class CrateBE extends BlockEntity{
 
     public static final String TAGOWNER = "owner";
     public static final String TAGSTOCK = "cratestock";
@@ -42,7 +45,6 @@ public class CrateBE extends BlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         saveCrateDataToTag(tag);
-
     }
 
     /**
@@ -81,6 +83,8 @@ public class CrateBE extends BlockEntity {
         if (tag.contains(TAGOWNER))
             owner = tag.getUUID(TAGOWNER);
     }
+
+
 
 //    @Override
 //    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {

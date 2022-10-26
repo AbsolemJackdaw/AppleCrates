@@ -1,4 +1,4 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.container;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

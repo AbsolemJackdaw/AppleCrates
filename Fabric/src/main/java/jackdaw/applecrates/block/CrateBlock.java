@@ -1,5 +1,8 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.block;
 
+import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.container.CrateMenuFactory;
+import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -29,7 +32,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import static jackdaw.applecrates.CrateStackHandler.TAGSTOCK;
+import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
 
 public class CrateBlock extends BaseEntityBlock {
 

@@ -1,4 +1,4 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.api;
 
 public class WoodException extends RuntimeException {
     public static final WoodException INSTANCE = new WoodException();
