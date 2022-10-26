@@ -1,8 +1,8 @@
 package jackdaw.applecrates.block;
 
+import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenuFactory;
-import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -139,6 +139,7 @@ public class CrateBlock extends BaseEntityBlock {
                     sp.openMenu(new CrateMenuFactory(Component.translatable("container.crate" + (owner ? ".owner" : "")), buf -> {
                         buf.writeBoolean(owner);
                         buf.writeBoolean(crate.isUnlimitedShop);
+                        buf.writeBlockPos(crate.getBlockPos());
                     }));
                 }
                 pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);

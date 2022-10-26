@@ -20,6 +20,7 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
     private static final int ITEMS_PER_ROW = 3;
 
     public CrateBESR(BlockEntityRendererProvider.Context context) {
+        System.out.println("do");
     }
 
     @Override

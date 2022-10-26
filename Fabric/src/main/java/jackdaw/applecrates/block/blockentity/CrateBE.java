@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class CrateBE extends BlockEntity{
+public class CrateBE extends BlockEntity {
 
     public static final String TAGOWNER = "owner";
     public static final String TAGSTOCK = "cratestock";
@@ -83,7 +83,6 @@ public class CrateBE extends BlockEntity{
         if (tag.contains(TAGOWNER))
             owner = tag.getUUID(TAGOWNER);
     }
-
 
 
 //    @Override

@@ -10,18 +10,29 @@ import jackdaw.applecrates.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
 public class FabricCrates implements ModInitializer {
     private static final ScreenHandlerRegistry.ExtendedClientHandlerFactory<CrateMenu> factory = (syncId, inventory, buf) -> {
+        var level = inventory.player.level;
         boolean owner = buf.readBoolean();
         boolean unlimited = buf.readBoolean();
-        return new CrateMenu(syncId, inventory, owner, unlimited);
+        BlockPos pos = buf.readBlockPos();
+        if (level.getBlockEntity(pos) instanceof CrateBE crateBE)
+            return new CrateMenu(syncId, inventory, crateBE, owner, unlimited);
+        return null;
     };
 
     public static final ExtendedScreenHandlerType<CrateMenu> CRATETYPE = new ExtendedScreenHandlerType<>(factory);
+
+    public static final List<Supplier<BlockEntityType<CrateBE>>> besrreg = new ArrayList<>();
 
     @Override
     public void onInitialize() {
@@ -33,9 +44,9 @@ public class FabricCrates implements ModInitializer {
             var crate = new CrateBlock(crateWoodType);
             Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
             Registry.register(Registry.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
-            Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()), BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBE(crateWoodType, blockPos, blockState)).build(null));
+            var type = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()), BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBE(crateWoodType, blockPos, blockState)).build(null));
+            besrreg.add(() -> type);
         });
-
         ServerNetwork.registerServerPackets();
     }
 }

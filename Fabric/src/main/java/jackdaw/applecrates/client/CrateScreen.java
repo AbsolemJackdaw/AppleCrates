@@ -2,9 +2,9 @@ package jackdaw.applecrates.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import jackdaw.applecrates.PacketId;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.container.CrateStackHandler;
-import jackdaw.applecrates.PacketId;
 import jackdaw.applecrates.network.ServerNetwork;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.components.Button;
