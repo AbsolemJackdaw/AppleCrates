@@ -44,7 +44,10 @@ public class FabricCrates implements ModInitializer {
             var crate = new CrateBlock(crateWoodType);
             Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
             Registry.register(Registry.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
-            var type = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()), BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBE(crateWoodType, blockPos, blockState)).build(null));
+            var type = Registry.register(
+                    Registry.BLOCK_ENTITY_TYPE,
+                    new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()),
+                    BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBE(crateWoodType, blockPos, blockState), crate).build(null));
             besrreg.add(() -> type);
         });
         ServerNetwork.registerServerPackets();
