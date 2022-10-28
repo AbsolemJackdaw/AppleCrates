@@ -35,7 +35,6 @@ public class CrateStackHandler extends GenericItemStackHandler implements CrateS
     public void deserializeNBT(CompoundTag nbt) {
         super.deserializeNBT(nbt);
         this.itemCountCache.clear();
-
     }
 
     @Override

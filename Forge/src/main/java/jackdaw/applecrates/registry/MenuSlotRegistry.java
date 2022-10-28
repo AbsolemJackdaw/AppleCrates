@@ -1,8 +1,8 @@
 package jackdaw.applecrates.registry;
 
 import jackdaw.applecrates.Content;
-import jackdaw.applecrates.container.ForgeSlotPriceSale;
-import jackdaw.applecrates.container.SlotCrateStock;
+import jackdaw.applecrates.container.slot.ForgeSlotPriceSale;
+import jackdaw.applecrates.container.slot.SlotCrateStock;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;

@@ -1,6 +1,5 @@
 package jackdaw.applecrates.container;
 
-import jackdaw.applecrates.GenericInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 

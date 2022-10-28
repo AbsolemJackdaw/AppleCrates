@@ -2,7 +2,6 @@ package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
-import jackdaw.applecrates.GenericInventory;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -26,11 +25,6 @@ public class CrateMenu extends AbstractContainerMenu {
     private Level volatileLevel;
     private BlockPos volatilePos;
 
-    //Registry overload for menu type registry //client for forge
-//    public CrateMenu(int id, Inventory inventory,  boolean owner, boolean unlimited) {
-//        this(id, inventory, new SimpleContainerNBT(2), new SimpleContainerNBT(2), new CrateStackHandler(), owner, unlimited);
-//    }
-
     public CrateMenu(
             int id,
             Inventory inventory,
@@ -49,22 +43,7 @@ public class CrateMenu extends AbstractContainerMenu {
         this.isOwner = owner;
         this.isUnlimitedShop = ul;
 
-        Content.menuSlots.make(this);
-        //TODO
-//        this.addSlot(new Slot(interactableSlots, 0, 136, 37));
-//        this.addSlot(new Slot(interactableSlots, 1, 220, 38) {
-//            @Override
-//            public boolean mayPlace(@NotNull ItemStack stack) {
-//                return isOwner;
-//            }
-//        });
-//
-//        this.addSlot(new SlotPriceSale(priceAndSaleSlots, 0, 10, 140));
-//        this.addSlot(new SlotPriceSale(priceAndSaleSlots, 1, 74, 140));
-//
-//        for (int y = 0; y < 6; y++) //crate stock
-//            for (int x = 0; x < 5; x++)
-//                addSlot(new SlotCrateStock(stock, y * 5 + x, x * 18 + 5, y * 18 + 18, isOwner));
+        Content.menuSlots.accept(this);
 
         for (int i = 0; i < 3; ++i) { //player inventory
             for (int j = 0; j < 9; ++j) {

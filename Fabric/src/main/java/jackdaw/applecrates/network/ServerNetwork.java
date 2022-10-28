@@ -1,12 +1,8 @@
 package jackdaw.applecrates.network;
 
-import jackdaw.applecrates.PacketId;
-import jackdaw.applecrates.container.CrateMenu;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 
 public class ServerNetwork {
 
@@ -16,26 +12,13 @@ public class ServerNetwork {
             byte FORGE_PACKET_ID = buf.readByte();//FORGE PACKET COMPAT
             switch (FORGE_PACKET_ID) {
                 case PacketId.SPACKET_TRADE -> server.execute(() -> {
-                    if (serverPlayer.containerMenu instanceof CrateMenu menu) {
-                        confirmTrade(menu, serverPlayer, 0);
-                        confirmTrade(menu, serverPlayer, 1);
-                    }
+                    ProcessServerPacket.handleTrade(serverPlayer);
                 });
                 case PacketId.SPACKET_SALE -> server.execute(() -> {
-                    if (serverPlayer.containerMenu instanceof CrateMenu menu) {
-                        menu.tryMovePaymentToInteraction();
-                    }
+                    ProcessServerPacket.handleSale(serverPlayer);
                 });
             }
         });
-    }
-
-    private static void confirmTrade(CrateMenu menu, ServerPlayer player, int slot) {
-        ItemStack stack = menu.interactableSlots.getItem(slot).copy();
-        menu.priceAndSaleSlots.setItem(slot, stack.copy());
-        player.getInventory().add(stack.copy());
-        menu.interactableSlots.setItem(slot, ItemStack.EMPTY);
-
     }
 
     public static FriendlyByteBuf sPacketTrade() {

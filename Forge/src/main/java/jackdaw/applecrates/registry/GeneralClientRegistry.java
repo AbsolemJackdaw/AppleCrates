@@ -3,6 +3,7 @@ package jackdaw.applecrates.registry;
 import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.client.CrateScreen;
 import jackdaw.applecrates.client.besr.CrateBESR;
 import jackdaw.applecrates.client.screen.CrateScreen;
 import net.minecraft.client.gui.screens.MenuScreens;

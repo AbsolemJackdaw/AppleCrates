@@ -1,6 +1,5 @@
 package jackdaw.applecrates.container;
 
-import jackdaw.applecrates.GenericInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
