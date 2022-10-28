@@ -43,12 +43,12 @@ public class CrateStackHandler extends GenericItemStackHandler implements CrateS
         this.itemCountCache.clear();
     }
 
+    public boolean updateStackInPaymentSlot(ItemStack payment, boolean isUnlimitedShop) {
+        return Constants.CommonCode.updateStackInPaymentSlot(this, payment, isUnlimitedShop);
+    }
+
     //*** Wrapper ***/
     public int getCountOfItem(Item item) {
         return Constants.CommonCode.getCountOfItem(this, item);
-    }
-
-    public boolean updateStackInPaymentSlot(ItemStack payment, boolean isUnlimitedShop) {
-        return Constants.CommonCode.updateStackInPaymentSlot(this, payment, isUnlimitedShop);
     }
 }

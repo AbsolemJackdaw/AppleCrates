@@ -9,8 +9,7 @@
     }
   },
   "pattern": [
-    "s s",
-    "ppp"
+    "s s", "ppp"
   ],
   "result": {
     "item": "applecrates:birch_crate"

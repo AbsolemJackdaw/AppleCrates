@@ -25,6 +25,12 @@ public class CrateMenu extends AbstractContainerMenu {
     private Level volatileLevel;
     private BlockPos volatilePos;
 
+    public CrateMenu(int id, Inventory inventory, CrateBE crate, boolean owner, boolean unlimited) {
+        this(id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, owner, unlimited);
+        volatileLevel = crate.getLevel();
+        volatilePos = crate.getBlockPos();
+    }
+
     public CrateMenu(
             int id,
             Inventory inventory,
@@ -54,12 +60,6 @@ public class CrateMenu extends AbstractContainerMenu {
         for (int i = 0; i < 9; ++i) { //player hotbar
             this.addSlot(new Slot(inventory, i, 108 + i * 18, 142));
         }
-    }
-
-    public CrateMenu(int id, Inventory inventory, CrateBE crate, boolean owner, boolean unlimited) {
-        this(id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, owner, unlimited);
-        volatileLevel = crate.getLevel();
-        volatilePos = crate.getBlockPos();
     }
 
     public void tryMovePaymentToInteraction() {

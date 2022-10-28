@@ -1,8 +1,8 @@
 package jackdaw.applecrates.block.blockentity;
 
-import jackdaw.applecrates.container.GenericInventory;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.container.CrateStockHandler;
+import jackdaw.applecrates.container.GenericInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;

@@ -32,19 +32,6 @@ public class SimpleContainerNBT extends SimpleContainer implements GenericInvent
         setItem(slot, stack);
     }
 
-    public void deserializeNBT(CompoundTag nbt) {
-        //setSize(nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : items.size());
-        ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
-        for (int i = 0; i < tagList.size(); i++) {
-            CompoundTag itemTags = tagList.getCompound(i);
-            int slot = itemTags.getInt("Slot");
-
-            if (slot >= 0 && slot < items.size()) {
-                items.set(slot, ItemStack.of(itemTags));
-            }
-        }
-    }
-
     public CompoundTag serializeNBT() {
         ListTag nbtTagList = new ListTag();
         for (int i = 0; i < getContainerSize(); i++) {
@@ -59,5 +46,18 @@ public class SimpleContainerNBT extends SimpleContainer implements GenericInvent
         nbt.put("Items", nbtTagList);
         nbt.putInt("Size", items.size());
         return nbt;
+    }
+
+    public void deserializeNBT(CompoundTag nbt) {
+        //setSize(nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : items.size());
+        ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
+        for (int i = 0; i < tagList.size(); i++) {
+            CompoundTag itemTags = tagList.getCompound(i);
+            int slot = itemTags.getInt("Slot");
+
+            if (slot >= 0 && slot < items.size()) {
+                items.set(slot, ItemStack.of(itemTags));
+            }
+        }
     }
 }

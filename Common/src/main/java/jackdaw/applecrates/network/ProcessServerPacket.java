@@ -12,17 +12,17 @@ public class ProcessServerPacket {
         }
     }
 
-    public static void handleSale(ServerPlayer serverPlayer) {
-        if (serverPlayer.containerMenu instanceof CrateMenu menu) {
-            menu.tryMovePaymentToInteraction();
-        }
-    }
-
     private static void confirmTrade(CrateMenu menu, ServerPlayer player, int slot) {
         ItemStack stack = menu.interactableSlots.getItemInSlot(slot).copy();
         menu.priceAndSaleSlots.setItemInSlot(slot, stack.copy());
         player.getInventory().add(stack.copy());
         menu.interactableSlots.setItemInSlot(slot, ItemStack.EMPTY);
 
+    }
+
+    public static void handleSale(ServerPlayer serverPlayer) {
+        if (serverPlayer.containerMenu instanceof CrateMenu menu) {
+            menu.tryMovePaymentToInteraction();
+        }
     }
 }

@@ -5,7 +5,6 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.client.CrateScreen;
 import jackdaw.applecrates.client.besr.CrateBESR;
-import jackdaw.applecrates.client.screen.CrateScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
