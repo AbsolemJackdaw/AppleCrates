@@ -1,18 +1,18 @@
 package jackdaw.applecrates.api;
 
-import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.datagen.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = AppleCrates.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Constants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        generatedCrates(AppleCrates.MODID, event);
+        generatedCrates(Constants.MODID, event);
     }
 
     public static void generatedCrates(String modid, GatherDataEvent event) {

@@ -2,6 +2,7 @@ package jackdaw.applecrates.datagen;
 
 import com.mojang.logging.LogUtils;
 import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.exception.WoodException;
@@ -28,7 +29,7 @@ public class CrateModels extends BlockModelProvider {
                 if (existingTexture == null)
                     throw WoodException.INSTANCE.resLocNotFound(crateWoodType);
                 existingFileHelper.trackGenerated(existingTexture, TEXTURE);
-                var appleCrateModel = new ResourceLocation(AppleCrates.MODID, "block/applecrate");
+                var appleCrateModel = new ResourceLocation(Constants.MODID, "block/applecrate");
                 withExistingParent(crateWoodType.getBlockRegistryName(), appleCrateModel).texture("particle", existingTexture).texture("0", existingTexture);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());

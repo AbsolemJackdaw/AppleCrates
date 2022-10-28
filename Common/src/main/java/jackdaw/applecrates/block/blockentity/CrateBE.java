@@ -1,5 +1,6 @@
 package jackdaw.applecrates.block.blockentity;
 
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.container.CrateStockHandler;
 import jackdaw.applecrates.container.GenericInventory;
@@ -24,9 +25,9 @@ public class CrateBE extends BlockEntity {
     public static final String TAGINTERACTABLE = "interactable";
     public static final String TAGPRICESALE = "pricensale";
     public static final String TAGUNLIMITED = "isUnlimited";
-    public CrateStockHandler crateStock;//= new CrateStackHandler();
-    public GenericInventory interactable;// = new SimpleContainerNBT(2);
-    public GenericInventory priceAndSale;//= new SimpleContainerNBT(2);
+    public CrateStockHandler crateStock;
+    public GenericInventory interactable;
+    public GenericInventory priceAndSale;
     //    private final LazyOptional<IItemHandler> crateStockHopper = LazyOptional.of(() -> this.crateStock);
     public boolean isUnlimitedShop = false;
     private UUID owner;
@@ -34,6 +35,7 @@ public class CrateBE extends BlockEntity {
 
     public CrateBE(CrateWoodType type, BlockPos pos, BlockState state) {
         super(CrateWoodType.getBlockEntityType(type), pos, state);
+        Content.crateStock.accept(this);
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ForgeClientConfig {
     public static final ForgeConfigSpec SPEC;
+    public static ForgeConfigSpec.EnumValue<ClientConfig.CrateItemRendering> configSpec;
 
     static {
         ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
@@ -13,6 +14,6 @@ public class ForgeClientConfig {
     }
 
     private static void setupConfig(ForgeConfigSpec.Builder builder) {
-        ClientConfig.crateItemRendering = builder.defineEnum("crate_item_rendering", ClientConfig.CrateItemRendering.THREE).get();
+        configSpec = builder.defineEnum("crate_item_rendering", ClientConfig.CrateItemRendering.THREE);
     }
 }

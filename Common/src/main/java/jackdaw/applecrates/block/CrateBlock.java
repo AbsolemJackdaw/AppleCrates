@@ -1,6 +1,7 @@
 package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.core.BlockPos;
@@ -135,12 +136,7 @@ public class CrateBlock extends BaseEntityBlock {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
                 if (pPlayer instanceof ServerPlayer sp) {
-                    //TODO
-//                    sp.openMenu(new CrateMenuFactory(Component.translatable("container.crate" + (owner ? ".owner" : "")), buf -> {
-//                        buf.writeBoolean(owner);
-//                        buf.writeBoolean(crate.isUnlimitedShop);
-//                        buf.writeBlockPos(crate.getBlockPos());
-//                    }));
+                    Content.openGui.accept(sp, crate, Component.translatable("container.crate" + (owner ? ".owner" : "")), owner);
                 }
                 pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }

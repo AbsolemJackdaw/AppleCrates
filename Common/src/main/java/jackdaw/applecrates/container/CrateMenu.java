@@ -31,16 +31,8 @@ public class CrateMenu extends AbstractContainerMenu {
         volatilePos = crate.getBlockPos();
     }
 
-    public CrateMenu(
-            int id,
-            Inventory inventory,
-            GenericInventory interaction,
-            GenericInventory trade,
-            CrateStockHandler stock,
-            boolean owner,
-            boolean ul) {
-
-        super(Content.MENUTYPE, id);
+    public CrateMenu(int id, Inventory inventory, GenericInventory interaction, GenericInventory trade, CrateStockHandler stock, boolean owner, boolean ul) {
+        super(Content.MENUTYPE.get(), id);
 
         this.interactableSlots = interaction;
         this.priceAndSaleSlots = trade;

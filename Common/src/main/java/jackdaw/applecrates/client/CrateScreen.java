@@ -3,7 +3,9 @@ package jackdaw.applecrates.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.network.PacketId;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -43,17 +45,14 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 138, (button) -> {
                 if (!(menu.interactableSlots.getItemInSlot(0).isEmpty() && menu.interactableSlots.getItemInSlot(1).isEmpty())) {
                     if (menu.crateStock.getItemInSlot(29).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
-                        //TODO
-                        // ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());
+                        Content.packetHandler.send(PacketId.SPACKET_TRADE);
                     }
                 }
             }));
         } else {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 17, (button) -> {
                 if (isUnlimitedShop || !menu.outOfStock())
-                    ;
-                //TODO
-                // ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketSale());
+                    Content.packetHandler.send(PacketId.SPACKET_SALE);
             }));
         }
     }

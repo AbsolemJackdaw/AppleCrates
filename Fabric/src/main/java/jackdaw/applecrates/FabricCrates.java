@@ -5,11 +5,16 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
-import jackdaw.applecrates.container.SlotCrateStock;
-import jackdaw.applecrates.container.SlotPriceSale;
+import jackdaw.applecrates.container.CrateMenuFactory;
+import jackdaw.applecrates.container.CrateStackHandler;
+import jackdaw.applecrates.container.SimpleContainerNBT;
+import jackdaw.applecrates.container.slot.SlotCrateStock;
+import jackdaw.applecrates.container.slot.SlotPriceSale;
 import jackdaw.applecrates.item.CrateItem;
+import jackdaw.applecrates.network.PacketId;
 import jackdaw.applecrates.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.core.BlockPos;
@@ -42,6 +47,7 @@ public class FabricCrates implements ModInitializer {
     public void onInitialize() {
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
 
+        Content.MENUTYPE = () -> CRATETYPE;
         Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "cratemenu"), CRATETYPE);
 
         Content.menuSlots = menu -> {
@@ -64,6 +70,28 @@ public class FabricCrates implements ModInitializer {
                     for (int x = 0; x < 5; x++)
                         menu.addGenericSlot(new SlotCrateStock(container, y * 5 + x, x * 18 + 5, y * 18 + 18, menu.isOwner));
 
+        };
+
+        Content.openGui = (player, crate, component, isOwner) -> {
+
+            player.openMenu(new CrateMenuFactory(component, buf -> {
+                buf.writeBoolean(isOwner);
+                buf.writeBoolean(crate.isUnlimitedShop);
+                buf.writeBlockPos(crate.getBlockPos());
+            }));
+        };
+
+        Content.crateStock = crate -> {
+            crate.crateStock = new CrateStackHandler();
+            crate.priceAndSale = new SimpleContainerNBT(2);
+            crate.interactable = new SimpleContainerNBT(2);
+        };
+
+        Content.packetHandler = (b) -> {
+            switch (b) {
+                case PacketId.SPACKET_TRADE -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());
+                case PacketId.SPACKET_SALE -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketSale());
+            }
         };
 
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(Constants.MODID)).forEach(crateWoodType -> {

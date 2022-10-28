@@ -1,6 +1,6 @@
 package jackdaw.applecrates.registry;
 
-import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.client.CrateScreen;
@@ -11,7 +11,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = AppleCrates.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Constants.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GeneralClientRegistry {
 
     @SubscribeEvent
