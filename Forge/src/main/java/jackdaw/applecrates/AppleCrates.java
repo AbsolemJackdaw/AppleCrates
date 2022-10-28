@@ -1,16 +1,14 @@
 package jackdaw.applecrates;
 
-import jackdaw.applecrates.client.ClientConfig;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.client.ForgeClientConfig;
 import jackdaw.applecrates.compat.SectionProtection;
+import jackdaw.applecrates.registry.MenuSlotRegistry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Mod(AppleCrates.MODID)
 public class AppleCrates {
@@ -24,8 +22,9 @@ public class AppleCrates {
         if (ModList.get().isLoaded("sectionprotection"))
             SectionProtection.init();
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, "apple_crates_client.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ForgeClientConfig.SPEC, "apple_crates_client.toml");
 
+        MenuSlotRegistry.init();
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
         //call after mod compat so it can register new WoodTypes
         GeneralRegistry.prepareForRegistry(MODID, GeneralRegistry.BLOCKS, GeneralRegistry.ITEMS, GeneralRegistry.BLOCK_ENTITY_TYPES);

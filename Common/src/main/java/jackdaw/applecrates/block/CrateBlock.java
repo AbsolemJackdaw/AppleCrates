@@ -1,8 +1,8 @@
 package jackdaw.applecrates.block;
 
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBE;
-import jackdaw.applecrates.container.CrateMenuFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -32,7 +32,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
 
 public class CrateBlock extends BaseEntityBlock {
 
@@ -88,13 +87,13 @@ public class CrateBlock extends BaseEntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
             if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pLevel instanceof ServerLevel serverLevel) {
-                for (int i = 0; i < crate.crateStock.getContainerSize(); i++) {
-                    ItemStack stack = crate.crateStock.getItem(i);
+                for (int i = 0; i < crate.crateStock.numberOfSlots(); i++) {
+                    ItemStack stack = crate.crateStock.getItemInSlot(i);
                     if (i == 29) {
-                        if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(TAGSTOCK)) {
-                            int pay = stack.getTag().getInt(TAGSTOCK);
+                        if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(Constants.TAGSTOCK)) {
+                            int pay = stack.getTag().getInt(Constants.TAGSTOCK);
                             ItemStack prepCopy = stack.copy();
-                            prepCopy.removeTagKey(TAGSTOCK);
+                            prepCopy.removeTagKey(Constants.TAGSTOCK);
                             if (prepCopy.getTag() != null && prepCopy.getTag().isEmpty())
                                 prepCopy.setTag(null);
 
@@ -115,7 +114,7 @@ public class CrateBlock extends BaseEntityBlock {
                     }
                 }
                 for (int i = 0; i < 2; i++) {
-                    ItemStack toDrop = crate.interactable.getItem(i);
+                    ItemStack toDrop = crate.interactable.getItemInSlot(i);
                     Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
                 }
                 pLevel.updateNeighbourForOutputSignal(pPos, this);
@@ -136,11 +135,12 @@ public class CrateBlock extends BaseEntityBlock {
                 boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
 
                 if (pPlayer instanceof ServerPlayer sp) {
-                    sp.openMenu(new CrateMenuFactory(Component.translatable("container.crate" + (owner ? ".owner" : "")), buf -> {
-                        buf.writeBoolean(owner);
-                        buf.writeBoolean(crate.isUnlimitedShop);
-                        buf.writeBlockPos(crate.getBlockPos());
-                    }));
+                    //TODO
+//                    sp.openMenu(new CrateMenuFactory(Component.translatable("container.crate" + (owner ? ".owner" : "")), buf -> {
+//                        buf.writeBoolean(owner);
+//                        buf.writeBoolean(crate.isUnlimitedShop);
+//                        buf.writeBlockPos(crate.getBlockPos());
+//                    }));
                 }
                 pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }

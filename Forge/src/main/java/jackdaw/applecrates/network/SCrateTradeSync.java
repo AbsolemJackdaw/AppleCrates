@@ -37,10 +37,10 @@ public class SCrateTradeSync {
     }
 
     private void confirmTrade(CrateMenu menu, ServerPlayer player, int slot) {
-        ItemStack stack = menu.interactableSlots.getStackInSlot(slot).copy();
-        menu.priceAndSaleSlots.setStackInSlot(slot, stack.copy());
+        ItemStack stack = menu.interactableSlots.getItemInSlot(slot).copy();
+        menu.priceAndSaleSlots.setItemInSlot(slot, stack.copy());
         player.getInventory().add(stack.copy());
-        menu.interactableSlots.setStackInSlot(slot, ItemStack.EMPTY);
+        menu.interactableSlots.setItemInSlot(slot, ItemStack.EMPTY);
 
     }
 }

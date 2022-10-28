@@ -3,7 +3,7 @@ package jackdaw.applecrates.client;
 public class ClientConfig {
     public static CrateItemRendering crateItemRendering = CrateItemRendering.THREE;
 
-    public static enum CrateItemRendering {
+    public enum CrateItemRendering {
         THREE,
         MANY
     }

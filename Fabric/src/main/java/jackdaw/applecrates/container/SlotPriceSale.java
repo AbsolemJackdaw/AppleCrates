@@ -10,12 +10,12 @@ public class SlotPriceSale extends Slot {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean mayPickup(Player playerIn) {
         return false;
     }
 
     @Override
-    public boolean mayPickup(Player playerIn) {
+    public boolean isActive() {
         return false;
     }
 }

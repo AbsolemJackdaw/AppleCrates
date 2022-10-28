@@ -4,6 +4,8 @@ import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.container.CrateStackHandler;
+import jackdaw.applecrates.container.GenericItemStackHandler;
 import jackdaw.applecrates.item.CrateItem;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
@@ -24,7 +26,7 @@ public class GeneralRegistry {
     public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU = MENU_TYPES.register("crate_menu_buyer", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean owner = data.readBoolean();
         boolean unlimited = data.readBoolean();
-        return new CrateMenu(windowId, inv, owner, unlimited);
+        return new CrateMenu(windowId, inv, new GenericItemStackHandler(2), new GenericItemStackHandler(2), new CrateStackHandler(), owner, unlimited);
     }));
 
     /**

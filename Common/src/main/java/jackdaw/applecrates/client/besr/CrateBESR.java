@@ -20,13 +20,12 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
     private static final int ITEMS_PER_ROW = 3;
 
     public CrateBESR(BlockEntityRendererProvider.Context context) {
-        System.out.println("do");
     }
 
     @Override
     public void render(CrateBE pBlockEntity, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         float blockRotation = pBlockEntity.getBlockState().getValue(CrateBlock.FACING).toYRot();
-        ItemStack selling = pBlockEntity.priceAndSale.getItem(1);
+        ItemStack selling = pBlockEntity.priceAndSale.getItemInSlot(1);
 
         if (!selling.isEmpty()) {
             int amount = ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.THREE ? 3 : (pBlockEntity.isUnlimitedShop ?
@@ -66,8 +65,8 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                 } else {
                     stack.translate(
                             (i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
-                            0.17f + ((int) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
-                            0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2) * 0.01 //y or crate's higher/lower. In general, don't touch this value
+                            0.17f + ((i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
+                            0.1f + ((i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2) * 0.01 //y or crate's higher/lower. In general, don't touch this value
                     );
                 }
 

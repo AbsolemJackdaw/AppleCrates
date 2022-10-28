@@ -1,12 +1,9 @@
-package jackdaw.applecrates.client.screen;
+package jackdaw.applecrates.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.container.CrateMenu;
-import jackdaw.applecrates.container.CrateStackHandler;
-import jackdaw.applecrates.network.CrateChannel;
-import jackdaw.applecrates.network.SCrateTradeSync;
-import jackdaw.applecrates.network.SGetSale;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -18,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = new ResourceLocation("textures/gui/container/villager2.png");
     private static final Component CANNOT_SWITCH = Component.translatable("cannot.switch.trade");
+    private final boolean isUnlimitedShop;
     private boolean isOwner;
-    private boolean isUnlimitedShop;
     private int guiStartX;
     private int guiStartY;
 
@@ -44,28 +41,31 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         this.guiStartY = (this.height - this.imageHeight) / 2;
         if (isOwner) {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 138, (button) -> {
-                if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())) {
-                    if (menu.crateStock.getStackInSlot(29).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
-                        CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
+                if (!(menu.interactableSlots.getItemInSlot(0).isEmpty() && menu.interactableSlots.getItemInSlot(1).isEmpty())) {
+                    if (menu.crateStock.getItemInSlot(29).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
+                        //TODO
+                        // ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());
                     }
                 }
             }));
         } else {
             addRenderableWidget(new SaleButton(guiStartX + 4, guiStartY + 17, (button) -> {
                 if (isUnlimitedShop || !menu.outOfStock())
-                    CrateChannel.NETWORK.sendToServer(new SGetSale());
+                    ;
+                //TODO
+                // ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketSale());
             }));
         }
     }
 
     private boolean isSamePayout() {
-        ItemStack payout = menu.crateStock.getStackInSlot(29).copy();
-        ItemStack give = menu.interactableSlots.getStackInSlot(0).copy();
+        ItemStack payout = menu.crateStock.getItemInSlot(29).copy();
+        ItemStack give = menu.interactableSlots.getItemInSlot(0).copy();
         if (give.isEmpty() || payout.isEmpty())
             return true;
 
-        if (payout.hasTag() && payout.getTag().contains(CrateStackHandler.TAGSTOCK)) {
-            payout.removeTagKey(CrateStackHandler.TAGSTOCK);
+        if (payout.hasTag() && payout.getTag().contains(Constants.TAGSTOCK)) {
+            payout.removeTagKey(Constants.TAGSTOCK);
             if (payout.getTag() != null && payout.getTag().isEmpty())
                 payout.setTag(null);
         }
@@ -78,7 +78,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 
         RenderSystem.enableBlend();
-        if (isOwner && !(menu.priceAndSaleSlots.getStackInSlot(0).isEmpty() && menu.priceAndSaleSlots.getStackInSlot(1).isEmpty()) && menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())
+        if (isOwner && !(menu.priceAndSaleSlots.getItemInSlot(0).isEmpty() && menu.priceAndSaleSlots.getItemInSlot(1).isEmpty()) && menu.interactableSlots.getItemInSlot(0).isEmpty() && menu.interactableSlots.getItemInSlot(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
         if (!isSamePayout())
             RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
@@ -93,10 +93,10 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         renderTrade(0, guiStartX, guiStartY + offSet);
         renderTrade(1, guiStartX, guiStartY + offSet);
 
-        if (!menu.crateStock.getStackInSlot(29).isEmpty() && isOwner) {
-            ItemStack inSlot = menu.crateStock.getStackInSlot(29);
-            if (inSlot.getOrCreateTag().contains(CrateStackHandler.TAGSTOCK)) {
-                int pay = inSlot.getOrCreateTag().getInt(CrateStackHandler.TAGSTOCK);
+        if (!menu.crateStock.getItemInSlot(29).isEmpty() && isOwner) {
+            ItemStack inSlot = menu.crateStock.getItemInSlot(29);
+            if (inSlot.getOrCreateTag().contains(Constants.TAGSTOCK)) {
+                int pay = inSlot.getOrCreateTag().getInt(Constants.TAGSTOCK);
                 //set inSlot's itemcount to the nbt ammount, but only on client side
                 //this is visual
                 inSlot.setCount(pay);
@@ -108,8 +108,8 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
-        if ((!menu.interactableSlots.getStackInSlot(slotId).isEmpty() && isOwner) || !menu.priceAndSaleSlots.getStackInSlot(slotId).isEmpty()) {
-            ItemStack saleStack = isOwner && !menu.interactableSlots.getStackInSlot(slotId).isEmpty() ? menu.interactableSlots.getStackInSlot(slotId) : menu.priceAndSaleSlots.getStackInSlot(slotId);
+        if ((!menu.interactableSlots.getItemInSlot(slotId).isEmpty() && isOwner) || !menu.priceAndSaleSlots.getItemInSlot(slotId).isEmpty()) {
+            ItemStack saleStack = isOwner && !menu.interactableSlots.getItemInSlot(slotId).isEmpty() ? menu.interactableSlots.getItemInSlot(slotId) : menu.priceAndSaleSlots.getItemInSlot(slotId);
             int xo = slotId == 0 ? 10 : 74;
             int yo = 140;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
@@ -154,7 +154,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
 
     class SaleButton extends Button {
 
-        public SaleButton(int x, int y, Button.OnPress press) {
+        public SaleButton(int x, int y, OnPress press) {
             super(x, y, 91, 20, Component.empty(), press);
         }
 
@@ -171,7 +171,7 @@ public class CrateScreen extends AbstractContainerScreen<CrateMenu> {
         }
 
         private void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
-            ItemStack stack = menu.priceAndSaleSlots.getStackInSlot(slot);
+            ItemStack stack = menu.priceAndSaleSlots.getItemInSlot(slot);
             if (!stack.isEmpty())
                 CrateScreen.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }

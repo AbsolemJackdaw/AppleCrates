@@ -1,12 +1,13 @@
 package jackdaw.applecrates.container;
 
+import jackdaw.applecrates.GenericInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
-public class SimpleContainerNBT extends SimpleContainer {
+public class SimpleContainerNBT extends SimpleContainer implements GenericInventory {
 
     public SimpleContainerNBT(int i) {
         super(i);
@@ -14,6 +15,22 @@ public class SimpleContainerNBT extends SimpleContainer {
 
     public SimpleContainerNBT(ItemStack... itemStacks) {
         super(itemStacks);
+    }
+
+    //*****Wrapper******//
+    @Override
+    public int numberOfSlots() {
+        return getContainerSize();
+    }
+
+    @Override
+    public ItemStack getItemInSlot(int slot) {
+        return getItem(slot);
+    }
+
+    @Override
+    public void setItemInSlot(int slot, ItemStack stack) {
+        setItem(slot, stack);
     }
 
     public void deserializeNBT(CompoundTag nbt) {

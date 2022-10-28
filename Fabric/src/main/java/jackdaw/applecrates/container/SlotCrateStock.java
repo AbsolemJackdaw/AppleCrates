@@ -15,11 +15,6 @@ public class SlotCrateStock extends Slot {
     }
 
     @Override
-    public boolean isActive() {
-        return isOwner;
-    }
-
-    @Override
     public boolean mayPlace(@NotNull ItemStack stack) {
         return getContainerSlot() < 29;
     }
@@ -27,5 +22,10 @@ public class SlotCrateStock extends Slot {
     @Override
     public boolean mayPickup(Player playerIn) {
         return getContainerSlot() != 29 && isOwner;
+    }
+
+    @Override
+    public boolean isActive() {
+        return isOwner;
     }
 }

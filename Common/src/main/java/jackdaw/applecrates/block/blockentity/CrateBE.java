@@ -1,10 +1,11 @@
 package jackdaw.applecrates.block.blockentity;
 
+import jackdaw.applecrates.GenericInventory;
 import jackdaw.applecrates.api.CrateWoodType;
-import jackdaw.applecrates.container.CrateStackHandler;
-import jackdaw.applecrates.container.SimpleContainerNBT;
+import jackdaw.applecrates.container.CrateStockHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -23,9 +24,9 @@ public class CrateBE extends BlockEntity {
     public static final String TAGINTERACTABLE = "interactable";
     public static final String TAGPRICESALE = "pricensale";
     public static final String TAGUNLIMITED = "isUnlimited";
-    public CrateStackHandler crateStock = new CrateStackHandler();
-    public SimpleContainerNBT interactable = new SimpleContainerNBT(2);
-    public SimpleContainerNBT priceAndSale = new SimpleContainerNBT(2);
+    public CrateStockHandler crateStock;//= new CrateStackHandler();
+    public GenericInventory interactable;// = new SimpleContainerNBT(2);
+    public GenericInventory priceAndSale;//= new SimpleContainerNBT(2);
     //    private final LazyOptional<IItemHandler> crateStockHopper = LazyOptional.of(() -> this.crateStock);
     public boolean isUnlimitedShop = false;
     private UUID owner;
@@ -85,17 +86,17 @@ public class CrateBE extends BlockEntity {
     }
 
 
-//    @Override
-//    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-//        // do not read super here, for the same reason as handleUpdateTag !!
-//        loadCrateDataFromTag(pkt.getTag());
-//    }
+    //    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        // do not read super here, for the same reason as handleUpdateTag !!
+        loadCrateDataFromTag(pkt.getTag());
+    }
 
-//    @Override
-//    public void handleUpdateTag(CompoundTag tag) {
-    //do not call super here. it uses the load method from above, but we're not sending all the same data here !
-//        loadCrateDataFromTag(tag);
-//    }
+    //    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+//    do not call super here. it uses the load method from above, but we're not sending all the same data here !
+        loadCrateDataFromTag(tag);
+    }
 
     public UUID getOwner() {
         return owner;

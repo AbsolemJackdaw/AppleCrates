@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 public class CrateRecipes extends RecipeProvider {
 
-    private String modId;
+    private final String modId;
 
     public CrateRecipes(String modId, DataGenerator pGenerator) {
         super(pGenerator);

@@ -3,6 +3,7 @@ package jackdaw.applecrates.api;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.api.exception.WoodException;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -11,8 +12,8 @@ import java.util.Set;
 
 public class AppleCrateAPI {
     private static final Set<AppleCrateBuilder> VALUES = new ObjectArraySet<>();
-    private static Map<CrateWoodType, ResourceLocation> texturePathFromWood = new HashMap<>();
-    private static Map<CrateWoodType, ResourceLocation> originalPlankBlockForWood = new HashMap<>();
+    private static final Map<CrateWoodType, ResourceLocation> texturePathFromWood = new HashMap<>();
+    private static final Map<CrateWoodType, ResourceLocation> originalPlankBlockForWood = new HashMap<>();
 
     public static Map<CrateWoodType, ResourceLocation> getTexturePathFromWood() {
         return texturePathFromWood;
@@ -52,6 +53,10 @@ public class AppleCrateAPI {
         protected String plankRegistryName = "";
         protected boolean optifineTextureOverride = false;
 
+        protected AppleCrateBuilder(String yourModId, String woodName) {
+            this("minecraft", yourModId, woodName);
+        }
+
         /**
          * Call in @mod-file constructor.
          * <p>
@@ -74,11 +79,6 @@ public class AppleCrateAPI {
             this.yourModId = yourModId;
             this.textureName = woodName;
         }
-
-        protected AppleCrateBuilder(String yourModId, String woodName) {
-            this("minecraft", yourModId, woodName);
-        }
-
 
         public static void registerVanilla() { //loads the class so the static vanilla crate initializer can be called.
             //when called multiple times, will only init vanilla crates once, so they can't be double registered

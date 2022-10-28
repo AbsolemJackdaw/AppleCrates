@@ -2,6 +2,7 @@ package jackdaw.applecrates.api;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -19,9 +20,9 @@ public class CrateWoodType {
     private final String yourModId;
     private final String compatId;
 
-    private String beName;
-    private ResourceLocation resourceLocation;
-    private ResourceLocation resourceLocationBe;
+    private final String beName;
+    private final ResourceLocation resourceLocation;
+    private final ResourceLocation resourceLocationBe;
 
 
     protected CrateWoodType(String compatId, String yourModId, String woodName) {
@@ -39,10 +40,6 @@ public class CrateWoodType {
         builder.append(this.name());
         builder.append("_crate");
         return builder.toString(); //role exclusion for the underscore separator if the namespace is minecraft/empty
-    }
-
-    public String getCompatId() {
-        return compatId;
     }
 
     public String getBeRegistryName() {
@@ -94,6 +91,10 @@ public class CrateWoodType {
 
     public ResourceLocation getFullBeRegistryResLoc() {
         return resourceLocationBe;
+    }
+
+    public String getCompatId() {
+        return compatId;
     }
 
     public boolean isFrom(String modId) {
