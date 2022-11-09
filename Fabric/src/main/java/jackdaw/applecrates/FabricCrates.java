@@ -2,7 +2,7 @@ package jackdaw.applecrates;
 
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.CrateWoodType;
-import jackdaw.applecrates.block.CrateBlock;
+import jackdaw.applecrates.block.CrateBlockFabric;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.container.CrateMenuFactory;
@@ -95,7 +95,7 @@ public class FabricCrates implements ModInitializer {
         };
 
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(Constants.MODID)).forEach(crateWoodType -> {
-            var crate = new CrateBlock(crateWoodType);
+            var crate = new CrateBlockFabric(crateWoodType);
             Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
             Registry.register(Registry.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
             var type = Registry.register(

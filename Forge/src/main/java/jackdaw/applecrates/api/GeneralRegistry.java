@@ -4,6 +4,7 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.container.CrateBEForge;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.container.GenericItemStackHandler;
@@ -39,7 +40,7 @@ public class GeneralRegistry {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
             RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
-            beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBE(crateWoodType, pos, state), block.get()).build(null));
+            beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBEForge(crateWoodType, pos, state), block.get()).build(null));
 
         });
     }

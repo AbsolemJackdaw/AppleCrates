@@ -51,4 +51,6 @@ public class CrateStackHandler extends GenericItemStackHandler implements CrateS
     public int getCountOfItem(Item item) {
         return Constants.CommonCode.getCountOfItem(this, item);
     }
+
+
 }
