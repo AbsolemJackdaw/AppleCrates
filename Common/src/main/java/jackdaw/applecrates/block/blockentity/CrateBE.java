@@ -2,7 +2,6 @@ package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
-import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.container.CrateStockHandler;
 import jackdaw.applecrates.container.GenericInventory;
 import net.minecraft.core.BlockPos;
@@ -12,11 +11,9 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

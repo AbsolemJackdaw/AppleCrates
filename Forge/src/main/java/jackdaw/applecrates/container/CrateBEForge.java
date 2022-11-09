@@ -20,16 +20,16 @@ public class CrateBEForge extends CrateBE {
             crateStockHopper = LazyOptional.of(() -> handler);
     }
 
+    public void invalidateCaps() {
+        if (crateStockHopper != null)
+            crateStockHopper.invalidate();
+        super.invalidateCaps();
+    }
+
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (getBlockState().getValue(CrateBlock.FACING).equals(side) && crateStockHopper != null) {
             return crateStockHopper.cast();
         }
         return super.getCapability(cap, side);
-    }
-
-    public void invalidateCaps() {
-        if (crateStockHopper != null)
-            crateStockHopper.invalidate();
-        super.invalidateCaps();
     }
 }

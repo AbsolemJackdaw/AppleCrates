@@ -3,7 +3,6 @@ package jackdaw.applecrates.api;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.block.CrateBlock;
-import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateBEForge;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.container.CrateStackHandler;

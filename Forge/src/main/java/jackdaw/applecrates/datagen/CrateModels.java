@@ -1,7 +1,6 @@
 package jackdaw.applecrates.datagen;
 
 import com.mojang.logging.LogUtils;
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.CrateWoodType;
