@@ -209,11 +209,11 @@ public class CrateMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player pPlayer) {
 
-        pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getStackInSlot(0));
+        this.returnItemToInventory(pPlayer, 0);
         if (!isOwner)
             updateSellItem();
         else
-            pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getStackInSlot(1));
+            this.returnItemToInventory(pPlayer, 1);
 
         super.removed(pPlayer);
 
@@ -223,6 +223,11 @@ public class CrateMenu extends AbstractContainerMenu {
                 volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
                 crate.setChanged();
             }
+    }
+
+    private void returnItemToInventory(Player player, int index) {
+        player.getInventory().placeItemBackInInventory(this.interactableSlots.getStackInSlot(index));
+        this.interactableSlots.setStackInSlot(index, ItemStack.EMPTY);
     }
 
     @Override
