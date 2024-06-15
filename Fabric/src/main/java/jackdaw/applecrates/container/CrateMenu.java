@@ -165,7 +165,7 @@ public class CrateMenu extends AbstractContainerMenu {
             ItemStack resultSlotCache = interactableSlots.getItem(1).copy();//get copy before clicking
             super.clicked(slotID, mouseButton, click, player);
             //if the pickup slot had content, then there was payment enough
-            if (ClickType.PICKUP.equals(click) && !resultSlotCache.isEmpty() && interactableSlots.getItem(1).isEmpty()) {
+            if ((ClickType.PICKUP.equals(click) || ClickType.THROW.equals(click)) && !resultSlotCache.isEmpty() && interactableSlots.getItem(1).isEmpty()) {
                 interactableSlots.getItem(0).shrink(priceAndSaleSlots.getItem(0).getCount());
                 crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getItem(0), isUnlimitedShop);
                 updateSellItem();
@@ -192,12 +192,11 @@ public class CrateMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player pPlayer) {
 
-        pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getItem(0));
+        this.returnItemToInventory(pPlayer, 0);
         if (!isOwner)
             updateSellItem();
         else
-            pPlayer.getInventory().placeItemBackInInventory(this.interactableSlots.getItem(1));
-
+            this.returnItemToInventory(pPlayer, 1);
         super.removed(pPlayer);
 
         if (volatileLevel != null && volatilePos != null)
@@ -206,6 +205,11 @@ public class CrateMenu extends AbstractContainerMenu {
                 volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
                 crate.setChanged();
             }
+    }
+
+    private void returnItemToInventory(Player player, int index) {
+        player.getInventory().placeItemBackInInventory(this.interactableSlots.getItem(index));
+        this.interactableSlots.setItem(index, ItemStack.EMPTY);
     }
 
     @Override

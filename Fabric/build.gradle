@@ -42,6 +42,7 @@ loom {
 }
 
 processResources {
+    from project(":Common").sourceSets.main.resources
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
