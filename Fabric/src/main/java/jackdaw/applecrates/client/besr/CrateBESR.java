@@ -29,9 +29,9 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
         ItemStack selling = pBlockEntity.priceAndSale.getItem(1);
 
         if (!selling.isEmpty()) {
-            int amount = ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.THREE ? 3 : (pBlockEntity.isUnlimitedShop ?
-                    MAX_RENDERED_ITEMS :
-                    Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
+            boolean one = ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.ONE;
+            boolean three = ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.THREE;
+            int amount = one ? 1 : three ? 3 : (pBlockEntity.isUnlimitedShop ? MAX_RENDERED_ITEMS : Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
 
             for (int i = 0; i < amount; i++) {
                 stack.pushPose();
@@ -58,27 +58,18 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                 float randZ = (float) offset.z();
 
                 if (ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.THREE) {
-                    stack.translate(
-                            (i == 0 ? 0.0f : randX / (float) i * (i == 1 ? -1 : 1)), // x or crate's left/right
+                    stack.translate((i == 0 ? 0.0f : randX / (float) i * (i == 1 ? -1 : 1)), // x or crate's left/right
                             0.25f + (i == 0 ? 0.0f : randZ / (float) i), //z or crate's up/down
                             0.1f + (float) i * 0.025 //y or crate's higher/lower. In general, don't touch this value
                     );
                 } else {
-                    stack.translate(
-                            (i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
+                    stack.translate((i % ITEMS_PER_ROW) * 0.25 - 0.25, // x or crate's left/right
                             0.17f + ((int) (i / ITEMS_PER_ROW) / (float) MAX_RENDERED_ITEMS) * 2.0, //z or crate's up/down
                             0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2) * 0.01 //y or crate's higher/lower. In general, don't touch this value
                     );
                 }
 
-                Minecraft.getInstance().getItemRenderer().renderStatic(
-                        selling,
-                        ItemTransforms.TransformType.GROUND,
-                        pPackedLight,
-                        pPackedOverlay,
-                        stack,
-                        pBufferSource,
-                        0);
+                Minecraft.getInstance().getItemRenderer().renderStatic(selling, ItemTransforms.TransformType.GROUND, pPackedLight, pPackedOverlay, stack, pBufferSource, 0);
                 stack.popPose();
             }
         }

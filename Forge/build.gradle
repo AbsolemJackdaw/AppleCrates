@@ -132,9 +132,8 @@ publishing {
     }
 }
 task publishCurseForge(type: TaskPublishCurseForge) {
-
+    dependsOn(tasks.build)
     apiToken = findProperty('cf_api_token');
-
     // The main file to upload
     def mainFile = upload(630726, jar)
     mainFile.releaseType = "${releasetype}"

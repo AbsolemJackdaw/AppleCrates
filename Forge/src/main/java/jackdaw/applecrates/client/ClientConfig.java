@@ -17,6 +17,7 @@ public class ClientConfig {
     }
 
     public static enum CrateItemRendering {
+        ONE,
         THREE,
         MANY
     }

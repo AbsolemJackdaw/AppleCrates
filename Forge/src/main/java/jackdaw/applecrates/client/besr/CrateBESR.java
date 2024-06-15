@@ -29,9 +29,13 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
         ItemStack selling = pBlockEntity.priceAndSale.getStackInSlot(1);
 
         if (!selling.isEmpty()) {
-            int amount = ClientConfig.crateItemRendering.get() == ClientConfig.CrateItemRendering.THREE ? 3 : (pBlockEntity.isUnlimitedShop ?
-                    MAX_RENDERED_ITEMS :
-                    Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
+            boolean one = ClientConfig.crateItemRendering.get() == ClientConfig.CrateItemRendering.ONE;
+            boolean three = ClientConfig.crateItemRendering.get() == ClientConfig.CrateItemRendering.THREE;
+            int amount =
+                    one ? 1 :
+                            three ? 3 :
+                                    (pBlockEntity.isUnlimitedShop ? MAX_RENDERED_ITEMS :
+                                            Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
 
             for (int i = 0; i < amount; i++) {
                 stack.pushPose();
