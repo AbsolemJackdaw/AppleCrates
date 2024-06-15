@@ -81,14 +81,15 @@ publishing {
 
 task publishCurseForge(type: TaskPublishCurseForge) {
 
-    apiToken = "${api_token_paintings}"
+    apiToken = findProperty('cf_api_token');
 
     // The main file to upload
     def mainFile = upload(630726, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-    mainFile.releaseType = 'beta'
+    mainFile.releaseType = "${releasetype}"
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'
     mainFile.addJavaVersion('Java 17')
+    mainFile.addGameVersion("${minecraft_version}");
     mainFile.addModLoader('Fabric')
     mainFile.addModLoader('Quilt')
 
