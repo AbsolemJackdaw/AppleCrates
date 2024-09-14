@@ -2,11 +2,9 @@ package jackdaw.applecrates.api;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.exception.WoodException;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.Map;

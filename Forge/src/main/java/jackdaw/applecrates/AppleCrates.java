@@ -1,19 +1,14 @@
 package jackdaw.applecrates;
 
-import com.mojang.datafixers.kinds.Const;
-import jackdaw.applecrates.client.ClientConfig;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.client.ClientConfig;
 import jackdaw.applecrates.compat.SectionProtection;
-import net.minecraft.client.gui.components.toasts.TutorialToast;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Mod(Constants.MODID)
 public class AppleCrates {

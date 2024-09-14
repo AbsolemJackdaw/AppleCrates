@@ -4,7 +4,6 @@ import jackdaw.applecrates.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class StackHandlerAdapter implements IStackHandlerAdapter {
     public CrateStackHandler crateStock = new CrateStackHandler();

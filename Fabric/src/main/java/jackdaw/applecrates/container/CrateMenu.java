@@ -1,6 +1,6 @@
 package jackdaw.applecrates.container;
 
-import jackdaw.applecrates.*;
+import jackdaw.applecrates.FabricCrates;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
