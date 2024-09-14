@@ -1,10 +1,10 @@
 package jackdaw.applecrates.client;
 
+import jackdaw.applecrates.client.besr.CommonClientConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ClientConfig {
+public class ClientConfig extends CommonClientConfig {
     public static final ForgeConfigSpec SPEC;
-    public static ForgeConfigSpec.EnumValue<CrateItemRendering> crateItemRendering;
 
     static {
         ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
@@ -13,12 +13,6 @@ public class ClientConfig {
     }
 
     private static void setupConfig(ForgeConfigSpec.Builder builder) {
-        crateItemRendering = builder.defineEnum("crate_item_rendering", CrateItemRendering.THREE);
-    }
-
-    public static enum CrateItemRendering {
-        ONE,
-        THREE,
-        MANY
+        CommonClientConfig.crateItemRendering = builder.defineEnum("crate_item_rendering", CrateItemRendering.THREE).get();
     }
 }

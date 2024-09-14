@@ -68,7 +68,7 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     public CrateMenu(int id, Inventory inventory, CrateBE crate, boolean owner, boolean unlimited) {
-        this(id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, owner, unlimited);
+        this(id, inventory, crate.getInteractable(), crate.getPriceAndSale(), crate.getCrateStock(), owner, unlimited);
         volatileLevel = crate.getLevel();
         volatilePos = crate.getBlockPos();
     }

@@ -2,9 +2,8 @@ package jackdaw.applecrates.client.besr;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
-import jackdaw.applecrates.block.CrateBlock;
-import jackdaw.applecrates.block.blockentity.CrateBE;
-import jackdaw.applecrates.client.ClientConfig;
+import jackdaw.applecrates.block.CommonCrateBlock;
+import jackdaw.applecrates.block.blockentity.CommonCrateBE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -15,7 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class CrateBESR implements BlockEntityRenderer<CrateBE> {
+public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
     private static final int MAX_RENDERED_ITEMS = 9;
     private static final int ITEMS_PER_ROW = 3;
 
@@ -24,20 +23,20 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
     }
 
     @Override
-    public void render(CrateBE pBlockEntity, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        float blockRotation = pBlockEntity.getBlockState().getValue(CrateBlock.FACING).toYRot();
-        ItemStack selling = pBlockEntity.priceAndSale.getItem(1);
+    public void render(CommonCrateBE crateBE, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
+        float blockRotation = crateBE.getBlockState().getValue(CommonCrateBlock.FACING).toYRot();
+        ItemStack selling = crateBE.stackHandler.getPriceAndSaleItem(1);
 
         if (!selling.isEmpty()) {
-            boolean one = ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.ONE;
-            boolean three = ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.THREE;
-            int amount = one ? 1 : three ? 3 : (pBlockEntity.isUnlimitedShop ? MAX_RENDERED_ITEMS : Mth.clamp(pBlockEntity.crateStock.getCountOfItem(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
+            boolean one = CommonClientConfig.crateItemRendering == CommonClientConfig.CrateItemRendering.ONE;
+            boolean three = CommonClientConfig.crateItemRendering == CommonClientConfig.CrateItemRendering.THREE;
+            int amount = one ? 1 : three ? 3 : (crateBE.isUnlimitedShop ? MAX_RENDERED_ITEMS : Mth.clamp(crateBE.stackHandler.getCratestacksTotalItemCount(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
 
             for (int i = 0; i < amount; i++) {
                 stack.pushPose();
 
                 //prepare normalisation of crate rotation in shown itemstacks
-                int angleSimp = (int) pBlockEntity.getBlockState().getValue(CrateBlock.FACING).toYRot() / 90;
+                int angleSimp = (int) crateBE.getBlockState().getValue(CommonCrateBlock.FACING).toYRot() / 90;
                 float xoff = angleSimp == 1 || angleSimp == 2 ? 1.0f : 0.0f;
                 float zoff = angleSimp == 2 || angleSimp == 3 ? 1.0f : 0.0f;
                 float zfront = angleSimp % 2 == 1 ? (0.5f * (angleSimp == 3 ? -1 : 1)) : 0f;
@@ -53,11 +52,11 @@ public class CrateBESR implements BlockEntityRenderer<CrateBE> {
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
                 //or crate's left/right, up/down, and lower/higher
-                var offset = calculateOffset(pBlockEntity.getBlockPos());
+                var offset = calculateOffset(crateBE.getBlockPos());
                 float randX = (float) offset.x();
                 float randZ = (float) offset.z();
 
-                if (ClientConfig.crateItemRendering == ClientConfig.CrateItemRendering.THREE) {
+                if (CommonClientConfig.crateItemRendering == CommonClientConfig.CrateItemRendering.THREE) {
                     stack.translate((i == 0 ? 0.0f : randX / (float) i * (i == 1 ? -1 : 1)), // x or crate's left/right
                             0.25f + (i == 0 ? 0.0f : randZ / (float) i), //z or crate's up/down
                             0.1f + (float) i * 0.025 //y or crate's higher/lower. In general, don't touch this value

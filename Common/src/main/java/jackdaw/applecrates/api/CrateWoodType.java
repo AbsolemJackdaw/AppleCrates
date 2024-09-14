@@ -2,7 +2,8 @@ package jackdaw.applecrates.api;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.api.exception.WoodException;
+import jackdaw.applecrates.block.blockentity.CommonCrateBE;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -88,8 +89,8 @@ public class CrateWoodType {
         return resourceLocation;
     }
 
-    public static BlockEntityType<CrateBE> getBlockEntityType(CrateWoodType type) {
-        return (BlockEntityType<CrateBE>) Registry.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
+    public static BlockEntityType<? extends CommonCrateBE> getBlockEntityType(CrateWoodType type) {
+        return (BlockEntityType<? extends CommonCrateBE>) Registry.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
     }
 
     public ResourceLocation getFullBeRegistryResLoc() {

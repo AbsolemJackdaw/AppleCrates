@@ -2,8 +2,11 @@ package jackdaw.applecrates.api;
 
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.api.exception.WoodException;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,23 +26,25 @@ public class AppleCrateAPI {
     }
 
     protected static void registerForCrate(AppleCrateBuilder builder) {
-        //no case for datagen //TODO
-        try {
-            CrateWoodType wood = CrateWoodType.create(builder.compatModId, builder.yourModId, builder.woodName);
-            if (CrateWoodType.values().noneMatch(wood::equals)) {
-                CrateWoodType.register(wood);
-                texturePathFromWood.put(wood, builder.getTextureResourceLocation());
-                originalPlankBlockForWood.put(wood, builder.getPlanksResourceLocation());
-            } else throw WoodException.INSTANCE.alreadyInList(wood);
-        } catch (WoodException e) {
-            LogUtils.getLogger().error(e.getMessage());
+        //when datagen for other mods is ran, vanilla crates shouldnt be registered. when the game is ran however, they should
+        if (!builder.yourModId.equals(Constants.MODID) || Constants.GEN_VANILLA_CRATES || !Constants.IS_DATA_GEN) {
+            try {
+                CrateWoodType wood = CrateWoodType.create(builder.compatModId, builder.yourModId, builder.woodName);
+                if (CrateWoodType.values().noneMatch(wood::equals)) {
+                    CrateWoodType.register(wood);
+                    texturePathFromWood.put(wood, builder.getTextureResourceLocation());
+                    originalPlankBlockForWood.put(wood, builder.getPlanksResourceLocation());
+                } else throw WoodException.INSTANCE.alreadyInList(wood);
+            } catch (WoodException e) {
+                LogUtils.getLogger().error(e.getMessage());
+            }
         }
     }
 
     public static class AppleCrateBuilder {
         static {
             for (String wood : Constants.VANILLAWOODS)
-                new AppleCrateBuilder(Constants.MODID, wood).register();
+                new AppleCrateAPI.AppleCrateBuilder(Constants.MODID, wood).register();
         }
 
         protected final String woodName;

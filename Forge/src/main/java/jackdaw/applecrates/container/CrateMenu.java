@@ -29,21 +29,7 @@ public class CrateMenu extends AbstractContainerMenu {
     private BlockPos volatilePos;
 
     //Registry overload for menu type registry
-//    public CrateMenu(int id, Inventory inv, boolean isOwner, boolean isUnlimitedShop) {
-//        this(isOwner ? GeneralRegistry.CRATE_MENU_OWNER.get() : GeneralRegistry.CRATE_MENU_BUYER.get(), id, inv, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), isOwner);
-//        this.isUnlimitedShop = isUnlimitedShop;
-//    }
-//
-//    public CrateMenu(MenuType<CrateMenu> type, int id, Inventory inventory, CrateBE crate, boolean isOwner) {
-//        this(isOwner ? crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_OWNER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_OWNER.get() :
-//                        crate.isUnlimitedShop ? GeneralRegistry.CRATE_MENU_BUYER_UNLIMITED.get() : GeneralRegistry.CRATE_MENU_BUYER.get(),
-//                id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, isOwner);
-//        volatileLevel = crate.getLevel();
-//        volatilePos = crate.getBlockPos();
-//        isUnlimitedShop = crate.isUnlimitedShop;
-//    }
-
-    //Registry overload for menu type registry //client
+    //client
     public CrateMenu(int id, Inventory inventory, boolean owner, boolean unlimited) {
         this(id, inventory, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), owner, unlimited);
     }
@@ -85,7 +71,7 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     public CrateMenu(int id, Inventory inventory, CrateBE crate, boolean owner, boolean unlimited) {
-        this(id, inventory, crate.interactable, crate.priceAndSale, crate.crateStock, owner, unlimited);
+        this(id, inventory, crate.getInteractable(), crate.getPriceAndSale(), crate.getCrateStock(), owner, unlimited);
         volatileLevel = crate.getLevel();
         volatilePos = crate.getBlockPos();
     }
@@ -182,7 +168,7 @@ public class CrateMenu extends AbstractContainerMenu {
             ItemStack resultSlotCache = interactableSlots.getStackInSlot(1).copy();//get copy before clicking
             super.clicked(slotID, mouseButton, click, player);
             //if the pickup slot had content, then there was payment enough
-            if ((ClickType.PICKUP.equals(click) || ClickType.THROW.equals(click) ) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
+            if ((ClickType.PICKUP.equals(click) || ClickType.THROW.equals(click)) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
                 interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
                 crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getStackInSlot(0), isUnlimitedShop);
                 updateSellItem();

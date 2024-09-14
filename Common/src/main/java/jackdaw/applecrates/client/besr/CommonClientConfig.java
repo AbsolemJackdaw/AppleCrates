@@ -1,6 +1,6 @@
-package jackdaw.applecrates.client;
+package jackdaw.applecrates.client.besr;
 
-public class ClientConfig {
+public class CommonClientConfig {
     public static CrateItemRendering crateItemRendering = CrateItemRendering.THREE;
 
     public static enum CrateItemRendering {
