@@ -83,7 +83,8 @@ public class AppleCrateAPI {
         }
 
 
-        public static void registerVanilla() { //loads the class so the static vanilla crate initializer can be called.
+        public static void registerVanilla() {
+            //loads the class so the static vanilla crate initializer can be called.
             //when called multiple times, will only init vanilla crates once, so they can't be double registered
         }
 

@@ -16,7 +16,7 @@ public class CrateStackHandler extends ItemStackHandler {
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
     public CrateStackHandler() {
-        super(30);
+        super(31);
     }
 
     public int getCountOfItem(Item item) {
@@ -39,42 +39,42 @@ public class CrateStackHandler extends ItemStackHandler {
 
         ItemStack prepPay = payment.copy();
 
-        if (getStackInSlot(29).isEmpty()) {
+        if (getStackInSlot(getLastSlot()).isEmpty()) {
             prepPay.setCount(1);
-            setStackInSlot(29, prepPay);
+            setStackInSlot(getLastSlot(), prepPay);
         }
-        if (!ItemStack.isSame(payment, getStackInSlot(29)))
+        if (!ItemStack.isSame(payment, getStackInSlot(getLastSlot())))
             return false;
-        ItemStack prepXchange = getStackInSlot(29).copy();
+        ItemStack prepXchange = getStackInSlot(getLastSlot()).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
         if (tag.contains(TAGSTOCK)) {
             tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
         } else {
             tag.putInt(TAGSTOCK, payment.getCount());
         }
-        setStackInSlot(29, prepXchange);
+        setStackInSlot(getLastSlot(), prepXchange);
         return true;
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (slot == 29)
+        if (slot == getLastSlot())
             return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (slot == 29)
+        if (slot == getLastSlot())
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return slot != 29 && super.isItemValid(slot, stack);
+        return slot != getLastSlot() && super.isItemValid(slot, stack);
     }
-    
+
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
@@ -85,6 +85,9 @@ public class CrateStackHandler extends ItemStackHandler {
     public void deserializeNBT(CompoundTag nbt) {
         super.deserializeNBT(nbt);
         this.itemCountCache.clear();
+    }
 
+    public int getLastSlot() {
+        return getSlots() - 1;
     }
 }

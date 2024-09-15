@@ -2,6 +2,8 @@ package jackdaw.applecrates.client.besr;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
+import jackdaw.applecrates.Content;
+import jackdaw.applecrates.EnumCrateItemRendering;
 import jackdaw.applecrates.block.CommonCrateBlock;
 import jackdaw.applecrates.block.blockentity.CommonCrateBE;
 import net.minecraft.client.Minecraft;
@@ -18,9 +20,9 @@ public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
     private static final int MAX_RENDERED_ITEMS = 9;
     private static final int ITEMS_PER_ROW = 3;
 
-    public CrateBESR(BlockEntityRendererProvider.Context context) {
-        System.out.println("do");
+    public CrateBESR(BlockEntityRendererProvider.Context ctx) {
     }
+
 
     @Override
     public void render(CommonCrateBE crateBE, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
@@ -28,8 +30,8 @@ public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
         ItemStack selling = crateBE.stackHandler.getPriceAndSaleItem(1);
 
         if (!selling.isEmpty()) {
-            boolean one = CommonClientConfig.crateItemRendering == CommonClientConfig.CrateItemRendering.ONE;
-            boolean three = CommonClientConfig.crateItemRendering == CommonClientConfig.CrateItemRendering.THREE;
+            boolean one = Content.clientConfig.getCrateItemRenderingValue() == EnumCrateItemRendering.ONE;
+            boolean three = Content.clientConfig.getCrateItemRenderingValue() == EnumCrateItemRendering.THREE;
             int amount = one ? 1 : three ? 3 : (crateBE.isUnlimitedShop ? MAX_RENDERED_ITEMS : Mth.clamp(crateBE.stackHandler.getCratestacksTotalItemCount(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
 
             for (int i = 0; i < amount; i++) {
@@ -56,7 +58,7 @@ public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
                 float randX = (float) offset.x();
                 float randZ = (float) offset.z();
 
-                if (CommonClientConfig.crateItemRendering == CommonClientConfig.CrateItemRendering.THREE) {
+                if (Content.clientConfig.getCrateItemRenderingValue() == EnumCrateItemRendering.THREE) {
                     stack.translate((i == 0 ? 0.0f : randX / (float) i * (i == 1 ? -1 : 1)), // x or crate's left/right
                             0.25f + (i == 0 ? 0.0f : randZ / (float) i), //z or crate's up/down
                             0.1f + (float) i * 0.025 //y or crate's higher/lower. In general, don't touch this value

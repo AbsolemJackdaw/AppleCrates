@@ -89,8 +89,8 @@ public class CrateWoodType {
         return resourceLocation;
     }
 
-    public static BlockEntityType<? extends CommonCrateBE> getBlockEntityType(CrateWoodType type) {
-        return (BlockEntityType<? extends CommonCrateBE>) Registry.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
+    public static BlockEntityType<CommonCrateBE> getBlockEntityType(CrateWoodType type) {
+        return (BlockEntityType<CommonCrateBE>) Registry.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
     }
 
     public ResourceLocation getFullBeRegistryResLoc() {

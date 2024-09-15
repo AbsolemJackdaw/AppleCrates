@@ -17,14 +17,17 @@ public class AppleCrates {
 
     public AppleCrates() {
         //Adjust constant
-        Constants.IS_DATA_GEN = !FMLLoader.getLaunchHandler().isData();
+        Constants.IS_DATA_GEN = FMLLoader.getLaunchHandler().isData();
 
         GeneralRegistry.startup();
 
         if (ModList.get().isLoaded("sectionprotection"))
             SectionProtection.init();
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, "apple_crates_client.toml");
+        //init config for Forge
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.INSTANCE.SPEC, "apple_crates_client.toml");
+        //reference this config to be used in common code
+        Content.clientConfig = ClientConfig.INSTANCE;
 
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
         //call after mod compat so it can register new WoodTypes

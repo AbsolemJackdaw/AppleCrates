@@ -2,7 +2,8 @@ package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBE;
-import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.container.CrateMenuBuyer;
+import jackdaw.applecrates.container.CrateMenuOwner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -26,27 +27,32 @@ public class CrateBlock extends CommonCrateBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.getBlockEntity(pPos) instanceof CrateBE crate && pHand.equals(InteractionHand.MAIN_HAND)) {
-            if (pLevel instanceof ServerLevel server && pPlayer.getItemInHand(pHand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(pPlayer.getGameProfile())) {
+    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof CrateBE crate && hand.equals(InteractionHand.MAIN_HAND)) {
+            if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.getGameProfile())) {
                 crate.isUnlimitedShop = true;
-                pPlayer.displayClientMessage(Component.translatable("crate.set.creative"), true);
+                player.displayClientMessage(Component.translatable("crate.set.creative"), true);
                 crate.setChanged();
             } else {
-                boolean owner = !pPlayer.isShiftKeyDown() && crate.isOwner(pPlayer); //add shift debug testing
+                boolean owner = !player.isShiftKeyDown() && crate.isOwner(player); //add shift debug testing
 
-                if (pPlayer instanceof ServerPlayer sp) {
-                    NetworkHooks.openScreen(sp, new SimpleMenuProvider((id, inv, player) ->
-                            new CrateMenu(id, inv, crate, owner, crate.isUnlimitedShop), Component.translatable("container.crate" + (owner ? ".owner" : ""))), buf -> {
-                        //buffer to read client side
-                        buf.writeBoolean(owner);
-                        buf.writeBoolean(crate.isUnlimitedShop);
-
-                    });
+                if (player instanceof ServerPlayer sp) {
+                    if (owner)
+                        NetworkHooks.openScreen(sp, new SimpleMenuProvider((id, inv, interactingPlayer) ->
+                                new CrateMenuOwner(id, inv, crate, crate.isUnlimitedShop), Component.translatable("container.crate.owner")), buf -> {
+                            //buffer to read client side
+                            buf.writeBoolean(crate.isUnlimitedShop);
+                        });
+                    else
+                        NetworkHooks.openScreen(sp, new SimpleMenuProvider((id, inv, interactingPlayer) ->
+                                new CrateMenuBuyer(id, inv, crate, crate.isUnlimitedShop), Component.translatable("container.crate")), buf -> {
+                            //buffer to read client side
+                            buf.writeBoolean(crate.isUnlimitedShop);
+                        });
                 }
-                pLevel.playSound(pPlayer, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.FAIL;
     }

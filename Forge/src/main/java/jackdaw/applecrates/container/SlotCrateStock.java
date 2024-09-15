@@ -21,11 +21,11 @@ public class SlotCrateStock extends SlotItemHandler {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack stack) {
-        return getSlotIndex() < 29;
+        return getSlotIndex() < 30;
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getSlotIndex() != 29 && isOwner;
+        return getSlotIndex() != 30 && isOwner;
     }
 }

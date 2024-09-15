@@ -1,18 +1,28 @@
 package jackdaw.applecrates.client;
 
-import jackdaw.applecrates.client.besr.CommonClientConfig;
+import jackdaw.applecrates.EnumCrateItemRendering;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ClientConfig extends CommonClientConfig {
-    public static final ForgeConfigSpec SPEC;
+public class ClientConfig implements IClientConfig {
 
-    static {
+    public static final ClientConfig INSTANCE = new ClientConfig();
+
+    public final ForgeConfigSpec SPEC;
+    private ForgeConfigSpec.EnumValue<EnumCrateItemRendering> configValue;
+
+    //class load
+    {
         ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
         setupConfig(configBuilder);
         SPEC = configBuilder.build();
     }
 
-    private static void setupConfig(ForgeConfigSpec.Builder builder) {
-        CommonClientConfig.crateItemRendering = builder.defineEnum("crate_item_rendering", CrateItemRendering.THREE).get();
+    @Override
+    public EnumCrateItemRendering getCrateItemRenderingValue() {
+        return configValue.get();
+    }
+
+    private void setupConfig(ForgeConfigSpec.Builder builder) {
+        configValue = builder.defineEnum("crate_item_rendering", EnumCrateItemRendering.THREE);
     }
 }

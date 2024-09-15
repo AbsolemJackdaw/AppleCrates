@@ -1,9 +1,10 @@
 package jackdaw.applecrates.api;
 
 import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.block.CommonCrateBlock;
+import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
-import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.container.CrateMenuBuyer;
+import jackdaw.applecrates.container.CrateMenuOwner;
 import jackdaw.applecrates.container.StackHandlerAdapter;
 import jackdaw.applecrates.item.CrateItem;
 import net.minecraft.world.inventory.MenuType;
@@ -22,10 +23,14 @@ public class GeneralRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Constants.MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MODID);
-    public static final RegistryObject<MenuType<CrateMenu>> CRATE_MENU = MENU_TYPES.register("crate_menu_buyer", () -> IForgeMenuType.create((windowId, inv, data) -> {
-        boolean owner = data.readBoolean();
+    public static final RegistryObject<MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenu(windowId, inv, owner, unlimited);
+        return new CrateMenuOwner(windowId, inv, unlimited);
+    }));
+
+    public static final RegistryObject<MenuType<CrateMenuBuyer>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> IForgeMenuType.create((windowId, inv, data) -> {
+        boolean unlimited = data.readBoolean();
+        return new CrateMenuBuyer(windowId, inv, unlimited);
     }));
 
     /**
@@ -34,7 +39,7 @@ public class GeneralRegistry {
     public static void prepareForRegistry(String modId, DeferredRegister<Block> blockRegistry, DeferredRegister<Item> itemRegistry, DeferredRegister<BlockEntityType<?>> beRegistry) {
 
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
-            RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CommonCrateBlock(crateWoodType));
+            RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
             beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBE(crateWoodType, pos, state, new StackHandlerAdapter()), block.get()).build(null));
 

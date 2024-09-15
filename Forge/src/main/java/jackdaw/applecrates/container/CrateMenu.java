@@ -1,13 +1,12 @@
 package jackdaw.applecrates.container;
 
-import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -19,8 +18,6 @@ import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
 
 public class CrateMenu extends AbstractContainerMenu {
 
-    public boolean isOwner = false;
-
     public CrateStackHandler crateStock;
     public ItemStackHandler interactableSlots;
     public ItemStackHandler priceAndSaleSlots;
@@ -28,50 +25,59 @@ public class CrateMenu extends AbstractContainerMenu {
     private Level volatileLevel;
     private BlockPos volatilePos;
 
-    //Registry overload for menu type registry
-    //client
-    public CrateMenu(int id, Inventory inventory, boolean owner, boolean unlimited) {
-        this(id, inventory, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), owner, unlimited);
+    protected CrateMenu(MenuType type, int id, Inventory inventory, boolean unlimited) {
+        this(type, id, inventory, new ItemStackHandler(2), new ItemStackHandler(2), new CrateStackHandler(), unlimited);
     }
 
-    public CrateMenu(int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean owner, boolean ul) {
-        super(GeneralRegistry.CRATE_MENU.get(), id);
-
+    protected CrateMenu(MenuType type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean ul) {
+        super(type, id);
         this.interactableSlots = interaction;
         this.priceAndSaleSlots = trade;
         this.crateStock = stock;
-
-        this.isOwner = owner;
         this.isUnlimitedShop = ul;
 
-        this.addSlot(new SlotItemHandler(interactableSlots, 0, 136, 37));
-        this.addSlot(new SlotItemHandler(interactableSlots, 1, 220, 38) {
+        this.addSlot(new SlotItemHandler(interactableSlots, 0, isOwner() ? 10 : 102, isOwner() ? 76 : 21)); //owner set pay
+        this.addSlot(new SlotItemHandler(interactableSlots, 1, isOwner() ? 46 : 142, isOwner() ? 76 : 21) { //owner set item
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return isOwner;
+                return isOwner();
             }
         });
 
-        this.addSlot(new SlotPriceSale(priceAndSaleSlots, 0, 10, 140));
-        this.addSlot(new SlotPriceSale(priceAndSaleSlots, 1, 74, 140));
+        //invisible slots, storage for current trade
+        this.addSlot(new SlotPriceSale(priceAndSaleSlots, 0, 0, 0)); //buyer pays
+        this.addSlot(new SlotPriceSale(priceAndSaleSlots, 1, 0, 0)); //buyer gets
 
-        for (int y = 0; y < 6; y++) //crate stock
-            for (int x = 0; x < 5; x++)
-                addSlot(new SlotCrateStock(stock, y * 5 + x, x * 18 + 5, y * 18 + 18, isOwner));
+        for (int y = 0; y < 3; y++) //crate stock
+            for (int x = 0; x < 10; x++)
+                addSlot(new SlotCrateStock(stock, y * 10 + x, x * 18 + 10, y * 18 + 17, isOwner()));
+        addSlot(new SlotCrateStock(stock, crateStock.getLastSlot(), 172, 76, isOwner()));
 
         for (int i = 0; i < 3; ++i) { //player inventory
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(inventory, j + i * 9 + 9, 108 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(inventory, j + i * 9 + 9, playerInventoryX() + j * 18, playerInventoryY() + i * 18));
             }
         }
 
         for (int i = 0; i < 9; ++i) { //player hotbar
-            this.addSlot(new Slot(inventory, i, 108 + i * 18, 142));
+            this.addSlot(new Slot(inventory, i, playerInventoryX() + i * 18, playerInventoryY() + 58));
         }
     }
 
-    public CrateMenu(int id, Inventory inventory, CrateBE crate, boolean owner, boolean unlimited) {
-        this(id, inventory, crate.getInteractable(), crate.getPriceAndSale(), crate.getCrateStock(), owner, unlimited);
+    protected boolean isOwner() {
+        return false;
+    }
+
+    protected int playerInventoryX() {
+        return 0;
+    }
+
+    protected int playerInventoryY() {
+        return 0;
+    }
+
+    public CrateMenu(MenuType type, int id, Inventory inventory, CrateBE crate, boolean unlimited) {
+        this(type, id, inventory, crate.getInteractable(), crate.getPriceAndSale(), crate.getCrateStock(), unlimited);
         volatileLevel = crate.getLevel();
         volatilePos = crate.getBlockPos();
     }
@@ -96,7 +102,7 @@ public class CrateMenu extends AbstractContainerMenu {
         if (!give.isEmpty()) {
             for (int i = 34; i < (34 + (9 * 4)); ++i) {
                 ItemStack stackinSlot = this.slots.get(i).getItem();
-                if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(give, stackinSlot)) {
+                if (!stackinSlot.isEmpty() && ItemStack.isSame(give, stackinSlot)) {
                     ItemStack paymentSlot = this.interactableSlots.getStackInSlot(0);
                     int j = paymentSlot.isEmpty() ? 0 : paymentSlot.getCount();
                     int k = Math.min(give.getMaxStackSize() - j, stackinSlot.getCount());
@@ -115,74 +121,27 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        if (slots.get(pIndex).hasItem()) {
-            //slot 33 is money slot
-            if (pIndex >= 4 && pIndex <= 32 || pIndex < 2)
-                if (this.moveItemStackTo(slots.get(pIndex).getItem(), 34, 70, false)) { //player inv
-                    if (pIndex == 1) {
-                        ItemStack prepPayChange = interactableSlots.getStackInSlot(0).copy();
-                        prepPayChange.shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
-                        interactableSlots.setStackInSlot(0, prepPayChange);
-                        crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getStackInSlot(0), isUnlimitedShop);
-                        if (!interactableSlots.getStackInSlot(0).isEmpty()) {
-                            updateSellItem();
-                            return priceAndSaleSlots.getStackInSlot(1).copy(); //keep looping till pay is empty
-                        }
-                    }
-                    if (pIndex == 0)
+    public ItemStack quickMoveStack(Player player, int index) {
+        if (!slots.get(index).hasItem())
+            return ItemStack.EMPTY;
+
+        //slot 34 is money slot
+        if (index >= 4 && index <= 34 || index < 2)
+            if (this.moveItemStackTo(slots.get(index).getItem(), 35, 70, false)) { //player inv
+                if (index == 1) {
+                    ItemStack prepPayChange = interactableSlots.getStackInSlot(0).copy();
+                    prepPayChange.shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
+                    interactableSlots.setStackInSlot(0, prepPayChange);
+                    crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getStackInSlot(0), isUnlimitedShop);
+                    if (!interactableSlots.getStackInSlot(0).isEmpty()) {
                         updateSellItem();
-                } else return ItemStack.EMPTY;
-
-            if (isOwner) {
-                if (pIndex >= 34 && pIndex <= 70) { //only enable move to crate if player is the owner
-                    if (!this.moveItemStackTo(slots.get(pIndex).getItem(), 4, 33, false)) { //Crate slot
-                        return ItemStack.EMPTY;
+                        return priceAndSaleSlots.getStackInSlot(1).copy(); //keep looping till pay is empty
                     }
                 }
-                if (pIndex == 33) {
-                    //code is never reached.
-                    //the payement slot (or nr 33) is void form pickup and cannot trigger quickMoveStack.
-                    //custom quickmove code can be found in #clicked
-                }
-            } else {
-                if (pIndex >= 34 && pIndex <= 70) { //move to 'give' slot if not owner
-                    if (!this.moveItemStackTo(slots.get(pIndex).getItem(), 0, 1, false)) { //
-                        return ItemStack.EMPTY;
-                    }
+                if (index == 0)
                     updateSellItem();
-                }
-            }
-
-        }
-
+            } else return ItemStack.EMPTY;
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void clicked(int slotID, int mouseButton, ClickType click, Player player) {
-        if (slotID == 0 && !isOwner) {
-            super.clicked(slotID, mouseButton, click, player);
-            updateSellItem();
-        } else if (slotID == 1 && !isOwner) {
-            ItemStack resultSlotCache = interactableSlots.getStackInSlot(1).copy();//get copy before clicking
-            super.clicked(slotID, mouseButton, click, player);
-            //if the pickup slot had content, then there was payment enough
-            if ((ClickType.PICKUP.equals(click) || ClickType.THROW.equals(click)) && !resultSlotCache.isEmpty() && interactableSlots.getStackInSlot(1).isEmpty()) {
-                interactableSlots.getStackInSlot(0).shrink(priceAndSaleSlots.getStackInSlot(0).getCount());
-                crateStock.updateStackInPaymentSlot(priceAndSaleSlots.getStackInSlot(0), isUnlimitedShop);
-                updateSellItem();
-            }
-        } else if (slotID == 33 && this.getCarried().isEmpty()) {
-            if (click.equals(ClickType.PICKUP)) {
-                this.setCarried(pickUpPayment());
-            } else if (click.equals(ClickType.QUICK_MOVE)) {
-                //custom quickmove code because of locking down the payment slot so noone takes out anything ever
-                this.moveItemStackTo(pickUpPayment(), 34, 70, false);
-            }
-        } else {
-            super.clicked(slotID, mouseButton, click, player);
-        }
     }
 
     @Override
@@ -195,10 +154,7 @@ public class CrateMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player pPlayer) {
         this.returnItemToInventory(pPlayer, 0);
-        if (!isOwner)
-            updateSellItem();
-        else
-            this.returnItemToInventory(pPlayer, 1);
+        updateSellItem();
 
         super.removed(pPlayer);
 
@@ -221,12 +177,12 @@ public class CrateMenu extends AbstractContainerMenu {
         return true;
     }
 
-    private void updateSellItem() {
-        ItemStack paying = interactableSlots.getStackInSlot(0);
-        ItemStack give = priceAndSaleSlots.getStackInSlot(0);
-        if (!paying.isEmpty()) {
-            if (!give.isEmpty()) {
-                if (ItemStack.isSameItemSameTags(give, paying) && paying.getCount() >= give.getCount()) {
+    protected void updateSellItem() {
+        ItemStack payment = interactableSlots.getStackInSlot(0);
+        ItemStack toPay = priceAndSaleSlots.getStackInSlot(0);
+        if (!payment.isEmpty()) {
+            if (!toPay.isEmpty()) {
+                if (ItemStack.isSame(toPay, payment) && payment.getCount() >= toPay.getCount()) {
                     if (interactableSlots.getStackInSlot(1).isEmpty()) {
                         movefromStockToSaleSlot(priceAndSaleSlots.getStackInSlot(1).copy()); //check for the item to get
                     }
@@ -239,8 +195,8 @@ public class CrateMenu extends AbstractContainerMenu {
         }
     }
 
-    private ItemStack pickUpPayment() {
-        ItemStack original = crateStock.getStackInSlot(29); //do not modify originals !
+    protected ItemStack pickUpPayment() {
+        ItemStack original = crateStock.getStackInSlot(crateStock.getLastSlot()); //do not modify originals !
         int amount = original.hasTag() ? original.getTag().contains(TAGSTOCK) ? original.getTag().getInt(TAGSTOCK) : 0 : 0;
 
         if (amount > 0 && original.hasTag()) { //Redundant double check, but better safe then sorry
@@ -254,11 +210,11 @@ public class CrateMenu extends AbstractContainerMenu {
 
             int updatedAmount = amount - pickUp;
             if (updatedAmount <= 0) {
-                crateStock.setStackInSlot(29, ItemStack.EMPTY);
+                crateStock.setStackInSlot(crateStock.getLastSlot(), ItemStack.EMPTY);
             } else {
                 ItemStack prepUpdate = original.copy();
                 prepUpdate.getTag().putInt(TAGSTOCK, updatedAmount);
-                crateStock.setStackInSlot(29, prepUpdate);
+                crateStock.setStackInSlot(crateStock.getLastSlot(), prepUpdate);
             }
             return prepPickup;
         }
@@ -272,7 +228,7 @@ public class CrateMenu extends AbstractContainerMenu {
             else
                 for (int i = 4; i < 34; ++i) {
                     ItemStack stackinSlot = this.slots.get(i).getItem();
-                    if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(get, stackinSlot)) {
+                    if (!stackinSlot.isEmpty() && ItemStack.isSame(get, stackinSlot)) {
                         ItemStack pickupSlot = this.interactableSlots.getStackInSlot(1);
                         int j = pickupSlot.isEmpty() ? 0 : pickupSlot.getCount();
                         int k = Math.min(get.getCount() - j, stackinSlot.getCount());
@@ -290,9 +246,14 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     public boolean outOfStock() {
-        for (int i = 0; i < crateStock.getSlots() - 1; i++) //last slot is for payment
-            if (!crateStock.getStackInSlot(i).isEmpty() && crateStock.getStackInSlot(i).getCount() >= priceAndSaleSlots.getStackInSlot(1).getCount())
-                return false;
-        return interactableSlots.getStackInSlot(1).isEmpty();
+        int total = 0;
+        var buying = priceAndSaleSlots.getStackInSlot(1);
+        for (int i = 0; i < crateStock.getLastSlot() - 1; i++) //last slot is for payment
+        {
+            var stack = crateStock.getStackInSlot(i);
+            if (!stack.isEmpty() && ItemStack.isSame(stack, buying))
+                total += stack.getCount();
+        }
+        return total < buying.getCount();
     }
 }
