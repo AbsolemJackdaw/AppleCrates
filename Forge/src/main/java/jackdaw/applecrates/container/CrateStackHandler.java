@@ -1,5 +1,6 @@
 package jackdaw.applecrates.container;
 
+import jackdaw.applecrates.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +17,7 @@ public class CrateStackHandler extends ItemStackHandler {
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
     public CrateStackHandler() {
-        super(31);
+        super(Constants.CRATESLOTS + 1);
     }
 
     public int getCountOfItem(Item item) {
@@ -39,40 +40,40 @@ public class CrateStackHandler extends ItemStackHandler {
 
         ItemStack prepPay = payment.copy();
 
-        if (getStackInSlot(getLastSlot()).isEmpty()) {
+        if (getStackInSlot(Constants.CRATESLOTS).isEmpty()) {
             prepPay.setCount(1);
-            setStackInSlot(getLastSlot(), prepPay);
+            setStackInSlot(Constants.CRATESLOTS, prepPay);
         }
-        if (!ItemStack.isSame(payment, getStackInSlot(getLastSlot())))
+        if (!ItemStack.isSame(payment, getStackInSlot(Constants.CRATESLOTS )))
             return false;
-        ItemStack prepXchange = getStackInSlot(getLastSlot()).copy();
+        ItemStack prepXchange = getStackInSlot(Constants.CRATESLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
         if (tag.contains(TAGSTOCK)) {
             tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
         } else {
             tag.putInt(TAGSTOCK, payment.getCount());
         }
-        setStackInSlot(getLastSlot(), prepXchange);
+        setStackInSlot(Constants.CRATESLOTS, prepXchange);
         return true;
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (slot == getLastSlot())
+        if (slot == Constants.CRATESLOTS)
             return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (slot == getLastSlot())
+        if (slot == Constants.CRATESLOTS)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return slot != getLastSlot() && super.isItemValid(slot, stack);
+        return slot != Constants.CRATESLOTS && super.isItemValid(slot, stack);
     }
 
     @Override
@@ -85,9 +86,5 @@ public class CrateStackHandler extends ItemStackHandler {
     public void deserializeNBT(CompoundTag nbt) {
         super.deserializeNBT(nbt);
         this.itemCountCache.clear();
-    }
-
-    public int getLastSlot() {
-        return getSlots() - 1;
     }
 }

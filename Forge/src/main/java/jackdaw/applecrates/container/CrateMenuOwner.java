@@ -1,5 +1,7 @@
 package jackdaw.applecrates.container;
 
+import io.netty.util.Constant;
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,20 +38,13 @@ public class CrateMenuOwner extends CrateMenu {
     }
 
     @Override
-    public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
-        if (pSlot.index == 1)
-            return false;
-        return super.canTakeItemForPickAll(pStack, pSlot);
-    }
-
-    @Override
     public void clicked(int slotID, int mouseButton, ClickType click, Player player) {
-        if (slotID == 34 && this.getCarried().isEmpty()) {
+        if (slotID == Constants.MONEYSLOT && this.getCarried().isEmpty()) {
             if (click.equals(ClickType.PICKUP)) {
                 this.setCarried(pickUpPayment());
             } else if (click.equals(ClickType.QUICK_MOVE)) {
                 //custom quickmove code because of locking down the payment slot so noone takes out anything ever
-                this.moveItemStackTo(pickUpPayment(), 35, 70, false);
+                this.moveItemStackTo(pickUpPayment(), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false);
             }
             return;
         }
@@ -58,18 +53,16 @@ public class CrateMenuOwner extends CrateMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        super.quickMoveStack(player, index);
-
-        if (index >= 35 && index <= 70) { //only enable move to crate if player is the owner
-            if (!this.moveItemStackTo(slots.get(index).getItem(), 4, 34, false)) { //Crate slot
+        if (Constants.isInPlayerInventory(index)) { //only enable move to crate if player is the owner
+            if (!this.moveItemStackTo(slots.get(index).getItem(), Constants.CRATESTARTSLOT, Constants.CRATEENDSLOTALL, false)) { //Crate slot
                 return ItemStack.EMPTY;
             }
         }
-        if (index == 34) {
+        if (index == Constants.MONEYSLOT) {
             //code is never reached.
             //the payement slot (or nr 34) is void form pickup and cannot trigger quickMoveStack.
             //custom quickmove code can be found in #clicked
         }
-        return ItemStack.EMPTY;
+        return super.quickMoveStack(player, index);
     }
 }

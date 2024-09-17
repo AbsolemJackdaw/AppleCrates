@@ -4,8 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.container.CrateMenuBuyer;
-import jackdaw.applecrates.container.CrateMenuOwner;
-import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.network.CrateChannel;
 import jackdaw.applecrates.network.SGetSale;
 import net.minecraft.client.gui.components.Button;
@@ -71,8 +69,8 @@ public class CrateScreenBuyer extends AbstractContainerScreen<CrateMenuBuyer> {
 
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
-        if (!menu.priceAndSaleSlots.getStackInSlot(slotId).isEmpty()) {
-            ItemStack saleStack = menu.priceAndSaleSlots.getStackInSlot(slotId);
+        if (!menu.savedTradeSlots.getStackInSlot(slotId).isEmpty()) {
+            ItemStack saleStack = menu.savedTradeSlots.getStackInSlot(slotId);
             int xo = slotId == 0 ? 14 + 2 : 75 - 16 - 2;
             int yo = 20;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
@@ -111,7 +109,7 @@ public class CrateScreenBuyer extends AbstractContainerScreen<CrateMenuBuyer> {
         }
 
         private void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
-            ItemStack stack = menu.priceAndSaleSlots.getStackInSlot(slot);
+            ItemStack stack = menu.savedTradeSlots.getStackInSlot(slot);
             if (!stack.isEmpty())
                 CrateScreenBuyer.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }

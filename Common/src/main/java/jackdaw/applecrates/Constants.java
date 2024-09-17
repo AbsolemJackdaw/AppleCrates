@@ -15,4 +15,33 @@ public class Constants {
     public static final String TAGINTERACTABLE = "interactable";
     public static final String TAGPRICESALE = "pricensale";
     public static final String TAGUNLIMITED = "isUnlimited";
+
+    public static final int CRATESLOTS = 30;
+    public static final int PAYSLOT = 0;
+    public static final int OUTSLOT = 1;
+    public static final int SAVEDTRADEPAY = 2;
+    public static final int SAVEDTRADEOUT = 3;
+    public static final int CRATESTARTSLOT = 4;
+    public static final int CRATEENDSLOT = CRATESTARTSLOT + CRATESLOTS - 1; //subtract one for obo; first slot inclusive
+    public static final int CRATEENDSLOTALL = CRATESTARTSLOT + CRATESLOTS;
+
+    public static final int MONEYSLOT = CRATEENDSLOT + 1;
+    public static final int PLAYERSTARTSLOT = MONEYSLOT + 1;
+    public static final int PLAYERENDSLOT = PLAYERSTARTSLOT + (9 * 4) - 1;//subtract one for obo; first slot inclusive
+
+    public static boolean isInCrateStock(int id) {
+        return id >= CRATESTARTSLOT && id <= CRATEENDSLOT;
+    }
+
+    public static boolean isInPlayerInventory(int id) {
+        return id >= PLAYERSTARTSLOT && id <= PLAYERENDSLOT;
+    }
+
+    public static boolean isInInteractables(int id) {
+        return id == PAYSLOT || id == OUTSLOT;
+    }
+
+    public static boolean isInSavedTradeStock(int id) {
+        return id == SAVEDTRADEPAY || id == SAVEDTRADEOUT;
+    }
 }

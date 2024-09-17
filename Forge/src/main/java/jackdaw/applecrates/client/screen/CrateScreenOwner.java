@@ -41,8 +41,8 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
         this.guiStartY = (this.height - this.imageHeight) / 2;
 
         addRenderableWidget(new SaleButton(guiStartX + 72, guiStartY + 74, (button) -> {
-            if (!(menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())) {
-                if (menu.crateStock.getStackInSlot(menu.crateStock.getLastSlot()).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
+            if (!(menu.interactableTradeSlots.getStackInSlot(0).isEmpty() && menu.interactableTradeSlots.getStackInSlot(1).isEmpty())) {
+                if (menu.crateStock.getStackInSlot(Constants.CRATESLOTS).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
                     CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
                 }
             }
@@ -50,8 +50,8 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
     }
 
     private boolean isSamePayout() {
-        ItemStack payout = menu.crateStock.getStackInSlot(menu.crateStock.getLastSlot()).copy();
-        ItemStack give = menu.interactableSlots.getStackInSlot(0).copy();
+        ItemStack payout = menu.crateStock.getStackInSlot(Constants.CRATESLOTS).copy();
+        ItemStack give = menu.interactableTradeSlots.getStackInSlot(0).copy();
         if (give.isEmpty() || payout.isEmpty())
             return true;
 
@@ -68,7 +68,7 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
         this.renderBackground(poseStack);
         super.render(poseStack, pMouseX, pMouseY, pPartialTick);
         RenderSystem.enableBlend();
-        if (!(menu.priceAndSaleSlots.getStackInSlot(0).isEmpty() && menu.priceAndSaleSlots.getStackInSlot(1).isEmpty()) && menu.interactableSlots.getStackInSlot(0).isEmpty() && menu.interactableSlots.getStackInSlot(1).isEmpty())
+        if (!(menu.savedTradeSlots.getStackInSlot(0).isEmpty() && menu.savedTradeSlots.getStackInSlot(1).isEmpty()) && menu.interactableTradeSlots.getStackInSlot(0).isEmpty() && menu.interactableTradeSlots.getStackInSlot(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
         if (!isSamePayout())
             RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
@@ -103,8 +103,8 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
 
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
-        if ((!menu.interactableSlots.getStackInSlot(slotId).isEmpty()) || !menu.priceAndSaleSlots.getStackInSlot(slotId).isEmpty()) {
-            ItemStack saleStack = !menu.interactableSlots.getStackInSlot(slotId).isEmpty() ? menu.interactableSlots.getStackInSlot(slotId) : menu.priceAndSaleSlots.getStackInSlot(slotId);
+        if ((!menu.interactableTradeSlots.getStackInSlot(slotId).isEmpty()) || !menu.savedTradeSlots.getStackInSlot(slotId).isEmpty()) {
+            ItemStack saleStack = !menu.interactableTradeSlots.getStackInSlot(slotId).isEmpty() ? menu.interactableTradeSlots.getStackInSlot(slotId) : menu.savedTradeSlots.getStackInSlot(slotId);
             int xo = slotId == 0 ? 76 : 138;
             int yo = 75;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
@@ -144,7 +144,7 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
         }
 
         private void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
-            ItemStack stack = menu.priceAndSaleSlots.getStackInSlot(slot);
+            ItemStack stack = menu.savedTradeSlots.getStackInSlot(slot);
             if (!stack.isEmpty())
                 CrateScreenOwner.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }
