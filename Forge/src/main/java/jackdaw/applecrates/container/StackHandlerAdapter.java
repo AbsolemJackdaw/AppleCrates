@@ -12,11 +12,6 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     public ItemStackHandler priceAndSale = new net.minecraftforge.items.ItemStackHandler(2);
 
     @Override
-    public int getContainerSize() {
-        return crateStock.getSlots();
-    }
-
-    @Override
     public ItemStack getInteractableItem(int slot) {
         return interactable.getStackInSlot(slot);
     }

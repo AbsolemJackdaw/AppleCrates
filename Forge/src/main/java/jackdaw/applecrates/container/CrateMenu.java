@@ -52,7 +52,7 @@ public class CrateMenu extends AbstractContainerMenu {
         for (int y = 0; y < 3; y++) //crate stock
             for (int x = 0; x < 10; x++)
                 addSlot(new SlotCrateStock(stock, y * 10 + x, x * 18 + 10, y * 18 + 17, isOwner()));
-        addSlot(new SlotCrateStock(stock, Constants.CRATESLOTS, 172, 76, isOwner()));
+        addSlot(new SlotCrateStock(stock, Constants.TOTALCRATESTOCKLOTS, 172, 76, isOwner()));
 
         for (int i = 0; i < 4; ++i) { //player inventory
             for (int j = 0; j < 9; ++j)
@@ -96,15 +96,15 @@ public class CrateMenu extends AbstractContainerMenu {
 
     private void moveFromInventoryToPaymentSlot(ItemStack give) {
         if (!give.isEmpty()) {
-            for (int i = 34; i < (34 + (9 * 4)); ++i) {
-                ItemStack stackinSlot = this.slots.get(i).getItem();
-                if (!stackinSlot.isEmpty() && ItemStack.isSame(give, stackinSlot)) {
+            for (int i = Constants.PLAYERSTARTSLOT; i < Constants.PLAYERENDSLOT; ++i) {
+                ItemStack stackInSlot = this.slots.get(i).getItem();
+                if (!stackInSlot.isEmpty() && ItemStack.isSame(give, stackInSlot)) {
                     ItemStack paymentSlot = this.interactableTradeSlots.getStackInSlot(0);
                     int j = paymentSlot.isEmpty() ? 0 : paymentSlot.getCount();
-                    int k = Math.min(give.getMaxStackSize() - j, stackinSlot.getCount());
-                    ItemStack copy = stackinSlot.copy();
+                    int k = Math.min(give.getMaxStackSize() - j, stackInSlot.getCount());
+                    ItemStack copy = stackInSlot.copy();
                     int l = j + k;
-                    stackinSlot.shrink(k);
+                    stackInSlot.shrink(k);
                     copy.setCount(l);
                     this.interactableTradeSlots.setStackInSlot(0, copy);
                     if (l >= give.getMaxStackSize()) {
@@ -128,10 +128,11 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
-        if (pSlot.index == 1)
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
+        if (slot.index == Constants.OUTSLOT || slot.index == Constants.MONEYSLOT)
             return false;
-        return super.canTakeItemForPickAll(pStack, pSlot);
+        else
+            return super.canTakeItemForPickAll(stack, slot);
     }
 
     @Override
@@ -175,7 +176,7 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     protected ItemStack pickUpPayment() {
-        ItemStack original = crateStock.getStackInSlot(Constants.CRATESLOTS); //do not modify originals !
+        ItemStack original = crateStock.getStackInSlot(Constants.TOTALCRATESTOCKLOTS); //do not modify originals !
         int amount = original.hasTag() ? original.getTag().contains(TAGSTOCK) ? original.getTag().getInt(TAGSTOCK) : 0 : 0;
 
         if (amount > 0 && original.hasTag()) { //Redundant double check, but better safe then sorry
@@ -189,11 +190,11 @@ public class CrateMenu extends AbstractContainerMenu {
 
             int updatedAmount = amount - pickUp;
             if (updatedAmount <= 0) {
-                crateStock.setStackInSlot(Constants.CRATESLOTS, ItemStack.EMPTY);
+                crateStock.setStackInSlot(Constants.TOTALCRATESTOCKLOTS, ItemStack.EMPTY);
             } else {
                 ItemStack prepUpdate = original.copy();
                 prepUpdate.getTag().putInt(TAGSTOCK, updatedAmount);
-                crateStock.setStackInSlot(Constants.CRATESLOTS, prepUpdate);
+                crateStock.setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepUpdate);
             }
             return prepPickup;
         }
@@ -227,7 +228,7 @@ public class CrateMenu extends AbstractContainerMenu {
     public boolean outOfStock() {
         int total = 0;
         var buying = savedTradeSlots.getStackInSlot(1);
-        for (int i = 0; i < Constants.CRATESLOTS - 1; i++) //last slot is for payment
+        for (int i = 0; i < Constants.TOTALCRATESTOCKLOTS - 1; i++) //last slot is for payment
         {
             var stack = crateStock.getStackInSlot(i);
             if (!stack.isEmpty() && ItemStack.isSame(stack, buying))

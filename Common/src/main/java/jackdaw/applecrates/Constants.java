@@ -16,14 +16,15 @@ public class Constants {
     public static final String TAGPRICESALE = "pricensale";
     public static final String TAGUNLIMITED = "isUnlimited";
 
-    public static final int CRATESLOTS = 30;
+    public static final int TOTALCRATESTOCKLOTS = 30;
+    public static final int TOTALCRATESLOTS = 31;
     public static final int PAYSLOT = 0;
     public static final int OUTSLOT = 1;
     public static final int SAVEDTRADEPAY = 2;
     public static final int SAVEDTRADEOUT = 3;
     public static final int CRATESTARTSLOT = 4;
-    public static final int CRATEENDSLOT = CRATESTARTSLOT + CRATESLOTS - 1; //subtract one for obo; first slot inclusive
-    public static final int CRATEENDSLOTALL = CRATESTARTSLOT + CRATESLOTS;
+    public static final int CRATEENDSLOT = CRATESTARTSLOT + TOTALCRATESTOCKLOTS - 1; //subtract one for obo; first slot inclusive
+    public static final int CRATEENDSLOTALL = CRATESTARTSLOT + TOTALCRATESTOCKLOTS;
 
     public static final int MONEYSLOT = CRATEENDSLOT + 1;
     public static final int PLAYERSTARTSLOT = MONEYSLOT + 1;

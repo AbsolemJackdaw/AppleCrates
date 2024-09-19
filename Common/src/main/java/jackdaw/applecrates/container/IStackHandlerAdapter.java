@@ -5,8 +5,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public interface IStackHandlerAdapter {
-    int getContainerSize();
-
     ItemStack getInteractableItem(int slot);
 
     ItemStack getPriceAndSaleItem(int slot);

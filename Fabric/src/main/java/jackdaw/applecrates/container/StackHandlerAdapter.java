@@ -11,11 +11,6 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     public SimpleContainerNBT priceAndSale = new SimpleContainerNBT(2);
 
     @Override
-    public int getContainerSize() {
-        return crateStock.getContainerSize();
-    }
-
-    @Override
     public ItemStack getInteractableItem(int slot) {
         return interactable.getItem(slot);
     }

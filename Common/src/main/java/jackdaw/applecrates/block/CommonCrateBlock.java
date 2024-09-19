@@ -79,9 +79,9 @@ public class CommonCrateBlock extends BaseEntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
             if (pLevel.getBlockEntity(pPos) instanceof CommonCrateBE crate && pLevel instanceof ServerLevel serverLevel) {
-                for (int i = 0; i < crate.stackHandler.getContainerSize(); i++) {
+                for (int i = 0; i < Constants.TOTALCRATESLOTS; i++) {
                     ItemStack stack = crate.stackHandler.getCratestockItem(i);
-                    if (i == 29) {
+                    if (i == Constants.TOTALCRATESTOCKLOTS - 1) {
                         if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(Constants.TAGSTOCK)) {
                             int pay = stack.getTag().getInt(Constants.TAGSTOCK);
                             ItemStack prepCopy = stack.copy();

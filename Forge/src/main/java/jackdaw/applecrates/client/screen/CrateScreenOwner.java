@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
@@ -42,7 +41,7 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
 
         addRenderableWidget(new SaleButton(guiStartX + 72, guiStartY + 74, (button) -> {
             if (!(menu.interactableTradeSlots.getStackInSlot(0).isEmpty() && menu.interactableTradeSlots.getStackInSlot(1).isEmpty())) {
-                if (menu.crateStock.getStackInSlot(Constants.CRATESLOTS).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
+                if (menu.crateStock.getStackInSlot(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout()) { //do not allow a change if the payout slot isn't empty or the same item as the current one
                     CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
                 }
             }
@@ -50,7 +49,7 @@ public class CrateScreenOwner extends AbstractContainerScreen<CrateMenuOwner> {
     }
 
     private boolean isSamePayout() {
-        ItemStack payout = menu.crateStock.getStackInSlot(Constants.CRATESLOTS).copy();
+        ItemStack payout = menu.crateStock.getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
         ItemStack give = menu.interactableTradeSlots.getStackInSlot(0).copy();
         if (give.isEmpty() || payout.isEmpty())
             return true;

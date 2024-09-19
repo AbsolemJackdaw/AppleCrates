@@ -17,7 +17,7 @@ public class CrateStackHandler extends ItemStackHandler {
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
     public CrateStackHandler() {
-        super(Constants.CRATESLOTS + 1);
+        super(Constants.TOTALCRATESLOTS);
     }
 
     public int getCountOfItem(Item item) {
@@ -40,40 +40,40 @@ public class CrateStackHandler extends ItemStackHandler {
 
         ItemStack prepPay = payment.copy();
 
-        if (getStackInSlot(Constants.CRATESLOTS).isEmpty()) {
+        if (getStackInSlot(Constants.TOTALCRATESTOCKLOTS).isEmpty()) {
             prepPay.setCount(1);
-            setStackInSlot(Constants.CRATESLOTS, prepPay);
+            setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
-        if (!ItemStack.isSame(payment, getStackInSlot(Constants.CRATESLOTS )))
+        if (!ItemStack.isSame(payment, getStackInSlot(Constants.TOTALCRATESTOCKLOTS)))
             return false;
-        ItemStack prepXchange = getStackInSlot(Constants.CRATESLOTS).copy();
+        ItemStack prepXchange = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
         if (tag.contains(TAGSTOCK)) {
             tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
         } else {
             tag.putInt(TAGSTOCK, payment.getCount());
         }
-        setStackInSlot(Constants.CRATESLOTS, prepXchange);
+        setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepXchange);
         return true;
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (slot == Constants.CRATESLOTS)
+        if (slot == Constants.TOTALCRATESTOCKLOTS)
             return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (slot == Constants.CRATESLOTS)
+        if (slot == Constants.TOTALCRATESTOCKLOTS)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return slot != Constants.CRATESLOTS && super.isItemValid(slot, stack);
+        return slot != Constants.TOTALCRATESTOCKLOTS && super.isItemValid(slot, stack);
     }
 
     @Override
