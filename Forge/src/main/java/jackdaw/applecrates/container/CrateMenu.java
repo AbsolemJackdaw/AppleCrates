@@ -15,8 +15,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-import static jackdaw.applecrates.container.CrateStackHandler.TAGSTOCK;
-
 public class CrateMenu extends AbstractContainerMenu {
 
     public CrateStackHandler crateStock;
