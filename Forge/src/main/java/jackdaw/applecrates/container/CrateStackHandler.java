@@ -12,8 +12,6 @@ import java.util.Map;
 
 public class CrateStackHandler extends ItemStackHandler {
 
-    public static final String TAGSTOCK = "stocked";
-
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
     public CrateStackHandler() {
@@ -29,7 +27,6 @@ public class CrateStackHandler extends ItemStackHandler {
                     count += stack.getCount();
                 }
             }
-
             return count;
         });
     }
@@ -48,10 +45,10 @@ public class CrateStackHandler extends ItemStackHandler {
             return false;
         ItemStack prepXchange = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
-        if (tag.contains(TAGSTOCK)) {
-            tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
+        if (tag.contains(Constants.TAGSTOCK)) {
+            tag.putInt(Constants.TAGSTOCK, tag.getInt(Constants.TAGSTOCK) + payment.getCount());
         } else {
-            tag.putInt(TAGSTOCK, payment.getCount());
+            tag.putInt(Constants.TAGSTOCK, payment.getCount());
         }
         setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepXchange);
         return true;

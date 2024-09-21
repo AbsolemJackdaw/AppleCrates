@@ -6,7 +6,6 @@ import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateMenuBuyer extends CrateMenu {
@@ -38,10 +37,9 @@ public class CrateMenuBuyer extends CrateMenu {
             updateSellItem();
         } else if (slotID == Constants.OUTSLOT) {
             if (mouseButton != 0
-                    || (click != (ClickType.PICKUP))
+                    || (!(click.equals(ClickType.PICKUP) || click.equals(ClickType.QUICK_MOVE)))
                     || interactableTradeSlots.getStackInSlot(1).isEmpty()
-                    || getCarried().getCount() + interactableTradeSlots.getStackInSlot(1).getCount() >= getCarried().getMaxStackSize()
-            )
+                    || getCarried().getCount() + interactableTradeSlots.getStackInSlot(1).getCount() >= getCarried().getMaxStackSize())
                 return;
             super.clicked(slotID, mouseButton, click, player);
             interactableTradeSlots.getStackInSlot(0).shrink(savedTradeSlots.getStackInSlot(0).getCount());
@@ -62,19 +60,12 @@ public class CrateMenuBuyer extends CrateMenu {
             moveItemStackTo(interactableTradeSlots.getStackInSlot(0), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false);
             updateSellItem();
         }
-        //NO SHIFT CLICKING YET
-        //nota : quickmove works in tandem with 'clickd', which alreayd deducts payment.
-//        else if (index == Constants.OUTSLOT) {
-//            ItemStack prepPayChange = interactableTradeSlots.getStackInSlot(0).copy();
-//            prepPayChange.shrink(savedTradeSlots.getStackInSlot(0).getCount());
-//            interactableTradeSlots.setStackInSlot(0, prepPayChange);
-//            crateStock.updateStackInPaymentSlot(savedTradeSlots.getStackInSlot(0), isUnlimitedShop);
-//            if (!interactableTradeSlots.getStackInSlot(0).isEmpty()) {
-//                moveItemStackTo(interactableTradeSlots.getStackInSlot(1), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false);
-//                updateSellItem();
-//                return ItemStack.EMPTY; //keep looping till pay is empty
-//            }
-//        }
+        //nota : quickmove works in tandem with 'clicked', which already deducts payment.
+        if (index == Constants.OUTSLOT) {
+            //payment is processed in 'clicked'
+            moveItemStackTo(interactableTradeSlots.getStackInSlot(1), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false);
+            return ItemStack.EMPTY;
+        }
         return super.quickMoveStack(player, index);
     }
 }

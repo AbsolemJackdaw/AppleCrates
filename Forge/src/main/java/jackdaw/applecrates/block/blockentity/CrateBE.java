@@ -61,13 +61,13 @@ public class CrateBE extends CommonCrateBE {
 
     public ItemStackHandler getInteractable() {
         if (stackHandler instanceof StackHandlerAdapter sha)
-            return sha.interactable;
+            return sha.interactableTradeSlots;
         return new ItemStackHandler(0);
     }
 
     public ItemStackHandler getPriceAndSale() {
         if (stackHandler instanceof StackHandlerAdapter sha)
-            return sha.priceAndSale;
+            return sha.savedTradeSlots;
         return new ItemStackHandler(0);
     }
 }

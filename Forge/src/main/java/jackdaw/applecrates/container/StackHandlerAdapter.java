@@ -8,17 +8,17 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class StackHandlerAdapter implements IStackHandlerAdapter {
     public CrateStackHandler crateStock = new CrateStackHandler();
-    public ItemStackHandler interactable = new net.minecraftforge.items.ItemStackHandler(2);
-    public ItemStackHandler priceAndSale = new net.minecraftforge.items.ItemStackHandler(2);
+    public ItemStackHandler interactableTradeSlots = new net.minecraftforge.items.ItemStackHandler(2);
+    public ItemStackHandler savedTradeSlots = new net.minecraftforge.items.ItemStackHandler(2);
 
     @Override
     public ItemStack getInteractableItem(int slot) {
-        return interactable.getStackInSlot(slot);
+        return interactableTradeSlots.getStackInSlot(slot);
     }
 
     @Override
     public ItemStack getPriceAndSaleItem(int slot) {
-        return priceAndSale.getStackInSlot(slot);
+        return savedTradeSlots.getStackInSlot(slot);
     }
 
     @Override
@@ -34,15 +34,15 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     @Override
     public void saveInventoryData(CompoundTag tag) {
         tag.put(Constants.TAGSTOCK, crateStock.serializeNBT());
-        tag.put(Constants.TAGINTERACTABLE, interactable.serializeNBT());
-        tag.put(Constants.TAGPRICESALE, priceAndSale.serializeNBT());
+        tag.put(Constants.TAGINTERACTABLE, interactableTradeSlots.serializeNBT());
+        tag.put(Constants.TAGPRICESALE, savedTradeSlots.serializeNBT());
     }
 
     @Override
     public void loadInventoryData(CompoundTag tag) {
         crateStock.deserializeNBT((CompoundTag) tag.get(Constants.TAGSTOCK));
-        interactable.deserializeNBT((CompoundTag) tag.get(Constants.TAGINTERACTABLE));
-        priceAndSale.deserializeNBT((CompoundTag) tag.get(Constants.TAGPRICESALE));
+        interactableTradeSlots.deserializeNBT((CompoundTag) tag.get(Constants.TAGINTERACTABLE));
+        savedTradeSlots.deserializeNBT((CompoundTag) tag.get(Constants.TAGPRICESALE));
     }
 
     @Override

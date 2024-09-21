@@ -1,6 +1,5 @@
 package jackdaw.applecrates.network;
 
-import jackdaw.applecrates.PacketId;
 import jackdaw.applecrates.container.CrateMenu;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

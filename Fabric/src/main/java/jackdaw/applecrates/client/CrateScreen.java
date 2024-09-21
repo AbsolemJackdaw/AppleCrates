@@ -2,7 +2,7 @@ package jackdaw.applecrates.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import jackdaw.applecrates.PacketId;
+import jackdaw.applecrates.network.PacketId;
 import jackdaw.applecrates.container.CrateMenu;
 import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.network.ServerNetwork;

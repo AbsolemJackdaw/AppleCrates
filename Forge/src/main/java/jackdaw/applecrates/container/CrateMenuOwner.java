@@ -1,13 +1,11 @@
 package jackdaw.applecrates.container;
 
-import io.netty.util.Constant;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateMenuOwner extends CrateMenu {
@@ -53,15 +51,15 @@ public class CrateMenuOwner extends CrateMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        if (Constants.isInPlayerInventory(index)) { //only enable move to crate if player is the owner
-            if (!this.moveItemStackTo(slots.get(index).getItem(), Constants.CRATESTARTSLOT, Constants.CRATEENDSLOTALL, false)) { //Crate slot
-                return ItemStack.EMPTY;
-            }
-        }
-        if (index == Constants.MONEYSLOT) {
+        if (Constants.isInPlayerInventory(index) && !this.moveItemStackTo(slots.get(index).getItem(), Constants.CRATESTARTSLOT, Constants.CRATEENDSLOTALL, false)) //only enable move to crate if player is the owner
+            return ItemStack.EMPTY;
+        else if (Constants.isInInteractables(index) && !this.moveItemStackTo(slots.get(index).getItem(), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false)) //only enable move to crate if player is the owner
+            return ItemStack.EMPTY;
+        else if (index == Constants.MONEYSLOT) {
             //code is never reached.
             //the payement slot (or nr 34) is void form pickup and cannot trigger quickMoveStack.
             //custom quickmove code can be found in #clicked
+            return ItemStack.EMPTY;
         }
         return super.quickMoveStack(player, index);
     }

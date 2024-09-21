@@ -1,8 +1,6 @@
 package jackdaw.applecrates.network;
 
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.PacketId;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;

@@ -6,21 +6,17 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.container.CrateMenuBuyer;
 import jackdaw.applecrates.network.CrateChannel;
 import jackdaw.applecrates.network.SGetSale;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateScreenBuyer extends AbstractContainerScreen<CrateMenuBuyer> {
     private static final ResourceLocation BUYER = new ResourceLocation(Constants.MODID, "gui/buyer.png");
     private static final ResourceLocation VILLAGER_UI = new ResourceLocation("textures/gui/container/villager2.png");
-
-    private static final Component CANNOT_SWITCH = Component.translatable("cannot.switch.trade");
-    private boolean isUnlimitedShop;
+    private final boolean isUnlimitedShop;
     private int guiStartX;
     private int guiStartY;
 
@@ -38,10 +34,15 @@ public class CrateScreenBuyer extends AbstractContainerScreen<CrateMenuBuyer> {
         super.init();
         this.guiStartX = (this.width - this.imageWidth) / 2;
         this.guiStartY = (this.height - this.imageHeight) / 2;
-        addRenderableWidget(new SaleButton(guiStartX + 14, guiStartY + 19, (button) -> {
-            if (isUnlimitedShop || !menu.outOfStock())
-                CrateChannel.NETWORK.sendToServer(new SGetSale());
-        }));
+        addRenderableWidget(
+                new SaleButtonBuyer(
+                        guiStartX + 14,
+                        guiStartY + 19,
+                        62,
+                        (button) -> {
+                            if (isUnlimitedShop || !menu.outOfStock())
+                                CrateChannel.NETWORK.sendToServer(new SGetSale());
+                        }));
     }
 
     @Override
@@ -58,10 +59,6 @@ public class CrateScreenBuyer extends AbstractContainerScreen<CrateMenuBuyer> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         renderTrade(0, guiStartX, guiStartY);
         renderTrade(1, guiStartX, guiStartY);
-
-//        for (Slot slot : menu.slots)
-//            if (slot.isActive())
-//                this.font.draw(poseStack, "" + slot.index, guiStartX + slot.x, guiStartY + slot.y, 4210752);
 
         this.renderTooltip(poseStack, pMouseX, pMouseY);
     }
@@ -83,32 +80,16 @@ public class CrateScreenBuyer extends AbstractContainerScreen<CrateMenuBuyer> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, BUYER);
-
         blit(pPoseStack, guiStartX, guiStartY, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
     }
 
-    @Override
-    public void onClose() {
-        super.onClose();
-    }
-
-    class SaleButton extends Button {
-
-        public SaleButton(int x, int y, OnPress press) {
-            super(x, y, 62, 20, Component.empty(), press);
+    private class SaleButtonBuyer extends SaleButton {
+        public SaleButtonBuyer(int x, int y, int width, OnPress press) {
+            super(x, y, width, press);
         }
 
-        public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-            if (this.isHovered) {
-                if (pMouseX < this.x + 20) {
-                    doRenderTip(pPoseStack, pMouseX, pMouseY, 0);
-                } else if (pMouseX > this.x + 42) {
-                    doRenderTip(pPoseStack, pMouseX, pMouseY, 1);
-                }
-            }
-        }
-
-        private void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
+        @Override
+        void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
             ItemStack stack = menu.savedTradeSlots.getStackInSlot(slot);
             if (!stack.isEmpty())
                 CrateScreenBuyer.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);

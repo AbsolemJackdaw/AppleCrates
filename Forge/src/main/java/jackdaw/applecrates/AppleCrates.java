@@ -14,7 +14,6 @@ import net.minecraftforge.fml.loading.FMLLoader;
 public class AppleCrates {
     public static final boolean GEN_VANILLA_CRATES = false;
 
-
     public AppleCrates() {
         //Adjust constant
         Constants.IS_DATA_GEN = FMLLoader.getLaunchHandler().isData();

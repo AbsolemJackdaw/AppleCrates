@@ -1,5 +1,6 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.network;
 
+import jackdaw.applecrates.Constants;
 import net.minecraft.resources.ResourceLocation;
 
 public class PacketId {

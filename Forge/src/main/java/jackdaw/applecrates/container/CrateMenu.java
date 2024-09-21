@@ -54,9 +54,14 @@ public class CrateMenu extends AbstractContainerMenu {
                 addSlot(new SlotCrateStock(stock, y * 10 + x, x * 18 + 10, y * 18 + 17, isOwner()));
         addSlot(new SlotCrateStock(stock, Constants.TOTALCRATESTOCKLOTS, 172, 76, isOwner()));
 
-        for (int i = 0; i < 4; ++i) { //player inventory
-            for (int j = 0; j < 9; ++j)
-                this.addSlot(new Slot(inventory, j + i * 9, playerInventoryX() + j * 18, playerInventoryY() + i * (i == 3 ? 19 : 18)));
+        for (int y = 0; y < 4; ++y) { //player inventory
+            for (int x = 0; x < 9; ++x) {
+                int index_rotated = (y + 3) % 4;
+                int yPos = playerInventoryY() + index_rotated * (index_rotated == 3 ? 19 : 18);
+                int xPos = playerInventoryX() + x * 18;
+                int index = x + y * 9;
+                this.addSlot(new Slot(inventory, index, xPos, yPos));
+            }
         }
     }
 
@@ -177,12 +182,12 @@ public class CrateMenu extends AbstractContainerMenu {
 
     protected ItemStack pickUpPayment() {
         ItemStack original = crateStock.getStackInSlot(Constants.TOTALCRATESTOCKLOTS); //do not modify originals !
-        int amount = original.hasTag() ? original.getTag().contains(TAGSTOCK) ? original.getTag().getInt(TAGSTOCK) : 0 : 0;
+        int amount = original.hasTag() ? original.getTag().contains(Constants.TAGSTOCK) ? original.getTag().getInt(Constants.TAGSTOCK) : 0 : 0;
 
         if (amount > 0 && original.hasTag()) { //Redundant double check, but better safe then sorry
             ItemStack prepPickup = original.copy();
             CompoundTag tag = prepPickup.getTag();
-            tag.remove(TAGSTOCK);
+            tag.remove(Constants.TAGSTOCK);
             if (tag.isEmpty())
                 prepPickup.setTag(null);
             int pickUp = Math.min(amount, prepPickup.getMaxStackSize());
@@ -193,7 +198,7 @@ public class CrateMenu extends AbstractContainerMenu {
                 crateStock.setStackInSlot(Constants.TOTALCRATESTOCKLOTS, ItemStack.EMPTY);
             } else {
                 ItemStack prepUpdate = original.copy();
-                prepUpdate.getTag().putInt(TAGSTOCK, updatedAmount);
+                prepUpdate.getTag().putInt(Constants.TAGSTOCK, updatedAmount);
                 crateStock.setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepUpdate);
             }
             return prepPickup;

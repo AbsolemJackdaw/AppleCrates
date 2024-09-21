@@ -1,6 +1,5 @@
 package jackdaw.applecrates.registry;
 
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.network.CrateChannel;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

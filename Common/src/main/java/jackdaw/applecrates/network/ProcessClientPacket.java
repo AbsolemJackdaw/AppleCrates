@@ -1,4 +1,4 @@
-package jackdaw.applecrates;
+package jackdaw.applecrates.network;
 
 public class ProcessClientPacket {
 
