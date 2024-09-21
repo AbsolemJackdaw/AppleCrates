@@ -30,6 +30,7 @@ public class CrateMenu extends AbstractContainerMenu {
 
     protected CrateMenu(MenuType type, int id, Inventory inventory, ItemStackHandler interaction, ItemStackHandler trade, CrateStackHandler stock, boolean ul) {
         super(type, id);
+
         this.interactableTradeSlots = interaction;
         this.savedTradeSlots = trade;
         this.crateStock = stock;
@@ -85,7 +86,7 @@ public class CrateMenu extends AbstractContainerMenu {
         //if there's a stack that isnt payment in the slot, put it back in the inventory, then pop in new items that are payment
         ItemStack itemstack = this.interactableTradeSlots.getStackInSlot(0);
         if (!itemstack.isEmpty()) {
-            if (!this.moveItemStackTo(itemstack, 34, 34 + (9 * 3), false)) {
+            if (!this.moveItemStackTo(itemstack, Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false)) {
                 return;
             }
             this.interactableTradeSlots.setStackInSlot(0, itemstack);

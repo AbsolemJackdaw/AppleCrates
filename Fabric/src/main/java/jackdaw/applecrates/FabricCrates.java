@@ -5,6 +5,8 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
 import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.container.CrateMenuBuyer;
+import jackdaw.applecrates.container.CrateMenuOwner;
 import jackdaw.applecrates.container.StackHandlerAdapter;
 import jackdaw.applecrates.item.CrateItem;
 import jackdaw.applecrates.network.ServerNetwork;
@@ -21,17 +23,15 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class FabricCrates implements ModInitializer {
-    private static final ScreenHandlerRegistry.ExtendedClientHandlerFactory<CrateMenu> factory = (syncId, inventory, buf) -> {
-        var level = inventory.player.level;
-        boolean owner = buf.readBoolean();
-        boolean unlimited = buf.readBoolean();
-        BlockPos pos = buf.readBlockPos();
-        if (level.getBlockEntity(pos) instanceof CrateBE crateBE)
-            return new CrateMenu(syncId, inventory, crateBE, owner, unlimited);
-        return null;
-    };
 
-    public static final ExtendedScreenHandlerType<CrateMenu> CRATETYPE = new ExtendedScreenHandlerType<>(factory);
+    public static final ExtendedScreenHandlerType<CrateMenuOwner> CRATE_MENU_OWNER = new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> {
+        boolean unlimited = buf.readBoolean();
+        return new CrateMenuOwner(syncId, inventory, unlimited);
+    });
+    public static final ExtendedScreenHandlerType<CrateMenuBuyer> CRATE_MENU_BUYER = new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> {
+        boolean unlimited = buf.readBoolean();
+        return new CrateMenuBuyer(syncId, inventory, unlimited);
+    });
 
     public static final List<Supplier<BlockEntityType<CrateBE>>> besrreg = new ArrayList<>();
 
@@ -39,7 +39,8 @@ public class FabricCrates implements ModInitializer {
     public void onInitialize() {
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "cratemenu"), CRATETYPE);
+        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
+        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
 
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(Constants.MODID)).forEach(crateWoodType -> {
             var crate = new CrateBlock(crateWoodType);

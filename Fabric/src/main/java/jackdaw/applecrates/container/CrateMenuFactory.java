@@ -38,6 +38,6 @@ public class CrateMenuFactory implements ExtendedScreenHandlerFactory {
 
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return FabricCrates.CRATETYPE.create(i, inventory, this.buf);
+        return FabricCrates.CRATE_MENU_OWNER.create(i, inventory, this.buf);
     }
 }

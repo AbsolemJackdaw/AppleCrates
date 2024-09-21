@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
-abstract class SaleButton extends Button {
+public abstract class SaleButton extends Button {
     public SaleButton(int x, int y, int width, Button.OnPress press) {
         super(x, y, width, 20, Component.empty(), press);
     }
@@ -19,5 +19,5 @@ abstract class SaleButton extends Button {
         }
     }
 
-    abstract void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot);
+    public abstract void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot);
 }

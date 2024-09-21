@@ -5,12 +5,19 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CommonCrateBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DebugStickItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -21,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -149,4 +157,32 @@ public class CommonCrateBlock extends BaseEntityBlock {
         return 0;
     }
 
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof CommonCrateBE crate && hand.equals(InteractionHand.MAIN_HAND)) {
+            if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.getGameProfile())) {
+                crate.isUnlimitedShop = true;
+                player.displayClientMessage(Component.translatable("crate.set.creative"), true);
+                crate.setChanged();
+            } else {
+                boolean owner = !player.isShiftKeyDown() && crate.isOwner(player); //add shift debug testing
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    if (owner)
+                        openOwnerUI(serverPlayer, crate);
+                    else
+                        openBuyerUI(serverPlayer, crate);
+                }
+                level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    public void openOwnerUI(ServerPlayer serverPlayer, CommonCrateBE commonCrate) {
+    }
+
+    public void openBuyerUI(ServerPlayer serverPlayer, CommonCrateBE commonCrate) {
+    }
 }

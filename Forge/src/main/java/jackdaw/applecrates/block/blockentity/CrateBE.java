@@ -54,20 +54,20 @@ public class CrateBE extends CommonCrateBE {
     }
 
     public CrateStackHandler getCrateStock() {
-        if (stackHandler instanceof StackHandlerAdapter sha)
-            return sha.crateStock;
+        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
+            return stackHandlerAdapter.crateStock;
         return new CrateStackHandler();
     }
 
     public ItemStackHandler getInteractable() {
-        if (stackHandler instanceof StackHandlerAdapter sha)
-            return sha.interactableTradeSlots;
-        return new ItemStackHandler(0);
+        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
+            return stackHandlerAdapter.interactableTradeSlots;
+        return new ItemStackHandler(2);
     }
 
     public ItemStackHandler getPriceAndSale() {
-        if (stackHandler instanceof StackHandlerAdapter sha)
-            return sha.savedTradeSlots;
-        return new ItemStackHandler(0);
+        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
+            return stackHandlerAdapter.savedTradeSlots;
+        return new ItemStackHandler(2);
     }
 }

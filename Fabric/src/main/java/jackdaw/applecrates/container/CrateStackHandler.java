@@ -1,19 +1,20 @@
 package jackdaw.applecrates.container;
 
+import jackdaw.applecrates.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CrateStackHandler extends SimpleContainerNBT {
 
-    public static final String TAGSTOCK = "stocked";
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
     public CrateStackHandler() {
-        super(30);
+        super(Constants.TOTALCRATESLOTS);
     }
 
     public int getCountOfItem(Item item) {
@@ -30,8 +31,8 @@ public class CrateStackHandler extends SimpleContainerNBT {
     }
 
     @Override
-    public boolean canPlaceItem(int slot, ItemStack itemStack) {
-        return slot != 29;
+    public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
+        return slot != Constants.TOTALCRATESTOCKLOTS && super.canPlaceItem(slot, stack);
     }
 
 
@@ -41,20 +42,20 @@ public class CrateStackHandler extends SimpleContainerNBT {
 
         ItemStack prepPay = payment.copy();
 
-        if (getItem(29).isEmpty()) {
+        if (getItem(Constants.TOTALCRATESTOCKLOTS).isEmpty()) {
             prepPay.setCount(1);
-            setItem(29, prepPay);
+            setItem(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
-        if (!ItemStack.isSame(payment, getItem(29)))
+        if (!ItemStack.isSame(payment, getItem(Constants.TOTALCRATESTOCKLOTS)))
             return false;
-        ItemStack prepXchange = getItem(29).copy();
+        ItemStack prepXchange = getItem(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
-        if (tag.contains(TAGSTOCK)) {
-            tag.putInt(TAGSTOCK, tag.getInt(TAGSTOCK) + payment.getCount());
+        if (tag.contains(Constants.TAGSTOCK)) {
+            tag.putInt(Constants.TAGSTOCK, tag.getInt(Constants.TAGSTOCK) + payment.getCount());
         } else {
-            tag.putInt(TAGSTOCK, payment.getCount());
+            tag.putInt(Constants.TAGSTOCK, payment.getCount());
         }
-        setItem(29, prepXchange);
+        setItem(Constants.TOTALCRATESTOCKLOTS, prepXchange);
         return true;
     }
 }

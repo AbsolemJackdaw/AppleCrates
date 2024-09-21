@@ -30,10 +30,10 @@ public class ServerNetwork {
     }
 
     private static void confirmTrade(CrateMenu menu, ServerPlayer player, int slot) {
-        ItemStack stack = menu.interactableSlots.getItem(slot).copy();
-        menu.priceAndSaleSlots.setItem(slot, stack.copy());
+        ItemStack stack = menu.interactableTradeSlots.getItem(slot).copy();
+        menu.savedTradeSlots.setItem(slot, stack.copy());
         player.getInventory().add(stack.copy());
-        menu.interactableSlots.setItem(slot, ItemStack.EMPTY);
+        menu.interactableTradeSlots.setItem(slot, ItemStack.EMPTY);
 
     }
 

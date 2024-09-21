@@ -3,20 +3,18 @@ package jackdaw.applecrates.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.container.CrateMenuOwner;
-import jackdaw.applecrates.network.CrateChannel;
-import jackdaw.applecrates.network.SCrateTradeSync;
+import jackdaw.applecrates.container.CrateMenu;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class CrateScreenOwner extends CommonCrateScreen<CrateMenuOwner> {
+public class CrateScreenOwner extends CommonCrateScreen<CrateMenu> {
     private static final ResourceLocation OWNER = new ResourceLocation(Constants.MODID, "gui/owner.png");
 
-    public CrateScreenOwner(CrateMenuOwner menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, Component.translatable(title.getString()));
+    public CrateScreenOwner(CrateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+        super(pMenu, pPlayerInventory, Component.translatable(pTitle.getString()));
         this.imageWidth = 198;
         this.imageHeight = 194;
         this.inventoryLabelX = titleLabelX + 8;
@@ -37,15 +35,18 @@ public class CrateScreenOwner extends CommonCrateScreen<CrateMenuOwner> {
                         guiStartY + 74,
                         91,
                         (button) -> {
-                            if (!(menu.interactableTradeSlots.getStackInSlot(0).isEmpty() && menu.interactableTradeSlots.getStackInSlot(1).isEmpty())
-                                    || (menu.crateStock.getStackInSlot(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout())) //do not allow a change if the payout slot isn't empty or the same item as the current one
-                                CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
+                            if (!(menu.interactableTradeSlots.getItem(0).isEmpty() && menu.interactableTradeSlots.getItem(1).isEmpty())
+                                    || (menu.crateStock.getItem(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout())) //do not allow a change if the payout slot isn't empty or the same item as the current one
+                            {
+                            }
+                            // CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
+                            //TODO
                         }));
     }
 
     protected boolean isSamePayout() {
-        ItemStack payout = menu.crateStock.getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
-        ItemStack give = menu.interactableTradeSlots.getStackInSlot(0).copy();
+        ItemStack payout = menu.crateStock.getItem(Constants.TOTALCRATESTOCKLOTS).copy();
+        ItemStack give = menu.interactableTradeSlots.getItem(0).copy();
         if (give.isEmpty() || payout.isEmpty())
             return true;
 
@@ -62,7 +63,7 @@ public class CrateScreenOwner extends CommonCrateScreen<CrateMenuOwner> {
         this.renderBackground(poseStack);
         super.render(poseStack, pMouseX, pMouseY, pPartialTick);
         RenderSystem.enableBlend();
-        if (!(menu.savedTradeSlots.getStackInSlot(0).isEmpty() && menu.savedTradeSlots.getStackInSlot(1).isEmpty()) && menu.interactableTradeSlots.getStackInSlot(0).isEmpty() && menu.interactableTradeSlots.getStackInSlot(1).isEmpty())
+        if (!(menu.savedTradeSlots.getItem(0).isEmpty() && menu.savedTradeSlots.getItem(1).isEmpty()) && menu.interactableTradeSlots.getItem(0).isEmpty() && menu.interactableTradeSlots.getItem(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
         if (!isSamePayout())
             RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
@@ -74,8 +75,8 @@ public class CrateScreenOwner extends CommonCrateScreen<CrateMenuOwner> {
         renderTrade(1, guiStartX, guiStartY);
 
 
-        if (!menu.crateStock.getStackInSlot(menu.crateStock.getSlots() - 1).isEmpty()) {
-            ItemStack inSlot = menu.crateStock.getStackInSlot(menu.crateStock.getSlots() - 1);
+        if (!menu.crateStock.getItem(Constants.TOTALCRATESTOCKLOTS).isEmpty()) {
+            ItemStack inSlot = menu.crateStock.getItem(Constants.TOTALCRATESTOCKLOTS);
             if (inSlot.getOrCreateTag().contains(Constants.TAGSTOCK)) {
                 int pay = inSlot.getOrCreateTag().getInt(Constants.TAGSTOCK);
                 //set inSlot's itemcount to the nbt ammount, but only on client side
@@ -87,10 +88,11 @@ public class CrateScreenOwner extends CommonCrateScreen<CrateMenuOwner> {
         this.renderTooltip(poseStack, pMouseX, pMouseY);
     }
 
+
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
-        if ((!menu.interactableTradeSlots.getStackInSlot(slotId).isEmpty()) || !menu.savedTradeSlots.getStackInSlot(slotId).isEmpty()) {
-            ItemStack saleStack = !menu.interactableTradeSlots.getStackInSlot(slotId).isEmpty() ? menu.interactableTradeSlots.getStackInSlot(slotId) : menu.savedTradeSlots.getStackInSlot(slotId);
+        if ((!menu.interactableTradeSlots.getItem(slotId).isEmpty()) || !menu.savedTradeSlots.getItem(slotId).isEmpty()) {
+            ItemStack saleStack = !menu.interactableTradeSlots.getItem(slotId).isEmpty() ? menu.interactableTradeSlots.getItem(slotId) : menu.savedTradeSlots.getItem(slotId);
             int xo = slotId == 0 ? 76 : 138;
             int yo = 75;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
@@ -120,10 +122,9 @@ public class CrateScreenOwner extends CommonCrateScreen<CrateMenuOwner> {
 
         @Override
         public void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
-            ItemStack stack = menu.savedTradeSlots.getStackInSlot(slot);
+            ItemStack stack = menu.savedTradeSlots.getItem(slot);
             if (!stack.isEmpty())
                 CrateScreenOwner.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
-
         }
 
         @Override
