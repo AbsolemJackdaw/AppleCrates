@@ -1,5 +1,6 @@
 package jackdaw.applecrates.container;
 
+import jackdaw.applecrates.Constants;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -21,11 +22,11 @@ public class SlotCrateStock extends Slot {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack stack) {
-        return getContainerSlot() < 29;
+        return getContainerSlot() < Constants.TOTALCRATESTOCKLOTS;
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getContainerSlot() != 29 && isOwner;
+        return getContainerSlot() != Constants.TOTALCRATESTOCKLOTS && isOwner;
     }
 }

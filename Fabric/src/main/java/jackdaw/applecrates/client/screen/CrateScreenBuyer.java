@@ -62,7 +62,6 @@ public class CrateScreenBuyer extends CommonCrateScreen<CrateMenuBuyer> {
         this.renderTooltip(poseStack, pMouseX, pMouseY);
     }
 
-
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
         if (!menu.savedTradeSlots.getItem(slotId).isEmpty()) {

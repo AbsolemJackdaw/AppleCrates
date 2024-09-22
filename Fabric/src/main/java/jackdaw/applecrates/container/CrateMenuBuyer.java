@@ -47,6 +47,7 @@ public class CrateMenuBuyer extends CrateMenu {
             updateSellItem();
         } else {
             super.clicked(slotID, mouseButton, click, player);
+            updateSellItem();
         }
     }
 
