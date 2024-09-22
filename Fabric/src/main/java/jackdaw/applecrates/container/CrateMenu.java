@@ -167,7 +167,7 @@ public class CrateMenu extends AbstractContainerMenu {
         ItemStack payment = interactableTradeSlots.getItem(0);
         ItemStack toPay = savedTradeSlots.getItem(0);
         if (!payment.isEmpty()) {
-            if (!toPay.isEmpty() && ItemStack.isSame(toPay, payment) && payment.getCount() >= toPay.getCount() && interactableTradeSlots.getItem(1).isEmpty()) {
+            if (!toPay.isEmpty() && ItemStack.isSameItemSameTags(toPay, payment) && payment.getCount() >= toPay.getCount() && interactableTradeSlots.getItem(1).isEmpty()) {
                 //move allowed amount of stock to out slot
                 movefromStockToSaleSlot(savedTradeSlots.getItem(1).copy()); //check for the item to get
             }

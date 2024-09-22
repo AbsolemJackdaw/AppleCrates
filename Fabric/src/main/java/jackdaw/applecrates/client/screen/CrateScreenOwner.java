@@ -4,6 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.network.PacketId;
+import jackdaw.applecrates.network.ServerNetwork;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,10 +40,7 @@ public class CrateScreenOwner extends CommonCrateScreen<CrateMenu> {
                         (button) -> {
                             if (!(menu.interactableTradeSlots.getItem(0).isEmpty() && menu.interactableTradeSlots.getItem(1).isEmpty())
                                     || (menu.crateStock.getItem(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout())) //do not allow a change if the payout slot isn't empty or the same item as the current one
-                            {
-                            }
-                            // CrateChannel.NETWORK.sendToServer(new SCrateTradeSync()); //handles switching up items and giving back to player
-                            //TODO
+                                ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());//handles switching up items and giving back to player
                         }));
     }
 

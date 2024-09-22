@@ -102,7 +102,7 @@ public class CrateMenu extends AbstractContainerMenu {
         if (!give.isEmpty()) {
             for (int i = Constants.PLAYERSTARTSLOT; i < Constants.PLAYERENDSLOT; ++i) {
                 ItemStack stackInSlot = this.slots.get(i).getItem();
-                if (!stackInSlot.isEmpty() && ItemStack.isSame(give, stackInSlot)) {
+                if (!stackInSlot.isEmpty() && ItemStack.isSameItemSameTags(give, stackInSlot)) {
                     ItemStack paymentSlot = this.interactableTradeSlots.getStackInSlot(0);
                     int j = paymentSlot.isEmpty() ? 0 : paymentSlot.getCount();
                     int k = Math.min(give.getMaxStackSize() - j, stackInSlot.getCount());
@@ -169,7 +169,7 @@ public class CrateMenu extends AbstractContainerMenu {
         ItemStack payment = interactableTradeSlots.getStackInSlot(0);
         ItemStack toPay = savedTradeSlots.getStackInSlot(0);
         if (!payment.isEmpty()) {
-            if (!toPay.isEmpty() && ItemStack.isSame(toPay, payment) && payment.getCount() >= toPay.getCount() && interactableTradeSlots.getStackInSlot(1).isEmpty()) {
+            if (!toPay.isEmpty() && ItemStack.isSameItemSameTags(toPay, payment) && payment.getCount() >= toPay.getCount() && interactableTradeSlots.getStackInSlot(1).isEmpty()) {
                 //move allowed amount of stock to out slot
                 movefromStockToSaleSlot(savedTradeSlots.getStackInSlot(1).copy()); //check for the item to get
             }

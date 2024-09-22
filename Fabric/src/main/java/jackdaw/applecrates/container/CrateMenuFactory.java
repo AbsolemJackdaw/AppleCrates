@@ -1,7 +1,6 @@
 package jackdaw.applecrates.container;
 
 import io.netty.buffer.Unpooled;
-import jackdaw.applecrates.FabricCrates;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -9,35 +8,36 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuConstructor;
 
 import java.util.function.Consumer;
 
 public class CrateMenuFactory implements ExtendedScreenHandlerFactory {
 
     final FriendlyByteBuf buf;
-    final FriendlyByteBuf buf_opening_data;
+    final MenuConstructor menuConstructor;
 
-    final Component comp;
+    final Component screenTitle;
 
-    public CrateMenuFactory(Component comp, Consumer<FriendlyByteBuf> buf) {
-        this.buf = this.buf_opening_data = new FriendlyByteBuf(Unpooled.buffer());
+    public CrateMenuFactory(MenuConstructor menuConstructor, Component component, Consumer<FriendlyByteBuf> buf) {
+        this.buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.accept(this.buf);
-        buf.accept(this.buf_opening_data);
-        this.comp = comp;
+        this.menuConstructor = menuConstructor;
+        this.screenTitle = component;
     }
 
     @Override
     public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBytes(this.buf_opening_data);
+        buf.writeBytes(this.buf);
     }
 
     @Override
     public Component getDisplayName() {
-        return comp;
+        return screenTitle;
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return FabricCrates.CRATE_MENU_OWNER.create(i, inventory, this.buf);
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return this.menuConstructor.createMenu(id, inventory, player);
     }
 }

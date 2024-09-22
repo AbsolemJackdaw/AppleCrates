@@ -41,7 +41,7 @@ public class CrateStackHandler extends ItemStackHandler {
             prepPay.setCount(1);
             setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
-        if (!ItemStack.isSame(payment, getStackInSlot(Constants.TOTALCRATESTOCKLOTS)))
+        if (!ItemStack.isSameItemSameTags(payment, getStackInSlot(Constants.TOTALCRATESTOCKLOTS)))
             return false;
         ItemStack prepXchange = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();

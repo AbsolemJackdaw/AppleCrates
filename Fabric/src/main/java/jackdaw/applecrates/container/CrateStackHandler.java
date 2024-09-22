@@ -46,7 +46,7 @@ public class CrateStackHandler extends SimpleContainerNBT {
             prepPay.setCount(1);
             setItem(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
-        if (!ItemStack.isSame(payment, getItem(Constants.TOTALCRATESTOCKLOTS)))
+        if (!ItemStack.isSameItemSameTags(payment, getItem(Constants.TOTALCRATESTOCKLOTS)))
             return false;
         ItemStack prepXchange = getItem(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
