@@ -82,7 +82,6 @@ public class CrateScreenBuyer extends CommonCrateScreen<CrateMenuBuyer> {
         blit(pPoseStack, guiStartX, guiStartY, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
     }
 
-
     @Override
     public void onClose() {
         super.onClose();

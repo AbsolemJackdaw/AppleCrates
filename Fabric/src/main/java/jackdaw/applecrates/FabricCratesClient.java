@@ -4,7 +4,6 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.client.besr.CrateBESR;
-import jackdaw.applecrates.network.ClientNetwork;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,7 +21,5 @@ public class FabricCratesClient implements ClientModInitializer {
         });
         MenuScreens.register(FabricCrates.CRATE_MENU_OWNER, CrateScreenOwner::new);
         MenuScreens.register(FabricCrates.CRATE_MENU_BUYER, CrateScreenBuyer::new);
-
-        ClientNetwork.registerClientPackets();
     }
 }
