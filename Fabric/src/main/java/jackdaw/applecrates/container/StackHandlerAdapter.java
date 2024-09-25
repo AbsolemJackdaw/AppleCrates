@@ -1,28 +1,62 @@
 package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.container.inventory.CrateStackHandler;
+import jackdaw.applecrates.container.inventory.ICrateStock;
+import jackdaw.applecrates.container.inventory.IGenericInventory;
+import jackdaw.applecrates.container.inventory.SimpleContainerNBT;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class StackHandlerAdapter implements IStackHandlerAdapter {
     public CrateStackHandler crateStock = new CrateStackHandler();
-    public SimpleContainerNBT interactable = new SimpleContainerNBT(2);
-    public SimpleContainerNBT priceAndSale = new SimpleContainerNBT(2);
+    public SimpleContainerNBT interactableTrades = new SimpleContainerNBT(2);
+    public SimpleContainerNBT savedTrades = new SimpleContainerNBT(2);
 
     @Override
-    public ItemStack getInteractableItem(int slot) {
-        return interactable.getItem(slot);
+    public IGenericInventory getInteractableTradeSlots() {
+        return interactableTrades;
     }
 
     @Override
-    public ItemStack getPriceAndSaleItem(int slot) {
-        return priceAndSale.getItem(slot);
+    public IGenericInventory getSavedTradeSlots() {
+        return savedTrades;
     }
 
     @Override
-    public ItemStack getCratestockItem(int slot) {
+    public ICrateStock getCrateStock() {
+        return crateStock;
+    }
+
+    @Override
+    public ItemStack getInteractableTradeItem(int slot) {
+        return interactableTrades.getItem(slot);
+    }
+
+    @Override
+    public void setInteractableTradeItem(int slot, ItemStack stack) {
+        interactableTrades.setItem(slot, stack);
+    }
+
+    @Override
+    public ItemStack getSavedTradeSlotsItem(int slot) {
+        return savedTrades.getItem(slot);
+    }
+
+    @Override
+    public void setSavedTradeSlotItem(int slot, ItemStack stack) {
+        savedTrades.setItem(slot, stack);
+    }
+
+    @Override
+    public ItemStack getCrateStockItem(int slot) {
         return crateStock.getItem(slot);
+    }
+
+    @Override
+    public void setCrateStockItem(int slot, ItemStack stack) {
+        crateStock.setItem(slot, stack);
     }
 
     @Override
@@ -33,15 +67,15 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     @Override
     public void saveInventoryData(CompoundTag tag) {
         tag.put(Constants.TAGSTOCK, crateStock.serializeNBT());
-        tag.put(Constants.TAGINTERACTABLE, interactable.serializeNBT());
-        tag.put(Constants.TAGPRICESALE, priceAndSale.serializeNBT());
+        tag.put(Constants.TAGINTERACTABLE, interactableTrades.serializeNBT());
+        tag.put(Constants.TAGPRICESALE, savedTrades.serializeNBT());
     }
 
     @Override
     public void loadInventoryData(CompoundTag tag) {
         crateStock.deserializeNBT((CompoundTag) tag.get(Constants.TAGSTOCK));
-        interactable.deserializeNBT((CompoundTag) tag.get(Constants.TAGINTERACTABLE));
-        priceAndSale.deserializeNBT((CompoundTag) tag.get(Constants.TAGPRICESALE));
+        interactableTrades.deserializeNBT((CompoundTag) tag.get(Constants.TAGINTERACTABLE));
+        savedTrades.deserializeNBT((CompoundTag) tag.get(Constants.TAGPRICESALE));
     }
 
     @Override

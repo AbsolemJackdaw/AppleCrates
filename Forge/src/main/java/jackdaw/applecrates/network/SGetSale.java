@@ -1,6 +1,6 @@
 package jackdaw.applecrates.network;
 
-import jackdaw.applecrates.container.CrateMenu;
+import jackdaw.applecrates.network.packetprocessing.ServerGetSale;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -26,9 +26,7 @@ public class SGetSale {
     public void handle(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             ServerPlayer player = context.get().getSender();
-            if (player.containerMenu instanceof CrateMenu menu) {
-                menu.tryMovePaymentToInteraction();
-            }
+            new ServerGetSale().run(player);
         });
         context.get().setPacketHandled(true);
     }

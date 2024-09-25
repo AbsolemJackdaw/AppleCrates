@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -88,7 +87,7 @@ public class CommonCrateBlock extends BaseEntityBlock {
         if (!pState.is(pNewState.getBlock())) {
             if (pLevel.getBlockEntity(pPos) instanceof CommonCrateBE crate && pLevel instanceof ServerLevel serverLevel) {
                 for (int i = 0; i < Constants.TOTALCRATESLOTS; i++) {
-                    ItemStack stack = crate.stackHandler.getCratestockItem(i);
+                    ItemStack stack = crate.stackHandler.getCrateStockItem(i);
                     if (i == Constants.TOTALCRATESTOCKLOTS - 1) {
                         if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(Constants.TAGSTOCK)) {
                             int pay = stack.getTag().getInt(Constants.TAGSTOCK);
@@ -114,7 +113,7 @@ public class CommonCrateBlock extends BaseEntityBlock {
                     }
                 }
                 for (int i = 0; i < 2; i++) {
-                    ItemStack toDrop = crate.stackHandler.getInteractableItem(i);
+                    ItemStack toDrop = crate.stackHandler.getInteractableTradeItem(i);
                     Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
                 }
                 pLevel.updateNeighbourForOutputSignal(pPos, this);

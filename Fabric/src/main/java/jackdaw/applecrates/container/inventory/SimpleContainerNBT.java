@@ -1,4 +1,4 @@
-package jackdaw.applecrates.container;
+package jackdaw.applecrates.container.inventory;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -6,7 +6,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
-public class SimpleContainerNBT extends SimpleContainer {
+public class SimpleContainerNBT extends SimpleContainer implements IGenericInventory {
 
     public SimpleContainerNBT(int i) {
         super(i);

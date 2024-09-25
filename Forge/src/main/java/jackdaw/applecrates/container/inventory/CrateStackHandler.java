@@ -1,4 +1,4 @@
-package jackdaw.applecrates.container;
+package jackdaw.applecrates.container.inventory;
 
 import jackdaw.applecrates.Constants;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CrateStackHandler extends ItemStackHandler {
+public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
 
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
@@ -41,8 +41,13 @@ public class CrateStackHandler extends ItemStackHandler {
             prepPay.setCount(1);
             setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
+        ItemStack paymentCompare = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
+        if (paymentCompare.hasTag() && paymentCompare.getTag().contains(Constants.TAGSTOCK))
+            paymentCompare.getTag().remove(Constants.TAGSTOCK);
+
         if (!ItemStack.isSameItemSameTags(payment, getStackInSlot(Constants.TOTALCRATESTOCKLOTS)))
             return false;
+
         ItemStack prepXchange = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
         if (tag.contains(Constants.TAGSTOCK)) {

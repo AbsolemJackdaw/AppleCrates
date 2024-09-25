@@ -1,4 +1,4 @@
-package jackdaw.applecrates.container;
+package jackdaw.applecrates.container.inventory;
 
 import jackdaw.applecrates.Constants;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CrateStackHandler extends SimpleContainerNBT {
+public class CrateStackHandler extends SimpleContainerNBT implements ICrateStock {
 
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class CrateStackHandler extends SimpleContainerNBT {
         return slot != Constants.TOTALCRATESTOCKLOTS && super.canPlaceItem(slot, stack);
     }
 
-
+    @Override
     public boolean updateStackInPaymentSlot(ItemStack payment, boolean isUnlimitedShop) {
         if (isUnlimitedShop)
             return true;

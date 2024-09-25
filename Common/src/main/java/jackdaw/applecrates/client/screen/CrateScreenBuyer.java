@@ -3,17 +3,15 @@ package jackdaw.applecrates.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.container.CrateMenuBuyer;
-import jackdaw.applecrates.network.CrateChannel;
-import jackdaw.applecrates.network.SGetSale;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class CrateScreenBuyer extends CommonCrateScreen<CrateMenuBuyer> {
+public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
     private static final ResourceLocation BUYER = new ResourceLocation(Constants.MODID, "gui/buyer.png");
 
     public CrateScreenBuyer(CrateMenuBuyer menu, Inventory playerInventory, Component title) {
@@ -38,7 +36,7 @@ public class CrateScreenBuyer extends CommonCrateScreen<CrateMenuBuyer> {
                         62,
                         (button) -> {
                             if (isUnlimitedShop() || !menu.outOfStock())
-                                CrateChannel.NETWORK.sendToServer(new SGetSale());
+                                Content.buyerGuiButton.accept();
                         }));
     }
 
@@ -63,8 +61,8 @@ public class CrateScreenBuyer extends CommonCrateScreen<CrateMenuBuyer> {
 
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
     private void renderTrade(int slotId, int x, int y) {
-        if (!menu.savedTradeSlots.getStackInSlot(slotId).isEmpty()) {
-            ItemStack saleStack = menu.savedTradeSlots.getStackInSlot(slotId);
+        if (!menu.adapter.getSavedTradeSlotsItem(slotId).isEmpty()) {
+            ItemStack saleStack = menu.adapter.getSavedTradeSlotsItem(slotId);
             int xo = slotId == 0 ? 14 + 2 : 75 - 16 - 2;
             int yo = 20;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
@@ -92,7 +90,7 @@ public class CrateScreenBuyer extends CommonCrateScreen<CrateMenuBuyer> {
 
         @Override
         public void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
-            ItemStack stack = menu.savedTradeSlots.getStackInSlot(slot);
+            ItemStack stack = menu.adapter.getSavedTradeSlotsItem(slot);
             if (!stack.isEmpty())
                 CrateScreenBuyer.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
         }

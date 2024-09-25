@@ -1,4 +1,4 @@
-package jackdaw.applecrates.container;
+package jackdaw.applecrates.container.slot;
 
 import jackdaw.applecrates.Constants;
 import net.minecraft.world.Container;

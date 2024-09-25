@@ -1,4 +1,4 @@
-package jackdaw.applecrates.container;
+package jackdaw.applecrates.container.factory;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;

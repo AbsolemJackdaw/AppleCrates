@@ -2,8 +2,8 @@ package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.CommonCrateBlock;
-import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.container.StackHandlerAdapter;
+import jackdaw.applecrates.container.inventory.CrateStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

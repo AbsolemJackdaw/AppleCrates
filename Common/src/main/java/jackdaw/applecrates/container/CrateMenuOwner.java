@@ -1,37 +1,29 @@
 package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.FabricCrates;
-import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.block.blockentity.CommonCrateBE;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateMenuOwner extends CrateMenu {
 
-    //Registry overload for menu type registry //client
-    public CrateMenuOwner(int id, Inventory inventory, boolean unlimited) {
-        super(FabricCrates.CRATE_MENU_OWNER, id, inventory, unlimited);
+    //Registry overload for menu type registry
+    //client
+    public CrateMenuOwner(MenuType<?> type, int id, Inventory inventory, IStackHandlerAdapter adapter, boolean unlimited) {
+        super(type, id, inventory, adapter, unlimited);
     }
 
-    public CrateMenuOwner(int id, Inventory inventory, CrateBE crate, boolean unlimited) {
-        super(FabricCrates.CRATE_MENU_OWNER, id, inventory, crate, unlimited);
+    public CrateMenuOwner(MenuType<?> type, int id, Inventory inventory, CommonCrateBE crate, boolean unlimited) {
+        super(type, id, inventory, crate, unlimited);
     }
 
     @Override
-    protected boolean isOwner() {
+    public boolean isOwner() {
         return true;
-    }
-
-    @Override
-    protected int playerInventoryX() {
-        return 19;
-    }
-
-    @Override
-    protected int playerInventoryY() {
-        return 108;
     }
 
     @Override
@@ -61,5 +53,34 @@ public class CrateMenuOwner extends CrateMenu {
             return ItemStack.EMPTY;
         }
         return super.quickMoveStack(player, index);
+    }
+
+    protected ItemStack pickUpPayment() {
+        ItemStack original = adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS); //do not modify originals !
+        int amount = 0;
+        if (original.getOrCreateTag().contains(Constants.TAGSTOCK))
+            amount = original.getTag().getInt(Constants.TAGSTOCK);
+
+        if (amount > 0 && original.hasTag()) { //Redundant double check, but better safe then sorry
+            ItemStack prepPickup = original.copy();
+            CompoundTag tag = prepPickup.getTag();
+            tag.remove(Constants.TAGSTOCK);
+            if (tag.isEmpty()) //fix empty tag bug where an empty tag and a null tag are distinct items
+                tag = null;
+            prepPickup.setTag(tag);
+            int pickUp = Math.min(amount, prepPickup.getMaxStackSize());
+            prepPickup.setCount(pickUp);
+
+            int updatedAmount = amount - pickUp;
+            if (updatedAmount <= 0) {
+                adapter.setCrateStockItem(Constants.TOTALCRATESTOCKLOTS, ItemStack.EMPTY);
+            } else {
+                ItemStack prepUpdate = original.copy();
+                prepUpdate.getTag().putInt(Constants.TAGSTOCK, updatedAmount);
+                adapter.setCrateStockItem(Constants.TOTALCRATESTOCKLOTS, prepUpdate);
+            }
+            return prepPickup;
+        }
+        return ItemStack.EMPTY;
     }
 }

@@ -3,9 +3,7 @@ package jackdaw.applecrates.api;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBE;
-import jackdaw.applecrates.container.CrateMenuBuyer;
-import jackdaw.applecrates.container.CrateMenuOwner;
-import jackdaw.applecrates.container.StackHandlerAdapter;
+import jackdaw.applecrates.container.*;
 import jackdaw.applecrates.item.CrateItem;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
@@ -23,14 +21,15 @@ public class GeneralRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Constants.MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MODID);
+
     public static final RegistryObject<MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenuOwner(windowId, inv, unlimited);
+        return new CrateMenuOwnerService(windowId, inv, new StackHandlerAdapter(), unlimited);
     }));
 
     public static final RegistryObject<MenuType<CrateMenuBuyer>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenuBuyer(windowId, inv, unlimited);
+        return new CrateMenuBuyerService(windowId, inv, new StackHandlerAdapter(), unlimited);
     }));
 
     /**

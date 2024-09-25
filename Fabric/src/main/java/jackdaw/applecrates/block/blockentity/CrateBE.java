@@ -3,10 +3,10 @@ package jackdaw.applecrates.block.blockentity;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.CommonCrateBlock;
-import jackdaw.applecrates.container.CrateStackHandler;
 import jackdaw.applecrates.container.IStackHandlerAdapter;
-import jackdaw.applecrates.container.SimpleContainerNBT;
 import jackdaw.applecrates.container.StackHandlerAdapter;
+import jackdaw.applecrates.container.inventory.CrateStackHandler;
+import jackdaw.applecrates.container.inventory.SimpleContainerNBT;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.WorldlyContainer;
@@ -31,13 +31,13 @@ public class CrateBE extends CommonCrateBE implements WorldlyContainer {
 
     public SimpleContainerNBT getInteractable() {
         if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
-            return stackHandlerAdapter.interactable;
+            return stackHandlerAdapter.interactableTrades;
         return new SimpleContainerNBT(2);
     }
 
     public SimpleContainerNBT getPriceAndSale() {
         if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
-            return stackHandlerAdapter.priceAndSale;
+            return stackHandlerAdapter.savedTrades;
         return new SimpleContainerNBT(2);
     }
 

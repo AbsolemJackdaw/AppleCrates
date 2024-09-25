@@ -7,13 +7,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-public class CommonCrateScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+public class CrateScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
     protected static final ResourceLocation VILLAGER_UI = new ResourceLocation("textures/gui/container/villager2.png");
 
     protected int guiStartX;
     protected int guiStartY;
 
-    public CommonCrateScreen(T menu, Inventory inventory, Component comp) {
+    public CrateScreen(T menu, Inventory inventory, Component comp) {
         super(menu, inventory, comp);
     }
 

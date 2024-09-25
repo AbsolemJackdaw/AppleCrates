@@ -27,7 +27,7 @@ public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
     @Override
     public void render(CommonCrateBE crateBE, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         float blockRotation = crateBE.getBlockState().getValue(CommonCrateBlock.FACING).toYRot();
-        ItemStack selling = crateBE.stackHandler.getPriceAndSaleItem(1);
+        ItemStack selling = crateBE.stackHandler.getSavedTradeSlotsItem(1);
 
         if (!selling.isEmpty()) {
             boolean one = Content.clientConfig.getCrateItemRenderingValue() == EnumCrateItemRendering.ONE;

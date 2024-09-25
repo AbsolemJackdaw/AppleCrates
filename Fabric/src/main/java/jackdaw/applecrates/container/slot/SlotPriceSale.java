@@ -1,12 +1,12 @@
-package jackdaw.applecrates.container;
+package jackdaw.applecrates.container.slot;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 
 public class SlotPriceSale extends Slot {
-    public SlotPriceSale(Container container, int i, int j, int k) {
-        super(container, i, j, k);
+    public SlotPriceSale(Container container, int i) {
+        super(container, i, 0, 0);
     }
 
     @Override
