@@ -1,7 +1,7 @@
 package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.block.blockentity.CommonCrateBE;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ public class CrateMenuOwner extends CrateMenu {
         super(type, id, inventory, adapter, unlimited);
     }
 
-    public CrateMenuOwner(MenuType<?> type, int id, Inventory inventory, CommonCrateBE crate, boolean unlimited) {
+    public CrateMenuOwner(MenuType<?> type, int id, Inventory inventory, CrateBlockEntityBase crate, boolean unlimited) {
         super(type, id, inventory, crate, unlimited);
     }
 

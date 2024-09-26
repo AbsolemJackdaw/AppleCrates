@@ -9,15 +9,8 @@ import java.util.function.Supplier;
 
 public class SCrateTradeSync {
 
-    public SCrateTradeSync() {
-    }
-
-    public SCrateTradeSync(FriendlyByteBuf read) {
-        decode(read);
-    }
-
-    public void decode(FriendlyByteBuf buf) {
-
+    public static SCrateTradeSync decode(FriendlyByteBuf buf) {
+        return new SCrateTradeSync();
     }
 
     public void encode(FriendlyByteBuf buf) {

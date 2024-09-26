@@ -2,7 +2,7 @@ package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
-import jackdaw.applecrates.block.blockentity.CommonCrateBE;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +21,7 @@ public class CrateMenu extends AbstractContainerMenu {
     protected Level volatileLevel;
     protected BlockPos volatilePos;
 
-    public CrateMenu(MenuType<?> type, int id, Inventory inventory, CommonCrateBE crate, boolean unlimited) {
+    public CrateMenu(MenuType<?> type, int id, Inventory inventory, CrateBlockEntityBase crate, boolean unlimited) {
         this(type, id, inventory, crate.stackHandler, unlimited);
         volatileLevel = crate.getLevel();
         volatilePos = crate.getBlockPos();
@@ -82,7 +82,7 @@ public class CrateMenu extends AbstractContainerMenu {
         super.removed(pPlayer);
 
         if (volatileLevel != null && volatilePos != null)
-            if (volatileLevel.getBlockEntity(volatilePos) instanceof CommonCrateBE crate) //includes null check
+            if (volatileLevel.getBlockEntity(volatilePos) instanceof CrateBlockEntityBase crate) //includes null check
             {
                 volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
                 crate.setChanged();

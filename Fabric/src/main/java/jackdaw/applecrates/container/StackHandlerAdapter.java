@@ -4,15 +4,15 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.container.inventory.CrateStackHandler;
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
-import jackdaw.applecrates.container.inventory.SimpleContainerNBT;
+import jackdaw.applecrates.container.inventory.GenericStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class StackHandlerAdapter implements IStackHandlerAdapter {
     public CrateStackHandler crateStock = new CrateStackHandler();
-    public SimpleContainerNBT interactableTrades = new SimpleContainerNBT(2);
-    public SimpleContainerNBT savedTrades = new SimpleContainerNBT(2);
+    public GenericStackHandler interactableTrades = new GenericStackHandler(2);
+    public GenericStackHandler savedTrades = new GenericStackHandler(2);
 
     @Override
     public IGenericInventory getInteractableTradeSlots() {

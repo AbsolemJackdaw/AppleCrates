@@ -2,11 +2,10 @@ package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
-import jackdaw.applecrates.block.CommonCrateBlock;
+import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.container.IStackHandlerAdapter;
 import jackdaw.applecrates.container.StackHandlerAdapter;
 import jackdaw.applecrates.container.inventory.CrateStackHandler;
-import jackdaw.applecrates.container.inventory.SimpleContainerNBT;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.WorldlyContainer;
@@ -17,40 +16,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.IntStream;
 
-public class CrateBE extends CommonCrateBE implements WorldlyContainer {
+public class CrateBlockEntity extends CrateBlockEntityBase implements WorldlyContainer {
 
-    public CrateBE(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter handler) {
+    public CrateBlockEntity(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter handler) {
         super(type, pos, state, handler);
-    }
-
-    public CrateStackHandler getCrateStock() {
-        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
-            return stackHandlerAdapter.crateStock;
-        return new CrateStackHandler();
-    }
-
-    public SimpleContainerNBT getInteractable() {
-        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
-            return stackHandlerAdapter.interactableTrades;
-        return new SimpleContainerNBT(2);
-    }
-
-    public SimpleContainerNBT getPriceAndSale() {
-        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
-            return stackHandlerAdapter.savedTrades;
-        return new SimpleContainerNBT(2);
     }
 
     @Override
     public int[] getSlotsForFace(Direction direction) {
-        if (getBlockState().getValue(CommonCrateBlock.FACING).equals(direction))
+        if (getBlockState().getValue(CrateBlockBase.FACING).equals(direction))
             return IntStream.range(0, Constants.TOTALCRATESTOCKLOTS).toArray();
         return new int[0];
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
-        return getBlockState().getValue(CommonCrateBlock.FACING).equals(direction);
+        return getBlockState().getValue(CrateBlockBase.FACING).equals(direction);
     }
 
     @Override
@@ -99,5 +80,11 @@ public class CrateBE extends CommonCrateBE implements WorldlyContainer {
     @Override
     public void clearContent() {
         getCrateStock().clearContent();
+    }
+
+    private CrateStackHandler getCrateStock() {
+        if (stackHandler instanceof StackHandlerAdapter stackHandlerAdapter)
+            return stackHandlerAdapter.crateStock;
+        return new CrateStackHandler();
     }
 }

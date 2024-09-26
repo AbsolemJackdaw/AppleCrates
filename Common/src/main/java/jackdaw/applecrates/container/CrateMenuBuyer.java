@@ -1,7 +1,7 @@
 package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.block.blockentity.CommonCrateBE;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -16,7 +16,7 @@ public class CrateMenuBuyer extends CrateMenu {
         super(type, id, inventory, adapter, unlimited);
     }
 
-    public CrateMenuBuyer(MenuType<?> type, int id, Inventory inventory, CommonCrateBE crate, boolean unlimited) {
+    public CrateMenuBuyer(MenuType<?> type, int id, Inventory inventory, CrateBlockEntityBase crate, boolean unlimited) {
         super(type, id, inventory, crate, unlimited);
     }
 
@@ -29,7 +29,7 @@ public class CrateMenuBuyer extends CrateMenu {
             if (mouseButton != 0
                     || (!(click.equals(ClickType.PICKUP) || click.equals(ClickType.QUICK_MOVE)))
                     || adapter.getInteractableTradeItem(1).isEmpty()
-                    || getCarried().getCount() + adapter.getInteractableTradeItem(1).getCount() >= getCarried().getMaxStackSize())
+                    || (!getCarried().isEmpty() && getCarried().getCount() + adapter.getInteractableTradeItem(1).getCount() > getCarried().getMaxStackSize()))
                 return;
             super.clicked(slotID, mouseButton, click, player);
             adapter.getInteractableTradeItem(0).shrink(adapter.getSavedTradeSlotsItem(0).getCount());

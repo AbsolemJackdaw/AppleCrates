@@ -15,13 +15,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.UUID;
 
-public abstract class CommonCrateBE extends BlockEntity {
+public abstract class CrateBlockEntityBase extends BlockEntity {
 
     public final IStackHandlerAdapter stackHandler;
     public boolean isUnlimitedShop = false;
     private UUID owner;
 
-    public CommonCrateBE(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter stackHandler) {
+    public CrateBlockEntityBase(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter stackHandler) {
         super(CrateWoodType.getBlockEntityType(type), pos, state);
         this.stackHandler = stackHandler;
     }

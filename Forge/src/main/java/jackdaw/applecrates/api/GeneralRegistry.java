@@ -2,7 +2,7 @@ package jackdaw.applecrates.api;
 
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.block.CrateBlock;
-import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntity;
 import jackdaw.applecrates.container.*;
 import jackdaw.applecrates.item.CrateItem;
 import net.minecraft.world.inventory.MenuType;
@@ -24,12 +24,12 @@ public class GeneralRegistry {
 
     public static final RegistryObject<MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenuOwnerService(windowId, inv, new StackHandlerAdapter(), unlimited);
+        return new CrateMenuOwnerService(windowId, inv, unlimited);
     }));
 
     public static final RegistryObject<MenuType<CrateMenuBuyer>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenuBuyerService(windowId, inv, new StackHandlerAdapter(), unlimited);
+        return new CrateMenuBuyerService(windowId, inv, unlimited);
     }));
 
     /**
@@ -40,8 +40,7 @@ public class GeneralRegistry {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
             RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
-            beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBE(crateWoodType, pos, state, new StackHandlerAdapter()), block.get()).build(null));
-
+            beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), block.get()).build(null));
         });
     }
 

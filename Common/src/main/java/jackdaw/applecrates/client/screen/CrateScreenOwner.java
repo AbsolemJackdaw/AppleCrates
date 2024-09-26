@@ -50,8 +50,6 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
 
         if (payout.hasTag() && payout.getTag().contains(Constants.TAGSTOCK)) {
             payout.removeTagKey(Constants.TAGSTOCK);
-            if (payout.getTag() != null && payout.getTag().isEmpty())
-                payout.setTag(null);
         }
         return ItemStack.isSameItemSameTags(payout, give);
     }

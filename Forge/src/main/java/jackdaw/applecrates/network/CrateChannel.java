@@ -15,8 +15,7 @@ public class CrateChannel {
             .simpleChannel();
 
     public static void init() {
-        CrateChannel.NETWORK.registerMessage(PacketId.SPACKET_TRADE, SCrateTradeSync.class, SCrateTradeSync::encode, SCrateTradeSync::new, SCrateTradeSync::handle);
-        CrateChannel.NETWORK.registerMessage(PacketId.SPACKET_SALE, SGetSale.class, SGetSale::encode, SGetSale::new, SGetSale::handle);
-
+        CrateChannel.NETWORK.registerMessage(PacketId.SPACKET_TRADE, SCrateTradeSync.class, SCrateTradeSync::encode, SCrateTradeSync::decode, SCrateTradeSync::handle);
+        CrateChannel.NETWORK.registerMessage(PacketId.SPACKET_SALE, SGetSale.class, SGetSale::encode, SGetSale::decode, SGetSale::handle);
     }
 }

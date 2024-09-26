@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.EnumCrateItemRendering;
-import jackdaw.applecrates.block.CommonCrateBlock;
-import jackdaw.applecrates.block.blockentity.CommonCrateBE;
+import jackdaw.applecrates.block.CrateBlockBase;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -16,17 +16,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
+public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<CrateBlockEntityBase> {
     private static final int MAX_RENDERED_ITEMS = 9;
     private static final int ITEMS_PER_ROW = 3;
 
-    public CrateBESR(BlockEntityRendererProvider.Context ctx) {
+    public CrateBlockEntitySpecialRenderer(BlockEntityRendererProvider.Context ctx) {
     }
 
 
     @Override
-    public void render(CommonCrateBE crateBE, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        float blockRotation = crateBE.getBlockState().getValue(CommonCrateBlock.FACING).toYRot();
+    public void render(CrateBlockEntityBase crateBE, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
+        float blockRotation = crateBE.getBlockState().getValue(CrateBlockBase.FACING).toYRot();
         ItemStack selling = crateBE.stackHandler.getSavedTradeSlotsItem(1);
 
         if (!selling.isEmpty()) {
@@ -38,7 +38,7 @@ public class CrateBESR implements BlockEntityRenderer<CommonCrateBE> {
                 stack.pushPose();
 
                 //prepare normalisation of crate rotation in shown itemstacks
-                int angleSimp = (int) crateBE.getBlockState().getValue(CommonCrateBlock.FACING).toYRot() / 90;
+                int angleSimp = (int) crateBE.getBlockState().getValue(CrateBlockBase.FACING).toYRot() / 90;
                 float xoff = angleSimp == 1 || angleSimp == 2 ? 1.0f : 0.0f;
                 float zoff = angleSimp == 2 || angleSimp == 3 ? 1.0f : 0.0f;
                 float zfront = angleSimp % 2 == 1 ? (0.5f * (angleSimp == 3 ? -1 : 1)) : 0f;

@@ -8,15 +8,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SGetSale {
-    public SGetSale() {
-    }
-
-    public SGetSale(FriendlyByteBuf read) {
-        decode(read);
-    }
-
-    public void decode(FriendlyByteBuf buf) {
-
+    public static SGetSale decode(FriendlyByteBuf buf) {
+        return new SGetSale();
     }
 
     public void encode(FriendlyByteBuf buf) {

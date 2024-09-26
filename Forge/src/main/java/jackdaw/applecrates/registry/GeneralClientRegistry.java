@@ -4,7 +4,7 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
-import jackdaw.applecrates.client.besr.CrateBESR;
+import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.network.CrateChannel;
@@ -23,7 +23,7 @@ public class GeneralClientRegistry {
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event) {
 
         CrateWoodType.values().forEach(crateWoodType -> {
-            event.registerBlockEntityRenderer(CrateWoodType.getBlockEntityType(crateWoodType), CrateBESR::new);
+            event.registerBlockEntityRenderer(CrateWoodType.getBlockEntityType(crateWoodType), CrateBlockEntitySpecialRenderer::new);
         });
         MenuScreens.register(GeneralRegistry.CRATE_MENU_OWNER.get(), CrateScreenOwner::new);
         MenuScreens.register(GeneralRegistry.CRATE_MENU_BUYER.get(), CrateScreenBuyer::new);

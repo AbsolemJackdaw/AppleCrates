@@ -41,11 +41,14 @@ public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
             prepPay.setCount(1);
             setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
-        ItemStack paymentCompare = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
-        if (paymentCompare.hasTag() && paymentCompare.getTag().contains(Constants.TAGSTOCK))
-            paymentCompare.getTag().remove(Constants.TAGSTOCK);
 
-        if (!ItemStack.isSameItemSameTags(payment, getStackInSlot(Constants.TOTALCRATESTOCKLOTS)))
+        //remove custom tag from money slot stack for comparison with 'virgin' item in the savedStack slot
+        ItemStack paymentCompare = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
+        if (paymentCompare.hasTag() && paymentCompare.getTag().contains(Constants.TAGSTOCK)) {
+            paymentCompare.removeTagKey(Constants.TAGSTOCK);
+        }
+
+        if (!ItemStack.isSameItemSameTags(payment, paymentCompare))
             return false;
 
         ItemStack prepXchange = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();

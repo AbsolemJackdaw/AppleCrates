@@ -2,7 +2,7 @@ package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
-import jackdaw.applecrates.block.blockentity.CommonCrateBE;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -32,15 +32,15 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class CommonCrateBlock extends BaseEntityBlock {
+public class CrateBlockBase extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
     private final CrateWoodType type;
 
-    public CommonCrateBlock(CrateWoodType type) {
-        super(Properties.copy(Blocks.OAK_PLANKS).noOcclusion().isValidSpawn(CommonCrateBlock::never).isRedstoneConductor(CommonCrateBlock::never).isSuffocating(CommonCrateBlock::never).isViewBlocking(CommonCrateBlock::never));
+    public CrateBlockBase(CrateWoodType type) {
+        super(Properties.copy(Blocks.OAK_PLANKS).noOcclusion().isValidSpawn(CrateBlockBase::never).isRedstoneConductor(CrateBlockBase::never).isSuffocating(CrateBlockBase::never).isViewBlocking(CrateBlockBase::never));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         this.type = type;
     }
@@ -61,7 +61,7 @@ public class CommonCrateBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-        if (pPlacer instanceof ServerPlayer serverPlayer && pLevel.getBlockEntity(pPos) instanceof CommonCrateBE crate) {
+        if (pPlacer instanceof ServerPlayer serverPlayer && pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate) {
             crate.setOwner(serverPlayer);
         }
     }
@@ -85,16 +85,14 @@ public class CommonCrateBlock extends BaseEntityBlock {
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (!pState.is(pNewState.getBlock())) {
-            if (pLevel.getBlockEntity(pPos) instanceof CommonCrateBE crate && pLevel instanceof ServerLevel serverLevel) {
+            if (pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate && pLevel instanceof ServerLevel serverLevel) {
                 for (int i = 0; i < Constants.TOTALCRATESLOTS; i++) {
                     ItemStack stack = crate.stackHandler.getCrateStockItem(i);
-                    if (i == Constants.TOTALCRATESTOCKLOTS - 1) {
+                    if (i == Constants.TOTALCRATESTOCKLOTS) {
                         if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(Constants.TAGSTOCK)) {
                             int pay = stack.getTag().getInt(Constants.TAGSTOCK);
                             ItemStack prepCopy = stack.copy();
                             prepCopy.removeTagKey(Constants.TAGSTOCK);
-                            if (prepCopy.getTag() != null && prepCopy.getTag().isEmpty())
-                                prepCopy.setTag(null);
 
                             while (pay > 0) {
                                 ItemStack toDrop = prepCopy.copy();
@@ -151,14 +149,14 @@ public class CommonCrateBlock extends BaseEntityBlock {
     //only owner can break
     @Override
     public float getDestroyProgress(BlockState pState, Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
-        if (pLevel.getBlockEntity(pPos) instanceof CommonCrateBE crate && crate.isOwner(pPlayer))
+        if (pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate && crate.isOwner(pPlayer))
             return super.getDestroyProgress(pState, pPlayer, pLevel, pPos);
         return 0;
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof CommonCrateBE crate && hand.equals(InteractionHand.MAIN_HAND)) {
+        if (level.getBlockEntity(pos) instanceof CrateBlockEntityBase crate && hand.equals(InteractionHand.MAIN_HAND)) {
             if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.getGameProfile())) {
                 crate.isUnlimitedShop = true;
                 player.displayClientMessage(Component.translatable("crate.set.creative"), true);
@@ -179,9 +177,9 @@ public class CommonCrateBlock extends BaseEntityBlock {
         return InteractionResult.FAIL;
     }
 
-    public void openOwnerUI(ServerPlayer serverPlayer, CommonCrateBE commonCrate) {
+    public void openOwnerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
     }
 
-    public void openBuyerUI(ServerPlayer serverPlayer, CommonCrateBE commonCrate) {
+    public void openBuyerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
     }
 }

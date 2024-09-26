@@ -6,14 +6,10 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
-public class SimpleContainerNBT extends SimpleContainer implements IGenericInventory {
+public class GenericStackHandler extends SimpleContainer implements IGenericInventory {
 
-    public SimpleContainerNBT(int i) {
+    public GenericStackHandler(int i) {
         super(i);
-    }
-
-    public SimpleContainerNBT(ItemStack... itemStacks) {
-        super(itemStacks);
     }
 
     public void deserializeNBT(CompoundTag nbt) {

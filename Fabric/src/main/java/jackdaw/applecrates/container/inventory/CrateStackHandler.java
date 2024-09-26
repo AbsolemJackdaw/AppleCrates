@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CrateStackHandler extends SimpleContainerNBT implements ICrateStock {
+public class CrateStackHandler extends GenericStackHandler implements ICrateStock {
 
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
@@ -46,8 +46,15 @@ public class CrateStackHandler extends SimpleContainerNBT implements ICrateStock
             prepPay.setCount(1);
             setItem(Constants.TOTALCRATESTOCKLOTS, prepPay);
         }
-        if (!ItemStack.isSameItemSameTags(payment, getItem(Constants.TOTALCRATESTOCKLOTS)))
+        //remove custom tag from money slot stack for comparison with 'virgin' item in the savedStack slot
+        ItemStack paymentCompare = getItem(Constants.TOTALCRATESTOCKLOTS).copy();
+        if (paymentCompare.hasTag() && paymentCompare.getTag().contains(Constants.TAGSTOCK)) {
+            paymentCompare.removeTagKey(Constants.TAGSTOCK);
+        }
+
+        if (!ItemStack.isSameItemSameTags(payment, paymentCompare))
             return false;
+
         ItemStack prepXchange = getItem(Constants.TOTALCRATESTOCKLOTS).copy();
         CompoundTag tag = prepXchange.getOrCreateTag();
         if (tag.contains(Constants.TAGSTOCK)) {

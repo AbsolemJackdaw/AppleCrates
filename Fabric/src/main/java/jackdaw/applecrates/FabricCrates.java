@@ -3,7 +3,7 @@ package jackdaw.applecrates;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.CrateBlock;
-import jackdaw.applecrates.block.blockentity.CrateBE;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntity;
 import jackdaw.applecrates.container.*;
 import jackdaw.applecrates.container.slot.SlotCrateStock;
 import jackdaw.applecrates.container.slot.SlotPriceSale;
@@ -33,7 +33,7 @@ public class FabricCrates implements ModInitializer {
         return new CrateMenuBuyerService(syncId, inventory, new StackHandlerAdapter(), unlimited);
     });
 
-    public static final List<Supplier<BlockEntityType<CrateBE>>> besrreg = new ArrayList<>();
+    public static final List<Supplier<BlockEntityType<CrateBlockEntity>>> besrreg = new ArrayList<>();
 
     @Override
     public void onInitialize() {
@@ -49,7 +49,7 @@ public class FabricCrates implements ModInitializer {
             var type = Registry.register(
                     Registry.BLOCK_ENTITY_TYPE,
                     new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()),
-                    BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBE(crateWoodType, blockPos, blockState, new StackHandlerAdapter()), crate).build(null));
+                    BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBlockEntity(crateWoodType, blockPos, blockState, new StackHandlerAdapter()), crate).build(null));
             besrreg.add(() -> type);
         });
 
