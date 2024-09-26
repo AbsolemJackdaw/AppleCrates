@@ -17,17 +17,19 @@ public class CrateStackHandler extends GenericStackHandler implements ICrateStoc
         super(Constants.TOTALCRATESLOTS);
     }
 
-    public int getCountOfItem(Item item) {
-        return this.itemCountCache.computeIfAbsent(item, $ -> {
-            int count = 0;
-            for (int i = 0; i < this.getContainerSize(); i++) {
-                var stack = this.getItem(i);
-                if (stack.is(item)) {
-                    count += stack.getCount();
-                }
+    public int getCountOfItemCached(Item item) {
+        return this.itemCountCache.computeIfAbsent(item, $ -> getCountOfItemImmediately(item));
+    }
+
+    public int getCountOfItemImmediately(Item item) {
+        int count = 0;
+        for (int i = 0; i < this.getContainerSize(); i++) {
+            var stack = this.getItem(i);
+            if (stack.is(item)) {
+                count += stack.getCount();
             }
-            return count;
-        });
+        }
+        return count;
     }
 
     @Override

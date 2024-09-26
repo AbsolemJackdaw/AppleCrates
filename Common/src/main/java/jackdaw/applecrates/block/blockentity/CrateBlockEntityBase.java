@@ -10,12 +10,13 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.UUID;
 
-public abstract class CrateBlockEntityBase extends BlockEntity {
+public class CrateBlockEntityBase extends BlockEntity {
 
     public final IStackHandlerAdapter stackHandler;
     public boolean isUnlimitedShop = false;
@@ -84,4 +85,21 @@ public abstract class CrateBlockEntityBase extends BlockEntity {
         return owner == null || player != null && owner.equals(player.getGameProfile().getId());
     }
 
+    public static int getStockSignal(BlockGetter blockLevel, BlockPos pos) {
+        if (blockLevel.getBlockState(pos).hasBlockEntity() && blockLevel.getBlockEntity(pos) instanceof CrateBlockEntityBase crate)
+            return crate.getStockLevel();
+        return 0;
+    }
+
+    public int getStockLevel() {
+        var outputStack = stackHandler.getSavedTradeSlotsItem(1);
+        if (!outputStack.isEmpty()) {
+            double count = stackHandler.getCrateStock().getCountOfItemImmediately(outputStack.getItem());
+            double totalPossible = outputStack.getMaxStackSize() * Constants.TOTALCRATESTOCKLOTS;
+            var ratio = 15 * (count / totalPossible);
+            System.out.println(count + " " + ratio);
+            return (int) ratio;
+        }
+        return 0;
+    }
 }

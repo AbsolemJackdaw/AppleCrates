@@ -61,7 +61,7 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
 
     @Override
     public int getCratestacksTotalItemCount(Item item) {
-        return crateStock.getCountOfItem(item);
+        return crateStock.getCountOfItemCached(item);
     }
 
     @Override

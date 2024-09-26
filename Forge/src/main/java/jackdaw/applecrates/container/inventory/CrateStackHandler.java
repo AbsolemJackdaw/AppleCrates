@@ -18,17 +18,20 @@ public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
         super(Constants.TOTALCRATESLOTS);
     }
 
-    public int getCountOfItem(Item item) {
-        return this.itemCountCache.computeIfAbsent(item, $ -> {
-            int count = 0;
-            for (int i = 0; i < this.getSlots(); i++) {
-                var stack = this.getStackInSlot(i);
-                if (stack.is(item)) {
-                    count += stack.getCount();
-                }
+    public int getCountOfItemCached(Item item) {
+        return this.itemCountCache.computeIfAbsent(item, $ -> getCountOfItemImmediately(item));
+    }
+
+    @Override
+    public int getCountOfItemImmediately(Item item) {
+        int count = 0;
+        for (int i = 0; i < this.getSlots(); i++) {
+            var stack = this.getStackInSlot(i);
+            if (stack.is(item)) {
+                count += stack.getCount();
             }
-            return count;
-        });
+        }
+        return count;
     }
 
     public boolean updateStackInPaymentSlot(ItemStack payment, boolean isUnlimitedShop) {

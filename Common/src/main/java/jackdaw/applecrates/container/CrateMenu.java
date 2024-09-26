@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -64,9 +65,25 @@ public class CrateMenu extends AbstractContainerMenu {
             return ItemStack.EMPTY;
 
         if (Constants.isInCrateStock(index))
-            this.moveItemStackTo(slots.get(index).getItem(), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT, false);
+            this.moveItemStackTo(slots.get(index).getItem(), Constants.PLAYERSTARTSLOT, Constants.PLAYERENDSLOT + 1, false);
 
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void clicked(int $$0, int $$1, ClickType $$2, Player $$3) {
+        super.clicked($$0, $$1, $$2, $$3);
+        markCrateChanged();
+    }
+
+    protected void markCrateChanged() {
+        System.out.println("crate changed");
+        if (volatileLevel != null && volatilePos != null)
+            if (volatileLevel.getBlockEntity(volatilePos) instanceof CrateBlockEntityBase crate) //includes null check
+            {
+                volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
+                crate.setChanged();
+            }
     }
 
     @Override
@@ -81,12 +98,7 @@ public class CrateMenu extends AbstractContainerMenu {
 
         super.removed(pPlayer);
 
-        if (volatileLevel != null && volatilePos != null)
-            if (volatileLevel.getBlockEntity(volatilePos) instanceof CrateBlockEntityBase crate) //includes null check
-            {
-                volatileLevel.sendBlockUpdated(volatilePos, volatileLevel.getBlockState(volatilePos), volatileLevel.getBlockState(volatilePos), 3);
-                crate.setChanged();
-            }
+        markCrateChanged();
     }
 
     @Override

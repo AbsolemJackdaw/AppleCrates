@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -64,6 +65,21 @@ public class CrateBlockBase extends BaseEntityBlock {
         if (pPlacer instanceof ServerPlayer serverPlayer && pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate) {
             crate.setOwner(serverPlayer);
         }
+    }
+
+    @Override
+    public int getSignal(BlockState blockState, BlockGetter blockLevel, BlockPos pos, Direction dir) {
+        return Mth.clamp(CrateBlockEntityBase.getStockSignal(blockLevel, pos), 0, 15);
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level blockLevel, BlockPos pos) {
+        return blockState.getSignal(blockLevel, pos, blockState.getValue(FACING));
     }
 
     @Override
