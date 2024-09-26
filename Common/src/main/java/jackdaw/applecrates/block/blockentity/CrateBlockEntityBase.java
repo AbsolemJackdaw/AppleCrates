@@ -97,7 +97,6 @@ public class CrateBlockEntityBase extends BlockEntity {
             double count = stackHandler.getCrateStock().getCountOfItemImmediately(outputStack.getItem());
             double totalPossible = outputStack.getMaxStackSize() * Constants.TOTALCRATESTOCKLOTS;
             var ratio = 15 * (count / totalPossible);
-            System.out.println(count + " " + ratio);
             return (int) ratio;
         }
         return 0;

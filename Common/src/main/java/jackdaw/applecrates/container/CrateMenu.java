@@ -77,7 +77,6 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     protected void markCrateChanged() {
-        System.out.println("crate changed");
         if (volatileLevel != null && volatilePos != null)
             if (volatileLevel.getBlockEntity(volatilePos) instanceof CrateBlockEntityBase crate) //includes null check
             {
