@@ -112,7 +112,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
         private static final Component CANNOT_SWITCH = Component.translatable("cannot.switch.trade");
 
         public SaleButtonOwner(int x, int y, int width, OnPress press) {
-            super(x, y, width, press);
+            super(x, y, width, Component.translatable("crate.button.sale.owner"), press);
         }
 
         @Override

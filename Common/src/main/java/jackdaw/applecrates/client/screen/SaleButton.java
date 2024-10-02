@@ -3,10 +3,20 @@ package jackdaw.applecrates.client.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class SaleButton extends Button {
-    public SaleButton(int x, int y, int width, Button.OnPress press) {
+    protected final Component narratorText;
+    public SaleButton(int x, int y, int width, Component message, Button.OnPress press) {
         super(x, y, width, 20, Component.empty(), press);
+        this.narratorText = message;
+    }
+
+    @NotNull
+    @Override
+    protected MutableComponent createNarrationMessage() {
+        return wrapDefaultNarrationMessage(narratorText);
     }
 
     public void renderToolTip(PoseStack poseStack, int pMouseX, int pMouseY) {

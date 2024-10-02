@@ -10,5 +10,7 @@
   "cannot.switch.trade": "To switch payment, the payout slot has to be empty",
   "container.crate": "Crate",
   "container.crate.owner": "My Crate Shop",
-  "crate.set.creative": "Crate set to creative shop"
+  "crate.set.creative": "Crate set to creative shop",
+  "crate.button.sale.owner": "Set Trade",
+  "crate.button.sale.buyer": "Trade"
 }
