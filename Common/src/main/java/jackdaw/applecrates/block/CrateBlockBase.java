@@ -63,7 +63,7 @@ public class CrateBlockBase extends BaseEntityBlock {
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
         if (pPlacer instanceof ServerPlayer serverPlayer && pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate) {
-            crate.setOwner(serverPlayer);
+            crate.addOwner(serverPlayer);
         }
     }
 

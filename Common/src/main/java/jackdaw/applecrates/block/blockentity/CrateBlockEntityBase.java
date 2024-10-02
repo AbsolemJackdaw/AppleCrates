@@ -5,6 +5,10 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.container.IStackHandlerAdapter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -13,14 +17,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CrateBlockEntityBase extends BlockEntity {
 
     public final IStackHandlerAdapter stackHandler;
     public boolean isUnlimitedShop = false;
-    private UUID owner;
+    private Set<UUID> owners = new HashSet<>();
 
     public CrateBlockEntityBase(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter stackHandler) {
         super(CrateWoodType.getBlockEntityType(type), pos, state);
@@ -58,8 +68,12 @@ public class CrateBlockEntityBase extends BlockEntity {
     protected CompoundTag saveCrateDataToTag(CompoundTag tag) {
         stackHandler.saveInventoryData(tag);
         tag.putBoolean(Constants.TAGUNLIMITED, isUnlimitedShop);
-        if (owner != null)
-            tag.putUUID(Constants.TAGOWNER, owner);
+        if (!owners.isEmpty()) {
+            ListTag ownersTag = owners.stream()
+                    .map(NbtUtils::createUUID)
+                    .collect(Collectors.toCollection(ListTag::new));
+            tag.put(Constants.TAGOWNER, ownersTag);
+        }
         return tag;
     }
 
@@ -67,22 +81,29 @@ public class CrateBlockEntityBase extends BlockEntity {
         stackHandler.loadInventoryData(tag);
         if (tag.contains(Constants.TAGUNLIMITED))
             isUnlimitedShop = tag.getBoolean(Constants.TAGUNLIMITED);
-        if (tag.contains(Constants.TAGOWNER))
-            owner = tag.getUUID(Constants.TAGOWNER);
+        if (tag.contains(Constants.TAGOWNER)) {
+            Tag owner = tag.get(Constants.TAGOWNER);
+            if (owner.getType() == IntArrayTag.TYPE) // Allow loading crates from an older version of the mod. Can be removed in the next major MC version.
+                owners = new HashSet<>(Collections.singleton(NbtUtils.loadUUID(owner)));
+            else if (owner instanceof ListTag ownerList)
+                owners = ownerList.stream()
+                        .map(NbtUtils::loadUUID)
+                        .collect(Collectors.toCollection(HashSet::new));
+        }
     }
 
 
-    public UUID getOwner() {
-        return owner;
+    public Collection<UUID> getOwners() {
+        return this.owners;
     }
 
-    public void setOwner(ServerPlayer player) {
-        this.owner = player.getGameProfile().getId();
+    public void addOwner(ServerPlayer player) {
+        this.owners.add(player.getGameProfile().getId());
     }
 
     //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
-    public boolean isOwner(Player player) {
-        return owner == null || player != null && owner.equals(player.getGameProfile().getId());
+    public boolean isOwner(@Nullable Player player) {
+        return owners.isEmpty() || player != null && owners.contains(player.getGameProfile().getId());
     }
 
     public static int getStockSignal(BlockGetter blockLevel, BlockPos pos) {
