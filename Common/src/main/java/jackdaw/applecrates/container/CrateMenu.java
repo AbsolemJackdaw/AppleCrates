@@ -4,6 +4,8 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 public class CrateMenu extends AbstractContainerMenu {
 
     public IStackHandlerAdapter adapter;
@@ -21,11 +25,13 @@ public class CrateMenu extends AbstractContainerMenu {
     public boolean isUnlimitedShop = false;
     protected Level volatileLevel;
     protected BlockPos volatilePos;
+    protected CrateBlockEntityBase crate;
 
     public CrateMenu(MenuType<?> type, int id, Inventory inventory, CrateBlockEntityBase crate, boolean unlimited) {
         this(type, id, inventory, crate.stackHandler, unlimited);
         volatileLevel = crate.getLevel();
         volatilePos = crate.getBlockPos();
+        this.crate = crate;
     }
 
     protected CrateMenu(MenuType<?> type, int id, Inventory inventory, IStackHandlerAdapter adapter, boolean ul) {
@@ -111,5 +117,22 @@ public class CrateMenu extends AbstractContainerMenu {
     @Override
     public @NotNull Slot addSlot(@NotNull Slot slot) {
         return super.addSlot(slot);
+    }
+
+    public void addOwner(ServerPlayer currentOwner, String newOwnerUsername) {
+        if (crate.isOwner(currentOwner)) {
+            currentOwner.server.getProfileCache().get(newOwnerUsername) // WARNING: This blocks the thread if the username is not in the cache.
+                    .ifPresentOrElse(profile -> {
+                                UUID newOwner = profile.getId();
+                                if (crate.isOwner(newOwner))
+                                    currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.already_owner", newOwnerUsername));
+                                else {
+                                    crate.addOwner(newOwner);
+                                    currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.success", newOwnerUsername));
+                                }
+                            },
+                            () -> currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.not_found", newOwnerUsername))
+                    );
+        }
     }
 }

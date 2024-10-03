@@ -8,6 +8,7 @@ import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.network.CrateChannel;
+import jackdaw.applecrates.network.SAddOwner;
 import jackdaw.applecrates.network.SCrateTradeSync;
 import jackdaw.applecrates.network.SGetSale;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -33,6 +34,9 @@ public class GeneralClientRegistry {
         };
         Content.ownerGuiButton = () -> {
             CrateChannel.NETWORK.sendToServer(new SCrateTradeSync());
+        };
+        Content.addOwnerButton = username -> {
+            CrateChannel.NETWORK.sendToServer(new SAddOwner(username));
         };
     }
 }

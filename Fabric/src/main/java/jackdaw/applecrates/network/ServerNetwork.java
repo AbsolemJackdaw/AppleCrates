@@ -1,5 +1,6 @@
 package jackdaw.applecrates.network;
 
+import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
 import jackdaw.applecrates.network.packetprocessing.ServerCrateSync;
 import jackdaw.applecrates.network.packetprocessing.ServerGetSale;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -19,6 +20,9 @@ public class ServerNetwork {
                 case PacketId.SPACKET_SALE -> server.execute(() -> {
                     new ServerGetSale().run(serverPlayer);
                 });
+                case PacketId.SPACKET_ADDOWNER -> server.execute(() -> {
+                    new ServerAddOwner().run(serverPlayer, buf.readUtf());
+                });
             }
         });
     }
@@ -32,6 +36,13 @@ public class ServerNetwork {
     public static FriendlyByteBuf sPacketSale() {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeByte(PacketId.SPACKET_SALE); //FORGE PACKET COMPAT
+        return buf;
+    }
+
+    public static FriendlyByteBuf sPacketAddOwner(String username) {
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeByte(PacketId.SPACKET_ADDOWNER);
+        buf.writeUtf(username);
         return buf;
     }
 }

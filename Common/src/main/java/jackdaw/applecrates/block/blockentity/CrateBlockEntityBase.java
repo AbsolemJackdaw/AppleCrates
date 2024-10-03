@@ -12,14 +12,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -93,12 +91,16 @@ public class CrateBlockEntityBase extends BlockEntity {
     }
 
 
-    public Collection<UUID> getOwners() {
+    public Set<UUID> getOwners() {
         return this.owners;
     }
 
-    public void addOwner(ServerPlayer player) {
-        this.owners.add(player.getGameProfile().getId());
+    public void addOwner(UUID player) {
+        this.owners.add(player);
+    }
+
+    public boolean isOwner(UUID uuid) {
+        return owners.isEmpty() || owners.contains(uuid);
     }
 
     //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set

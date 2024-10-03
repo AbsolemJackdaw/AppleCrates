@@ -27,5 +27,6 @@ public class FabricCratesClient implements ClientModInitializer {
 
         Content.buyerGuiButton = () -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketSale());
         Content.ownerGuiButton = () -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());
+        Content.addOwnerButton = username -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketAddOwner(username));
     }
 }
