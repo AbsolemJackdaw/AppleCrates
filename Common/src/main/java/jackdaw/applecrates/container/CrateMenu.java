@@ -121,14 +121,16 @@ public class CrateMenu extends AbstractContainerMenu {
 
     public void addOwner(ServerPlayer currentOwner, String newOwnerUsername) {
         if (crate.isOwner(currentOwner)) {
-            currentOwner.server.getProfileCache().get(newOwnerUsername) // WARNING: This blocks the thread if the username is not in the cache.
-                    .ifPresentOrElse(profile -> {
-                                UUID newOwner = profile.getId();
+            currentOwner.server.getPlayerList().getPlayers().stream()
+                    .filter(player -> player.getGameProfile().getName().equalsIgnoreCase(newOwnerUsername))
+                    .findFirst()
+                    .ifPresentOrElse(player -> {
+                                UUID newOwner = player.getUUID();
                                 if (crate.isOwner(newOwner))
-                                    currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.already_owner", newOwnerUsername));
+                                    currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.already_owner", player.getName()));
                                 else {
                                     crate.addOwner(newOwner);
-                                    currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.success", newOwnerUsername));
+                                    currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.success", player.getName()));
                                 }
                             },
                             () -> currentOwner.sendSystemMessage(Component.translatable("crate.add.owner.not_found", newOwnerUsername))
