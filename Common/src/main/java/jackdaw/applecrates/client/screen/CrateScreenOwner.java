@@ -115,8 +115,12 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     }
 
     @Override
-    protected boolean isHovering(int $$0, int $$1, int $$2, int $$3, double $$4, double $$5) {
-        return !this.username.isVisible() && super.isHovering($$0, $$1, $$2, $$3, $$4, $$5);
+    protected boolean isHovering(int x, int y, int width, int height, double mouseX, double mouseY) {
+        // 150, 49 to 329, 125
+        if (this.username.isVisible() && super.isHovering(10, 15, 180, 54, mouseX, mouseY))
+            return false;
+        else
+            return super.isHovering(x, y, width, height, mouseX, mouseY);
     }
 
     protected boolean isSamePayout() {
