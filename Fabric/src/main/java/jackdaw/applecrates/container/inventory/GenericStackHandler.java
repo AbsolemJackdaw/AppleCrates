@@ -1,5 +1,6 @@
 package jackdaw.applecrates.container.inventory;
 
+import jackdaw.applecrates.Content;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -13,7 +14,8 @@ public class GenericStackHandler extends SimpleContainer implements IGenericInve
     }
 
     public void deserializeNBT(CompoundTag nbt) {
-        //setSize(nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : items.size());
+        //fix moving from 2.10 to later versions, where the amount of slots changed
+        Content.moneyPatch.apply(nbt);
         ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag itemTags = tagList.getCompound(i);

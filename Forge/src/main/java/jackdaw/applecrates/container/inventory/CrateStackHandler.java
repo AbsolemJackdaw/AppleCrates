@@ -1,6 +1,7 @@
 package jackdaw.applecrates.container.inventory;
 
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -92,6 +93,8 @@ public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+        //fix moving from 2.10 to later versions, where the amount of slots changed
+        Content.moneyPatch.apply(nbt);
         super.deserializeNBT(nbt);
         this.itemCountCache.clear();
     }
