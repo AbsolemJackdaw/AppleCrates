@@ -39,7 +39,7 @@ public class CrateMenu extends AbstractContainerMenu {
         for (int y = 0; y < 4; ++y) { //player inventory
             for (int x = 0; x < 9; ++x) {
                 int index_rotated = (y + 3) % 4;
-                int yPos = playerInventoryY() + index_rotated * (index_rotated == 3 ? 19 : 18);
+                int yPos = playerInventoryY() + index_rotated * 18 + (index_rotated == 3 ? 4 : 0);
                 int xPos = playerInventoryX() + x * 18;
                 int index = x + y * 9;
                 this.addSlot(new Slot(inventory, index, xPos, yPos));
