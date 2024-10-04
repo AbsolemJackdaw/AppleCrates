@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class CrateMenuBuyer extends CrateMenu {
 
@@ -70,15 +71,14 @@ public class CrateMenuBuyer extends CrateMenu {
     protected void updateSellItem() {
         ItemStack payment = this.adapter.getInteractableTradeItem(0);
         ItemStack toPay = this.adapter.getSavedTradeSlotsItem(0);
-        if (!payment.isEmpty()) {
-            if (!toPay.isEmpty() && ItemStack.isSameItemSameTags(toPay, payment) && payment.getCount() >= toPay.getCount() && this.adapter.getInteractableTradeItem(1).isEmpty()) {
-                //move allowed amount of stock to out slot
-                movefromStockToSaleSlot(this.adapter.getSavedTradeSlotsItem(1).copy()); //check for the item to get
-            }
-        } else if (!this.adapter.getInteractableTradeItem(1).isEmpty()) {
-            //move out slot back to crate stock
+        var isBuySlotEmpty = this.adapter.getInteractableTradeItem(1).isEmpty();
+        var isSamePay = ItemStack.isSameItemSameTags(toPay, payment) && !toPay.isEmpty();
+        var hasEnough = payment.getCount() >= toPay.getCount();
+
+        if (isBuySlotEmpty && isSamePay && hasEnough)
+            movefromStockToSaleSlot(this.adapter.getSavedTradeSlotsItem(1).copy());
+        else if (!isBuySlotEmpty && !hasEnough || payment.isEmpty())
             moveItemStackTo(this.adapter.getInteractableTradeItem(1), Constants.CRATESTARTSLOT, Constants.CRATEENDSLOT, false);
-        }
     }
 
     public void tryMovePaymentToInteraction() {
