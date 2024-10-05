@@ -10,8 +10,8 @@ public class Content {
 
     public static IMenuSlots menuSlots;
     public static IClientConfig clientConfig;
+    public static Consumer<String> addOwnerButton;
     public static IPacketOnButtonPress ownerGuiButton;
     public static IPacketOnButtonPress buyerGuiButton;
-    public static Consumer<String> addOwnerButton;
 
 }
