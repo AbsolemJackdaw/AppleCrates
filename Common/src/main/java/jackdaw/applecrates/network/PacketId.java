@@ -9,6 +9,6 @@ public class PacketId {
 
     public static final byte SPACKET_TRADE = 1;
     public static final byte SPACKET_SALE = 2;
-
+    public static final byte SPACKET_ADDOWNER = 3;
 
 }

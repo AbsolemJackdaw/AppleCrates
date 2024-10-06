@@ -85,7 +85,7 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
 
     private class SaleButtonBuyer extends SaleButton {
         public SaleButtonBuyer(int x, int y, int width, OnPress press) {
-            super(x, y, width, press);
+            super(x, y, width, Component.translatable("crate.button.sale.buyer"), press);
         }
 
         @Override

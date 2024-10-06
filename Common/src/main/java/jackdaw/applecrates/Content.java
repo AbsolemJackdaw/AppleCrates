@@ -8,10 +8,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Consumer;
+
 public class Content {
 
     public static IMenuSlots menuSlots;
     public static IClientConfig clientConfig;
+    public static Consumer<String> addOwnerButton;
     public static IPacketOnButtonPress ownerGuiButton;
     public static IPacketOnButtonPress buyerGuiButton;
     public static IMoneyPatch moneyPatch = nbt -> {
