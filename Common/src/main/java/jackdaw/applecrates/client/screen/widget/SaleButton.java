@@ -1,4 +1,4 @@
-package jackdaw.applecrates.client.screen;
+package jackdaw.applecrates.client.screen.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class SaleButton extends Button {
     protected final Component narratorText;
-    public SaleButton(int x, int y, int width, Component message, Button.OnPress press) {
-        super(x, y, width, 20, Component.empty(), press);
+    public SaleButton(int x, int y, Component message, Button.OnPress press) {
+        super(x, y, 62, 20, Component.empty(), press);
         this.narratorText = message;
     }
 

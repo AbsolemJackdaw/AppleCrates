@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
+import jackdaw.applecrates.client.screen.widget.SaleButton;
 import jackdaw.applecrates.container.CrateMenuBuyer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -33,7 +34,6 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
                 new SaleButtonBuyer(
                         this.guiStartX + 14,
                         this.guiStartY + 19,
-                        62,
                         (button) -> {
                             if (isUnlimitedShop() || !menu.outOfStock())
                                 Content.buyerGuiButton.accept();
@@ -63,7 +63,7 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
     private void renderTrade(int slotId, int x, int y) {
         if (!menu.adapter.getSavedTradeSlotsItem(slotId).isEmpty()) {
             ItemStack saleStack = menu.adapter.getSavedTradeSlotsItem(slotId);
-            int xo = slotId == 0 ? 14 + 2 : 75 - 16 - 2;
+            int xo = slotId == 0 ? 16 : 57;
             int yo = 20;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
             this.itemRenderer.renderGuiItemDecorations(this.font, saleStack, x + xo, y + yo);
@@ -84,8 +84,8 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
     }
 
     private class SaleButtonBuyer extends SaleButton {
-        public SaleButtonBuyer(int x, int y, int width, OnPress press) {
-            super(x, y, width, Component.translatable("crate.button.sale.buyer"), press);
+        public SaleButtonBuyer(int x, int y, OnPress press) {
+            super(x, y, Component.translatable("crate.button.sale.buyer"), press);
         }
 
         @Override

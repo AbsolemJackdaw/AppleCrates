@@ -4,24 +4,24 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
+import jackdaw.applecrates.client.screen.widget.AddOwnerButton;
+import jackdaw.applecrates.client.screen.widget.AddOwnerEditBox;
+import jackdaw.applecrates.client.screen.widget.ConfirmAddOwnerButton;
+import jackdaw.applecrates.client.screen.widget.SaleButton;
 import jackdaw.applecrates.container.CrateMenuOwner;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     private static final ResourceLocation OWNER = new ResourceLocation(Constants.MODID, "gui/owner.png");
-    private static final ResourceLocation OWNER_BUTTONS = new ResourceLocation(Constants.MODID, "gui/owner_buttons.png");
 
-    private EditBox username;
-    private ConfirmAddOwnerButton confirmAddOwner;
+    private AddOwnerEditBox inputField;
+    private ConfirmAddOwnerButton confirmAddOwnerButton;
     private AddOwnerButton addOwnerButton;
     private boolean cancelFocusChange = false;
 
@@ -45,64 +45,53 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
                 new SaleButtonOwner(
                         guiStartX + 70,
                         guiStartY + 74,
-                        54,
                         (button) -> {
                             if (!(menu.adapter.getInteractableTradeItem(0).isEmpty() && menu.adapter.getInteractableTradeItem(1).isEmpty())
                                     || (menu.adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout())) //do not allow a change if the payout slot isn't empty or the same item as the current one
                                 Content.ownerGuiButton.accept();//handles switching up items and giving back to player
                         }));
-        this.username = addWidget( // we manually render this above everything else
-                new EditBox(
+
+        this.inputField = addWidget( // we manually render this above everything else
+                new AddOwnerEditBox(
                         this.font,
                         this.guiStartX + 33,
                         this.guiStartY + 37,
                         113, 12,
                         Component.translatable("crate.add.owner")
                 ));
-        this.username.setMaxLength(16); // Maximum length of a Java username. https://minecraft.wiki/w/Player#Username
-        this.username.setVisible(false);
-        this.username.setEditable(false);
-        this.username.setCanLoseFocus(false);
-        this.username.setValue("username");
-        this.username.setFilter(ServerLoginPacketListenerImpl::isValidUsername);
-        this.confirmAddOwner = addWidget( // we manually render this above everything else
+
+        this.confirmAddOwnerButton = addWidget( // we manually render this above everything else
                 new ConfirmAddOwnerButton(
                         this.guiStartX + 151,
                         this.guiStartY + 37,
                         Component.translatable("crate.add.owner.confirm"),
                         button -> {
-                            if (!this.username.getValue().isBlank())
-                                Content.addOwnerButton.accept(this.username.getValue());
-                            boolean isNowOn = addOwnerButton.on = !addOwnerButton.on;
-                            this.username.setEditable(isNowOn);
-                            this.username.setVisible(isNowOn);
-                            if (isNowOn) {
-                                this.setFocused(this.username);
-                                this.cancelFocusChange = true;
-                            }
-                            this.username.setFocus(isNowOn);
-                            this.confirmAddOwner.visible = isNowOn;
+                            if (!this.inputField.getValue().isBlank())
+                                Content.addOwnerButton.accept(this.inputField.getValue());
+                            addOwnerButton.isOn = !addOwnerButton.isOn;
+                            toggleOverlay();
                         }
                 )
         );
-        this.confirmAddOwner.visible = false;
 
         this.addOwnerButton = addRenderableWidget(
                 new AddOwnerButton(
                         guiStartX + 138,
                         guiStartY + 74,
                         Component.translatable("crate.add.owner"),
-                        button -> {
-                            boolean isNowOn = addOwnerButton.on;
-                            this.username.setEditable(isNowOn);
-                            this.username.setVisible(isNowOn);
-                            if (isNowOn) {
-                                this.setFocused(this.username);
-                                this.cancelFocusChange = true;
-                            }
-                            this.username.setFocus(isNowOn);
-                            this.confirmAddOwner.visible = isNowOn;
-                        }));
+                        button -> toggleOverlay()));
+    }
+
+    private void toggleOverlay() {
+        boolean isNowOn = addOwnerButton.isOn;
+        this.inputField.setEditable(isNowOn);
+        this.inputField.setVisible(isNowOn);
+        if (isNowOn) {
+            this.setFocused(this.inputField);
+            this.cancelFocusChange = true;
+        }
+        this.inputField.setFocus(isNowOn);
+        this.confirmAddOwnerButton.visible = isNowOn;
     }
 
     @Override
@@ -117,7 +106,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     @Override
     protected boolean isHovering(int x, int y, int width, int height, double mouseX, double mouseY) {
         // 150, 49 to 329, 125
-        if (this.username.isVisible() && super.isHovering(10, 15, 180, 54, mouseX, mouseY))
+        if (this.inputField.isVisible() && super.isHovering(10, 15, 180, 54, mouseX, mouseY))
             return false;
         else
             return super.isHovering(x, y, width, height, mouseX, mouseY);
@@ -164,8 +153,8 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 350); // manually render these above everything else.
-        this.username.render(poseStack, pMouseX, pMouseY, pPartialTick);
-        this.confirmAddOwner.render(poseStack, pMouseX, pMouseY, pPartialTick);
+        this.inputField.render(poseStack, pMouseX, pMouseY, pPartialTick);
+        this.confirmAddOwnerButton.render(poseStack, pMouseX, pMouseY, pPartialTick);
         poseStack.popPose();
 
         this.renderTooltip(poseStack, pMouseX, pMouseY);
@@ -175,7 +164,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     private void renderTrade(int slotId, int x, int y) {
         if ((!menu.adapter.getInteractableTradeItem(slotId).isEmpty()) || !menu.adapter.getSavedTradeSlotsItem(slotId).isEmpty()) {
             ItemStack saleStack = !menu.adapter.getInteractableTradeItem(slotId).isEmpty() ? menu.adapter.getInteractableTradeItem(slotId) : menu.adapter.getSavedTradeSlotsItem(slotId);
-            int xo = slotId == 0 ? 74 : 104;
+            int xo = slotId == 0 ? 72 : 72+41;
             int yo = 75;
             this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
             this.itemRenderer.renderGuiItemDecorations(this.font, saleStack, x + xo, y + yo);
@@ -188,13 +177,15 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, OWNER);
         blit(pPoseStack, guiStartX, guiStartY, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+        this.inputField.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
+
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        if (this.username.isVisible())
-            this.username.tick();
+        if (this.inputField.isVisible())
+            this.inputField.tick();
     }
 
     @Override
@@ -203,7 +194,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
             this.minecraft.player.closeContainer();
         }
 
-        return this.username.keyPressed(keyCode, $$1, $$2) || this.username.canConsumeInput() || super.keyPressed(keyCode, $$1, $$2);
+        return this.inputField.keyPressed(keyCode, $$1, $$2) || this.inputField.canConsumeInput() || super.keyPressed(keyCode, $$1, $$2);
     }
 
     @Override
@@ -214,8 +205,8 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     private class SaleButtonOwner extends SaleButton {
         private static final Component CANNOT_SWITCH = Component.translatable("cannot.switch.trade");
 
-        public SaleButtonOwner(int x, int y, int width, OnPress press) {
-            super(x, y, width, Component.translatable("crate.button.sale.owner"), press);
+        public SaleButtonOwner(int x, int y, OnPress press) {
+            super(x, y, Component.translatable("crate.button.sale.owner"), press);
         }
 
         @Override
@@ -232,51 +223,6 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
             if (this.isHovered)
                 if (!isSamePayout())
                     CrateScreenOwner.this.renderTooltip(poseStack, CANNOT_SWITCH, pMouseX, pMouseY);
-        }
-    }
-
-    private static class AddOwnerButton extends Button {
-
-        protected boolean on = false;
-
-        public AddOwnerButton(int x, int y, Component message, OnPress onPress) {
-            super(x, y, 20, 20, message, onPress);
-        }
-
-        @Override
-        public void onPress() {
-            this.on = !this.on;
-            super.onPress();
-        }
-
-        @Override
-        public void renderButton(PoseStack poseStack, int someInt, int otherInt, float $$3) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, OWNER_BUTTONS);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableDepthTest();
-            int startY = this.isHoveredOrFocused() | this.on ? 20 : 0;
-            blit(poseStack, this.x, this.y, this.getBlitOffset(), 0.0F, startY, 20, 20, 32, 40);
-        }
-    }
-
-    private static class ConfirmAddOwnerButton extends Button {
-        public ConfirmAddOwnerButton(int x, int y, Component message, OnPress onPress) {
-            super(x, y, 12, 12, message, onPress);
-        }
-
-        @Override
-        public void renderButton(PoseStack poseStack, int someInt, int otherInt, float $$3) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, OWNER_BUTTONS);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableDepthTest();
-            int startY = this.isHoveredOrFocused() ? 12 : 0;
-            blit(poseStack, this.x, this.y, this.getBlitOffset(), 20F, startY, 12, 12, 32, 40);
         }
     }
 }
