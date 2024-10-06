@@ -1,14 +1,14 @@
 {
-  "block.applecrates.acacia_crate": "Acacia Crate",
-  "block.applecrates.birch_crate": "Birch Crate",
-  "block.applecrates.crimson_crate": "Crimson Crate",
-  "block.applecrates.dark_oak_crate": "Dark Oak Crate",
-  "block.applecrates.jungle_crate": "Jungle Crate",
-  "block.applecrates.oak_crate": "Oak Crate",
-  "block.applecrates.spruce_crate": "Spruce Crate",
-  "block.applecrates.warped_crate": "Warped Crate",
-  "cannot.switch.trade": "To switch payment item, your green payout slot has to be empty",
-  "container.crate": "Crate",
-  "container.crate.owner": "My Crate Shop",
-  "crate.set.creative": "Crate set to creative shop"
+  "block.applecrates.acacia_crate": "Caisse d'acacia",
+  "block.applecrates.birch_crate": "Caisse de bouleau",
+  "block.applecrates.crimson_crate": "Caisse carmin",
+  "block.applecrates.dark_oak_crate": "Caisse de chêne noir",
+  "block.applecrates.jungle_crate": "Caisse d'acajou",
+  "block.applecrates.oak_crate": "Caisse de chêne",
+  "block.applecrates.spruce_crate": "Caisse de sapin",
+  "block.applecrates.warped_crate": "Caisse biscornue",
+  "cannot.switch.trade": "Pour changer l'article de paiement, votre emplacement vert de paiement doit être vide",
+  "container.crate": "Caisse",
+  "container.crate.owner": "Ma caisse-boutique",
+  "crate.set.creative": "Caisse définie comme boutique créative"
 }
