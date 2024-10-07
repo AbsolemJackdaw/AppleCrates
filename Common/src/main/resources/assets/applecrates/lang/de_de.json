@@ -10,5 +10,5 @@
   "cannot.switch.trade": "Um das Zahlungsitem zu wechseln, muss der Auszahlungsslot leer sein!",
   "container.crate": "Kiste",
   "container.crate.owner": "Mein Kistenladen",
-  "crate.set.creative": "Kiste wurde zu einem Kreativladen gemacht."
+  "crate.set.creative": "Die Kiste ist nun ein Kreativladen."
 }
