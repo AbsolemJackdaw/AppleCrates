@@ -1,14 +1,14 @@
 {
-  "block.applecrates.acacia_crate": "Acacia Crate",
-  "block.applecrates.birch_crate": "Birch Crate",
-  "block.applecrates.crimson_crate": "Crimson Crate",
-  "block.applecrates.dark_oak_crate": "Dark Oak Crate",
-  "block.applecrates.jungle_crate": "Jungle Crate",
-  "block.applecrates.oak_crate": "Oak Crate",
-  "block.applecrates.spruce_crate": "Spruce Crate",
-  "block.applecrates.warped_crate": "Warped Crate",
-  "cannot.switch.trade": "To switch payment item, your green payout slot has to be empty",
-  "container.crate": "Crate",
-  "container.crate.owner": "My Crate Shop",
-  "crate.set.creative": "Crate set to creative shop"
+  "block.applecrates.acacia_crate": "Akazienkiste",
+  "block.applecrates.birch_crate": "Birkenkiste",
+  "block.applecrates.crimson_crate": "Karmesinkiste",
+  "block.applecrates.dark_oak_crate": "Schwarzeichenkiste",
+  "block.applecrates.jungle_crate": "Tropenkiste",
+  "block.applecrates.oak_crate": "Eichenkiste",
+  "block.applecrates.spruce_crate": "Fichtenkiste",
+  "block.applecrates.warped_crate": "Wirrkiste",
+  "cannot.switch.trade": "Um das Zahlungsitem zu wechseln, muss der Auszahlungsslot leer sein!",
+  "container.crate": "Kiste",
+  "container.crate.owner": "Mein Kistenladen",
+  "crate.set.creative": "Die Kiste ist nun ein Kreativladen."
 }
