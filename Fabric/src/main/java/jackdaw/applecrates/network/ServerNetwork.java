@@ -20,9 +20,12 @@ public class ServerNetwork {
                 case PacketId.SPACKET_SALE -> server.execute(() -> {
                     new ServerGetSale().run(serverPlayer);
                 });
-                case PacketId.SPACKET_ADDOWNER -> server.execute(() -> {
-                    new ServerAddOwner().run(serverPlayer, buf.readUtf());
-                });
+                case PacketId.SPACKET_ADDOWNER -> {
+                    var name = buf.readUtf();
+                    server.execute(() -> {
+                        new ServerAddOwner().run(serverPlayer, name);
+                    });
+                }
             }
         });
     }

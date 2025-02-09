@@ -1,6 +1,6 @@
 package jackdaw.applecrates.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ public class CrateScreen<T extends AbstractContainerMenu> extends AbstractContai
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float v, int i, int i1) {
+    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
 
     }
 

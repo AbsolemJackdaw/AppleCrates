@@ -8,9 +8,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class CrateItems extends ItemModelProvider {
     public CrateItems(String modid, DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, modid, existingFileHelper);
+        super(generator.getPackOutput(), modid, existingFileHelper);
     }
-
     @Override
     protected void registerModels() {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).forEach(crateWoodType -> {

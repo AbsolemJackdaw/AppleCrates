@@ -5,7 +5,8 @@ import com.mojang.logging.LogUtils;
 import jackdaw.applecrates.api.AppleCrateAPI;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.exception.WoodException;
-import net.minecraft.core.Registry;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -13,6 +14,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -28,15 +30,15 @@ public class CrateRecipes extends RecipeProvider {
     private String modId;
 
     public CrateRecipes(String modId, DataGenerator pGenerator) {
-        super(pGenerator);
+        super(pGenerator.getPackOutput());
         this.modId = modId;
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
 
         CrateWoodType.values().forEach(woodType -> {
-            Block plankBlock = Registry.BLOCK.get(AppleCrateAPI.getPlanksResourceLocation().get(woodType));
+            Block plankBlock = BuiltInRegistries.BLOCK.get(AppleCrateAPI.getPlanksResourceLocation().get(woodType));
             try {
                 if (plankBlock.equals(Blocks.AIR))
                     throw WoodException.INSTANCE.noSuchBlockError(woodType);
@@ -66,14 +68,17 @@ public class CrateRecipes extends RecipeProvider {
                 result,
                 count,
                 "", // recipe book group (not used)
+                CraftingBookCategory.MISC,
                 pattern,
                 key,
-                null, // advancement
-                null) {
+                Advancement.Builder.advancement(), // advancement
+                null,
+                false) {
             @Override
             public JsonObject serializeAdvancement() {
                 return null;
             }
         };
     }
+
 }

@@ -15,8 +15,8 @@ public class CrateModels extends BlockModelProvider {
     public static final String MINDIR = "$minecraft:$";
     protected static final ExistingFileHelper.ResourceType TEXTURE = new ExistingFileHelper.ResourceType(PackType.CLIENT_RESOURCES, ".png", "textures");
 
-    public CrateModels(String modid, DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, modid, existingFileHelper);
+    public CrateModels(String modId, DataGenerator generator, ExistingFileHelper existingFileHelper) {
+        super(generator.getPackOutput(), modId, existingFileHelper);
     }
 
     @Override

@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -79,7 +80,7 @@ public class CrateWoodType {
     }
 
     public static Block getBlock(CrateWoodType type) {
-        return Registry.BLOCK.get(type.getFullRegistryResLoc());
+        return BuiltInRegistries.BLOCK.get(type.getFullRegistryResLoc());
     }
 
     /**
@@ -90,7 +91,7 @@ public class CrateWoodType {
     }
 
     public static BlockEntityType<CrateBlockEntityBase> getBlockEntityType(CrateWoodType type) {
-        return (BlockEntityType<CrateBlockEntityBase>) Registry.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
+        return (BlockEntityType<CrateBlockEntityBase>) BuiltInRegistries.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
     }
 
     public ResourceLocation getFullBeRegistryResLoc() {

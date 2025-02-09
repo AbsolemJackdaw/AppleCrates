@@ -1,7 +1,6 @@
 package jackdaw.applecrates.client.besr;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.EnumCrateItemRendering;
 import jackdaw.applecrates.block.CrateBlockBase;
@@ -13,8 +12,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+
 
 public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<CrateBlockEntityBase> {
     private static final int MAX_RENDERED_ITEMS = 9;
@@ -48,8 +50,8 @@ public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<Crat
 
                 float xAngle = (90.0f - 22.5f) * (xfront == 0 ? (zfront * (zfront < 0 ? 2f : -2f)) : (xfront * (xfront < 0 ? 2f : -2f)));
 
-                stack.mulPose(new Quaternion(0f, blockRotation + (angleSimp % 2 == 0 ? 180.0f : 0f), 0f, true));
-                stack.mulPose(new Quaternion(xAngle, 0, 0, true));//do not merge quaternions!!!!
+                stack.mulPose(new Quaternionf(0f, blockRotation + (angleSimp % 2 == 0 ? 180.0f : 0f), 0f, 0f));
+                stack.mulPose(new Quaternionf(xAngle, 0f, 0f, 0f));//do not merge quaternions!!!!
 
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
@@ -70,7 +72,7 @@ public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<Crat
                     );
                 }
 
-                Minecraft.getInstance().getItemRenderer().renderStatic(selling, ItemTransforms.TransformType.GROUND, pPackedLight, pPackedOverlay, stack, pBufferSource, 0);
+                Minecraft.getInstance().getItemRenderer().renderStatic(selling, ItemDisplayContext.GROUND, pPackedLight, pPackedOverlay, stack, pBufferSource, crateBE.getLevel(), 0);
                 stack.popPose();
             }
         }

@@ -1,5 +1,3 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
@@ -145,9 +143,9 @@ publishing {
         }
     }
 }
-task publishCurseForge(type: TaskPublishCurseForge) {
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     dependsOn(tasks.build)
-    apiToken = findProperty('cf_api_token');
+    apiToken = findProperty('cf_api_token')
     // The main file to upload
     def mainFile = upload(630726, jar)
     mainFile.releaseType = "${releasetype}"

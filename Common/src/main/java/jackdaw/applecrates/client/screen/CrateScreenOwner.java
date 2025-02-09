@@ -4,11 +4,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
-import jackdaw.applecrates.client.screen.widget.AddOwnerButton;
-import jackdaw.applecrates.client.screen.widget.AddOwnerEditBox;
-import jackdaw.applecrates.client.screen.widget.ConfirmAddOwnerButton;
-import jackdaw.applecrates.client.screen.widget.SaleButton;
+import jackdaw.applecrates.client.screen.widget.*;
 import jackdaw.applecrates.container.CrateMenuOwner;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     private static final ResourceLocation OWNER = new ResourceLocation(Constants.MODID, "gui/owner.png");
@@ -47,7 +51,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
                         guiStartY + 74,
                         (button) -> {
                             if (!(menu.adapter.getInteractableTradeItem(0).isEmpty() && menu.adapter.getInteractableTradeItem(1).isEmpty())
-                                    || (menu.adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout())) //do not allow a change if the payout slot isn't empty or the same item as the current one
+                                    && (menu.adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS).isEmpty() || isSamePayout())) //do not allow a change if the payout slot isn't empty or the same item as the current one
                                 Content.ownerGuiButton.accept();//handles switching up items and giving back to player
                         }));
 
@@ -90,7 +94,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
             this.setFocused(this.inputField);
             this.cancelFocusChange = true;
         }
-        this.inputField.setFocus(isNowOn);
+        this.inputField.setFocused(isNowOn);
         this.confirmAddOwnerButton.visible = isNowOn;
     }
 
@@ -125,9 +129,9 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     }
 
     @Override
-    public void render(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(poseStack);
-        super.render(poseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.enableBlend();
         if (!(menu.adapter.getSavedTradeSlotsItem(0).isEmpty() && menu.adapter.getSavedTradeSlotsItem(1).isEmpty()) && menu.adapter.getInteractableTradeItem(0).isEmpty() && menu.adapter.getInteractableTradeItem(1).isEmpty())
             RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
@@ -135,10 +139,10 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
             RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_UI);
-        blit(poseStack, guiStartX + 92, guiStartY + 79, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
+        graphics.blit(VILLAGER_UI, guiStartX + 100, guiStartY + 79, /*this.getBlitOffset(),*/ 15.0F, 171.0F, 10, 9, 512, 256);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        renderTrade(0, guiStartX, guiStartY);
-        renderTrade(1, guiStartX, guiStartY);
+        renderTrade(graphics, 0, guiStartX, guiStartY);
+        renderTrade(graphics, 1, guiStartX, guiStartY);
 
 
         if (!menu.adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS).isEmpty()) { // moneyslot
@@ -151,33 +155,34 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
             }
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 350); // manually render these above everything else.
-        this.inputField.render(poseStack, pMouseX, pMouseY, pPartialTick);
-        this.confirmAddOwnerButton.render(poseStack, pMouseX, pMouseY, pPartialTick);
-        poseStack.popPose();
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 0, 350); // manually render these above everything else.
+        this.inputField.render(graphics, pMouseX, pMouseY, pPartialTick);
+        if (this.confirmAddOwnerButton.visible)
+            this.confirmAddOwnerButton.render(graphics, pMouseX, pMouseY, pPartialTick);
+        graphics.pose().popPose();
 
-        this.renderTooltip(poseStack, pMouseX, pMouseY);
+        this.renderTooltip(graphics, pMouseX, pMouseY);
     }
 
     //slots are invisible for aesthetic and syncing purposes. draw itemstacks by hand
-    private void renderTrade(int slotId, int x, int y) {
+    private void renderTrade(GuiGraphics graphics, int slotId, int x, int y) {
         if ((!menu.adapter.getInteractableTradeItem(slotId).isEmpty()) || !menu.adapter.getSavedTradeSlotsItem(slotId).isEmpty()) {
             ItemStack saleStack = !menu.adapter.getInteractableTradeItem(slotId).isEmpty() ? menu.adapter.getInteractableTradeItem(slotId) : menu.adapter.getSavedTradeSlotsItem(slotId);
-            int xo = slotId == 0 ? 72 : 72+41;
+            int xo = slotId == 0 ? 72 : 72 + 41;
             int yo = 75;
-            this.itemRenderer.renderAndDecorateFakeItem(saleStack, x + xo, y + yo);
-            this.itemRenderer.renderGuiItemDecorations(this.font, saleStack, x + xo, y + yo);
+            graphics.renderFakeItem(saleStack, x + xo, y + yo);
+            graphics.renderItemDecorations(this.font, saleStack, x + xo, y + yo);
         }
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, OWNER);
-        blit(pPoseStack, guiStartX, guiStartY, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
-        this.inputField.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
+        graphics.blit(OWNER, guiStartX, guiStartY, /*this.getBlitOffset(),*/ 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+        this.inputField.renderBgCustom(graphics);
 
     }
 
@@ -198,6 +203,18 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     }
 
     @Override
+    protected void renderTooltip(GuiGraphics g, int x, int y) {
+        super.renderTooltip(g, x, y);
+        for (var ren : children()) {
+            if (ren instanceof HoverTooltipButton htb && ren instanceof AbstractWidget widget) {
+                if (widget.active && widget.isHovered() && widget.visible) {
+                    htb.renderToolTip(g, x, y);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onClose() {
         super.onClose();
     }
@@ -210,19 +227,24 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
         }
 
         @Override
-        public void doRenderTip(PoseStack pPoseStack, int pMouseX, int pMouseY, int slot) {
-            ItemStack stack = menu.adapter.getSavedTradeSlotsItem(slot);
-            if (!stack.isEmpty())
-                CrateScreenOwner.this.renderTooltip(pPoseStack, stack, pMouseX, pMouseY);
-
+        public void doRenderTip(GuiGraphics graphics, int pMouseX, int pMouseY, int slot) {
         }
 
         @Override
-        public void renderToolTip(PoseStack poseStack, int pMouseX, int pMouseY) {
-            super.renderToolTip(poseStack, pMouseX, pMouseY);
-            if (this.isHovered)
+        public void renderToolTip(GuiGraphics graphics, int pMouseX, int pMouseY) {
+            ItemStack pay = menu.adapter.getSavedTradeSlotsItem(0);
+            ItemStack result = menu.adapter.getSavedTradeSlotsItem(1);
+
+            if (pMouseX < this.getX() + 20 && !pay.isEmpty()) {
+                graphics.renderTooltip(CrateScreenOwner.this.font, CrateScreenOwner.this.getTooltipFromContainerItem(pay), pay.getTooltipImage(), pMouseX, pMouseY);
+            } else if (pMouseX > this.getX() + this.width - 25 && !result.isEmpty()) {
+                graphics.renderTooltip(CrateScreenOwner.this.font, CrateScreenOwner.this.getTooltipFromContainerItem(result), result.getTooltipImage(), pMouseX, pMouseY);
+            } else {
                 if (!isSamePayout())
-                    CrateScreenOwner.this.renderTooltip(poseStack, CANNOT_SWITCH, pMouseX, pMouseY);
+                    graphics.renderTooltip(CrateScreenOwner.this.font, List.of(CANNOT_SWITCH), Optional.empty(), pMouseX, pMouseY);
+                else
+                    graphics.renderTooltip(Minecraft.getInstance().font, List.of(this.getHovertext()), Optional.empty(), pMouseX, pMouseY);
+            }
         }
     }
 }

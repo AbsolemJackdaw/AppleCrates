@@ -12,6 +12,7 @@ import jackdaw.applecrates.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -39,15 +40,15 @@ public class FabricCrates implements ModInitializer {
     public void onInitialize() {
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
 
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(Constants.MODID)).forEach(crateWoodType -> {
             var crate = new CrateBlock(crateWoodType);
-            Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
-            Registry.register(Registry.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
+            Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
+            Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
             var type = Registry.register(
-                    Registry.BLOCK_ENTITY_TYPE,
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
                     new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()),
                     BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBlockEntity(crateWoodType, blockPos, blockState, new StackHandlerAdapter()), crate).build(null));
             besrreg.add(() -> type);

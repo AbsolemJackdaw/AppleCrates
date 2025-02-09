@@ -6,6 +6,6 @@ import net.minecraft.world.level.block.Block;
 
 public class CrateItem extends BlockItem {
     public CrateItem(Block block) {
-        super(block, new Properties().tab(CreativeModeTab.TAB_DECORATIONS).stacksTo(16));
+        super(block, new Properties().stacksTo(16));
     }
 }
