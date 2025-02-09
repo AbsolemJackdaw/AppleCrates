@@ -126,7 +126,7 @@ public class CrateMenuBuyer extends CrateMenu {
             else
                 for (int i = Constants.CRATESTARTSLOT; i < Constants.CRATEENDSLOT; ++i) {
                     ItemStack stackinSlot = this.slots.get(i).getItem();
-                    if (!stackinSlot.isEmpty() && ItemStack.isSame(get, stackinSlot)) {
+                    if (!stackinSlot.isEmpty() && ItemStack.isSameItem(get, stackinSlot)) {
                         ItemStack pickupSlot = this.adapter.getInteractableTradeItem(1);
                         int j = pickupSlot.isEmpty() ? 0 : pickupSlot.getCount();
                         int k = Math.min(get.getCount() - j, stackinSlot.getCount());
@@ -149,7 +149,7 @@ public class CrateMenuBuyer extends CrateMenu {
         for (int i = 0; i < Constants.TOTALCRATESTOCKLOTS - 1; i++) //last slot is for payment
         {
             var stack = this.adapter.getCrateStockItem(i);
-            if (!stack.isEmpty() && ItemStack.isSame(stack, buying))
+            if (!stack.isEmpty() && ItemStack.isSameItem(stack, buying))
                 total += stack.getCount();
         }
         return total < buying.getCount();

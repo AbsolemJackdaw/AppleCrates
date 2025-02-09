@@ -12,7 +12,7 @@ public class CrateLanguage extends LanguageProvider {
     private final String modid;
 
     public CrateLanguage(String modid, DataGenerator generator, String locale) {
-        super(generator, modid, locale);
+        super(generator.getPackOutput(), modid, locale);
         this.modid = modid;
     }
 

@@ -10,11 +10,18 @@ import jackdaw.applecrates.container.slot.SlotPriceSale;
 import jackdaw.applecrates.item.CrateItem;
 import jackdaw.applecrates.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,18 +46,21 @@ public class FabricCrates implements ModInitializer {
     public void onInitialize() {
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
 
-        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
-        Registry.register(Registry.MENU, new ResourceLocation(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
 
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(Constants.MODID)).forEach(crateWoodType -> {
             var crate = new CrateBlock(crateWoodType);
-            Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
-            Registry.register(Registry.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
+            Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
+            Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
             var type = Registry.register(
-                    Registry.BLOCK_ENTITY_TYPE,
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
                     new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()),
                     BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBlockEntity(crateWoodType, blockPos, blockState, new StackHandlerAdapter()), crate).build(null));
             besrreg.add(() -> type);
+            ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(content -> {
+                content.addAfter(Blocks.BLAST_FURNACE, crate);
+            });
         });
 
         ServerNetwork.registerServerPackets();
@@ -74,5 +84,7 @@ public class FabricCrates implements ModInitializer {
                     menu.addSlot(new SlotCrateStock(stackHandlerAdapter.crateStock, y * 10 + x, x * 18 + 10, y * 18 + 17, menu.isOwner()));
             menu.addSlot(new SlotCrateStock(stackHandlerAdapter.crateStock, Constants.TOTALCRATESTOCKLOTS, 172, 76, menu.isOwner()));
         };
+
+
     }
 }

@@ -18,7 +18,7 @@ public class DataGenerators {
     public static void generatedCrates(String modid, GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         //datapack  server
-        generator.addProvider(event.includeServer(), new CrateTag(modid, generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new CrateTag(generator.getPackOutput(), event.getLookupProvider(), modid, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new CrateRecipes(modid, generator));
         generator.addProvider(event.includeServer(), new CrateLoot(modid, generator));
 
