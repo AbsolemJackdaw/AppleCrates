@@ -5,8 +5,15 @@ import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntity;
 import jackdaw.applecrates.container.*;
 import jackdaw.applecrates.item.CrateItem;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -15,12 +22,16 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class GeneralRegistry {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Constants.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Constants.MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MODID);
+    private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Constants.MODID);
 
     public static final RegistryObject<MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
@@ -42,6 +53,12 @@ public class GeneralRegistry {
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
             beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), block.get()).build(null));
         });
+
+        CreativeModeTab.Builder tabBuilder = CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0).title(Component.translatable("tab.crate"));
+        tabBuilder.displayItems((itemDisplayParameters, output) -> GeneralRegistry.BLOCKS.getEntries().stream().map(blockRegistryObject -> blockRegistryObject.get()).forEach(output::accept));
+        tabBuilder.icon(() -> new ItemStack(CrateWoodType.getBlock(CrateWoodType.values().filter(crateWoodType -> crateWoodType.name().equals("oak")).findFirst().get())));
+        var tab = tabBuilder.build();
+        TABS.register("tab.crate", () -> tab);
     }
 
     public static void startup() {
@@ -50,5 +67,6 @@ public class GeneralRegistry {
         ITEMS.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
         MENU_TYPES.register(bus);
+        TABS.register(bus);
     }
 }

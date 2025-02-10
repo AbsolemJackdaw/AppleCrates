@@ -1,11 +1,21 @@
 package jackdaw.applecrates;
 
 import jackdaw.applecrates.api.AppleCrateAPI;
+import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.block.CrateBlock;
+import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.client.ClientConfig;
 import jackdaw.applecrates.compat.SectionProtection;
+import jackdaw.applecrates.item.CrateItem;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -35,6 +45,7 @@ public class AppleCrates {
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
         //call after mod compat so it can register new WoodTypes
         GeneralRegistry.prepareForRegistry(Constants.MODID, GeneralRegistry.BLOCKS, GeneralRegistry.ITEMS, GeneralRegistry.BLOCK_ENTITY_TYPES);
+
     }
 
     public void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {

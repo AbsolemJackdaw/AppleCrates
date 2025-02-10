@@ -10,16 +10,24 @@ import jackdaw.applecrates.container.slot.SlotPriceSale;
 import jackdaw.applecrates.item.CrateItem;
 import jackdaw.applecrates.network.ServerNetwork;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -42,9 +50,10 @@ public class FabricCrates implements ModInitializer {
 
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
-
+        var items = new ArrayList<ItemStack>();
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(Constants.MODID)).forEach(crateWoodType -> {
             var crate = new CrateBlock(crateWoodType);
+            //use oak crate as tab icon. TODO improve check
             Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), crate);
             Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Constants.MODID, crateWoodType.getBlockRegistryName()), new CrateItem(crate));
             var type = Registry.register(
@@ -52,7 +61,16 @@ public class FabricCrates implements ModInitializer {
                     new ResourceLocation(Constants.MODID, crateWoodType.getBeRegistryName()),
                     BlockEntityType.Builder.of((blockPos, blockState) -> new CrateBlockEntity(crateWoodType, blockPos, blockState, new StackHandlerAdapter()), crate).build(null));
             besrreg.add(() -> type);
+            //add crate to creative tab
+            items.add(new ItemStack(crate));
         });
+
+        var tabBuilder = CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+                .title(Component.translatable("tab.crate"))
+                .icon(() -> new ItemStack(CrateWoodType.getBlock(CrateWoodType.values().filter(crateWoodType -> crateWoodType.name().equals("oak")).findFirst().get())))
+                .displayItems((itemDisplayParameters, output) -> output.acceptAll(items));
+
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constants.MODID, "tab.crate"), tabBuilder.build());
 
         ServerNetwork.registerServerPackets();
 
