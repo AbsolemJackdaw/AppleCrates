@@ -7,7 +7,6 @@ import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -49,9 +48,10 @@ public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<Crat
                 stack.translate(xoff + xfront, 0, zoff + zfront);
 
                 float xAngle = (90.0f - 22.5f) * (xfront == 0 ? (zfront * (zfront < 0 ? 2f : -2f)) : (xfront * (xfront < 0 ? 2f : -2f)));
-
-                stack.mulPose(new Quaternionf(0f, blockRotation + (angleSimp % 2 == 0 ? 180.0f : 0f), 0f, 0f));
-                stack.mulPose(new Quaternionf(xAngle, 0f, 0f, 0f));//do not merge quaternions!!!!
+                var angleBlockFacing = new Quaternionf().fromAxisAngleDeg(0, 1, 0, blockRotation + (angleSimp % 2 == 0 ? 180.0f : 1f));
+                var angleCrateIncline = new Quaternionf().fromAxisAngleDeg(1, 0, 0, xAngle);
+                stack.mulPose(angleBlockFacing);
+                stack.mulPose(angleCrateIncline);//do not merge quaternions!!!!
 
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
