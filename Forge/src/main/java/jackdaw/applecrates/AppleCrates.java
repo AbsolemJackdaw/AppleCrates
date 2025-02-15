@@ -26,7 +26,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 @Mod(Constants.MODID)
 public class AppleCrates {
-    public static final boolean GEN_VANILLA_CRATES = false;
 
     public AppleCrates() {
         //Adjust constant

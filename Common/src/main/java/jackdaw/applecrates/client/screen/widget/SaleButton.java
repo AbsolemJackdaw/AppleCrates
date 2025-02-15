@@ -1,16 +1,9 @@
 package jackdaw.applecrates.client.screen.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import jackdaw.applecrates.client.screen.CrateScreenOwner;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.Optional;
 
 public abstract class SaleButton extends Button implements HoverTooltipButton {
     protected final Component narratorText;
@@ -25,7 +18,6 @@ public abstract class SaleButton extends Button implements HoverTooltipButton {
         return narratorText;
     }
 
-    @NotNull
     @Override
     protected MutableComponent createNarrationMessage() {
         return wrapDefaultNarrationMessage(narratorText);

@@ -1,18 +1,16 @@
 modLoader = "javafml" #mandatory
 
-loaderVersion = "[43,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion = "${forge_loader_version_range}" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 
-license = "gnu v3"
+license = "${license}"
 
 issueTrackerURL = "https://github.com/ArtixAllMighty/AppleCrates/issues" #optional
 
 [[mods]] #mandatory
 
-modId = "applecrates" #mandatory
-
-version = "${file.jarVersion}" #mandatory
-
-displayName = "Apple Crates" #mandatory
+modId = "${mod_id}" #mandatory
+version = "${version}" #mandatory
+displayName = "${mod_name}" #mandatory
 
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/apple-crates" #optional
 
@@ -22,84 +20,82 @@ credits = "MMD for helping out, Geegor for extensively bugtesting the pre-releas
 
 authors = "Absolem Jackdaw" #optional
 
-description = '''
-Sell your stuff in fancy crates!
-'''
+description = '''${description}'''
 
-[[dependencies.applecrates]] #optional
+[[dependencies.${mod_id}]] #optional
 modId = "forge" #mandatory
 mandatory = true #mandatory
-versionRange = "[43,)" #mandatory
+versionRange = "[${forge_version},)" #mandatory
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,)"
+versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.applecrates]]
-modId = "sectionprotection"
-mandatory = false
-versionRange = "[0.8.0,)"
-ordering = "NONE"
-side = "SERVER"
+#[[dependencies.applecrates]]
+#modId = "sectionprotection"
+#mandatory = false
+#versionRange = "[0.8.0,)"
+#ordering = "NONE"
+#side = "SERVER"
 
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_byg"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_bop"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_botania"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_intdyn"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_premwood"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_solarforge"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_fruit"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_malum"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_nourished"
 mandatory = false
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "BOTH"
-[[dependencies.applecrates]]
+[[dependencies.${mod_id}]]
 modId = "applecrates_tcon"
 mandatory = false
 versionRange = "[0,)"

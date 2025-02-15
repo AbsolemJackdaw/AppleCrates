@@ -5,7 +5,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class SlotCrateStock extends SlotItemHandler {
     private final boolean isOwner;
@@ -21,7 +20,7 @@ public class SlotCrateStock extends SlotItemHandler {
     }
 
     @Override
-    public boolean mayPlace(@NotNull ItemStack stack) {
+    public boolean mayPlace( ItemStack stack) {
         return getSlotIndex() < Constants.TOTALCRATESTOCKLOTS;
     }
 

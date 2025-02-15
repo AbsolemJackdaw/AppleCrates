@@ -14,7 +14,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -115,7 +114,7 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public @NotNull Slot addSlot(@NotNull Slot slot) {
+    public  Slot addSlot(Slot slot) {
         return super.addSlot(slot);
     }
 

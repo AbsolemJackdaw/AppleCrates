@@ -13,8 +13,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CrateBlockEntity extends CrateBlockEntityBase {
 
@@ -38,7 +36,7 @@ public class CrateBlockEntity extends CrateBlockEntityBase {
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    public  <T> LazyOptional<T> getCapability( Capability<T> cap, Direction side) {
         if (getBlockState().getValue(CrateBlockBase.FACING).equals(side) && cap == ForgeCapabilities.ITEM_HANDLER) {
             return crateStockHopper.cast();
         }

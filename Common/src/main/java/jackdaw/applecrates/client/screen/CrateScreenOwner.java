@@ -1,7 +1,6 @@
 package jackdaw.applecrates.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.client.screen.widget.*;
@@ -9,14 +8,12 @@ import jackdaw.applecrates.container.CrateMenuOwner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +96,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     }
 
     @Override
-    public void setFocused(@Nullable GuiEventListener $$0) { // This method fires after a buttons onClick method to set focus to the button
+    public void setFocused( GuiEventListener $$0) { // This method fires after a buttons onClick method to set focus to the button
         if (cancelFocusChange) { // We cancel that under certain conditions so that focus can be transferred to the username text box upon clicking the add owner button, which is just nice.
             cancelFocusChange = false;
             return;

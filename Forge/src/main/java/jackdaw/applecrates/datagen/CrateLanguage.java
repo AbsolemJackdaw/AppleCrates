@@ -1,6 +1,7 @@
 package jackdaw.applecrates.datagen;
 
 import jackdaw.applecrates.AppleCrates;
+import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -27,7 +28,7 @@ public class CrateLanguage extends LanguageProvider {
             add(CrateWoodType.getBlock(crateWoodType), capitalized);
         });
 
-        if (AppleCrates.GEN_VANILLA_CRATES) {
+        if (Constants.GEN_VANILLA_CRATES) {
             add("container.crate", "Crate");
             add("container.crate.owner", "My Crate Shop");
             add("cannot.switch.trade", "To switch payment item, your green payout slot has to be empty");

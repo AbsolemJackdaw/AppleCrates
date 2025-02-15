@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,21 +66,21 @@ public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
     }
 
     @Override
-    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+    public  ItemStack insertItem(int slot,  ItemStack stack, boolean simulate) {
         if (slot == Constants.TOTALCRATESTOCKLOTS)
             return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
     @Override
-    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+    public  ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (slot == Constants.TOTALCRATESTOCKLOTS)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(int slot,  ItemStack stack) {
         return slot != Constants.TOTALCRATESTOCKLOTS && super.isItemValid(slot, stack);
     }
 

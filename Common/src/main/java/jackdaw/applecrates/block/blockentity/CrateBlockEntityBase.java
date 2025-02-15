@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -104,7 +103,7 @@ public class CrateBlockEntityBase extends BlockEntity {
     }
 
     //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
-    public boolean isOwner(@Nullable Player player) {
+    public boolean isOwner(Player player) {
         return owners.isEmpty() || player != null && owners.contains(player.getGameProfile().getId());
     }
 

@@ -11,7 +11,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
 
 @Mod.EventBusSubscriber(modid = Constants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonSetup {
@@ -26,7 +25,7 @@ public class CommonSetup {
             menu.addSlot(new SlotItemHandler(stackHandler.interactableTradeSlots, 0, menu.isOwner() ? 10 : 102, menu.isOwner() ? 76 : 21)); //owner set pay
             menu.addSlot(new SlotItemHandler(stackHandler.interactableTradeSlots, 1, menu.isOwner() ? 46 : 142, menu.isOwner() ? 76 : 21) { //owner set item
                 @Override
-                public boolean mayPlace(@NotNull ItemStack stack) {
+                public boolean mayPlace( ItemStack stack) {
                     return menu.isOwner();
                 }
             });
