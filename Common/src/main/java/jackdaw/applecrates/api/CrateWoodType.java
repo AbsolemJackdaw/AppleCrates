@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;

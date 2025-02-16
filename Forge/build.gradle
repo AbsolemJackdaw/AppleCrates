@@ -26,6 +26,7 @@ legacyForge {
         }
         data {
             data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
         server {
             server()
@@ -78,5 +79,4 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.addOptional('construct-crates')
     mainFile.addOptional('forbidden-crates')
     mainFile.addOptional('firma-crates')
-
 }

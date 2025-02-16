@@ -19,6 +19,7 @@ public class CrateModels extends BlockModelProvider {
         super(generator.getPackOutput(), modId, existingFileHelper);
     }
 
+
     @Override
     protected void registerModels() {
 
@@ -29,6 +30,7 @@ public class CrateModels extends BlockModelProvider {
                     throw WoodException.INSTANCE.resLocNotFound(crateWoodType);
                 existingFileHelper.trackGenerated(existingTexture, TEXTURE);
                 var appleCrateModel = new ResourceLocation(Constants.MODID, "block/applecrate");
+                existingFileHelper.trackGenerated(appleCrateModel, MODEL);
                 withExistingParent(crateWoodType.getBlockRegistryName(), appleCrateModel).texture("particle", existingTexture).texture("0", existingTexture);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());
