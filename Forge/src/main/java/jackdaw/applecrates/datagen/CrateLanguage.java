@@ -31,8 +31,16 @@ public class CrateLanguage extends LanguageProvider {
         if (Constants.GEN_VANILLA_CRATES) {
             add("container.crate", "Crate");
             add("container.crate.owner", "My Crate Shop");
-            add("cannot.switch.trade", "To switch payment item, your green payout slot has to be empty");
+            add("cannot.switch.trade", "To switch payment, the payout slot has to be empty");
             add("crate.set.creative", "Crate set to creative shop");
+            add("crate.add.owner", "Add owner");
+            add("crate.add.owner.confirm", "Confirm add owner");
+            add("crate.add.owner.success", "Added %s as an owner!");
+            add("crate.add.owner.not_found", "Player %s not found, cannot add as owner");
+            add("crate.add.owner.already_owner", "%s is already an owner!");
+            add("crate.button.sale.owner", "Set Trade");
+            add("crate.button.sale.buyer", "Trade");
+            add("tab.crate", "Crates");
         }
     }
 }
