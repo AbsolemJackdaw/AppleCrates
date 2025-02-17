@@ -7,8 +7,16 @@
   "block.applecrates.oak_crate": "Caisse de chêne",
   "block.applecrates.spruce_crate": "Caisse de sapin",
   "block.applecrates.warped_crate": "Caisse biscornue",
-  "cannot.switch.trade": "Pour changer l'article de paiement, votre emplacement vert de paiement doit être vide",
+  "cannot.switch.trade": "Pour changer l'article de paiement, la case de paye doit être vide",
   "container.crate": "Caisse",
   "container.crate.owner": "Ma caisse-boutique",
-  "crate.set.creative": "Caisse définie comme boutique créative"
+  "crate.set.creative": "Caisse définie comme boutique créative",
+  "crate.add.owner": "Ajouté co-propriétaire",
+  "crate.add.owner.already_owner": "%s est deja propriétaire!",
+  "crate.add.owner.confirm": "Confirmer l'ajout",
+  "crate.add.owner.not_found": "%s n'as pas été trouvé et n'as pas pu être ajouté.",
+  "crate.add.owner.success": "%s as été ajouté comme co-propriétaire!",
+  "crate.button.sale.buyer": "Echanger",
+  "crate.button.sale.owner": "Définire l'échange",
+  "tab.crate": "Caisses"
 }

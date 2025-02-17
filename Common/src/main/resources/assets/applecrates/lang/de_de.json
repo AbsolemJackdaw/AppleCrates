@@ -10,5 +10,14 @@
   "cannot.switch.trade": "Um das Zahlungsitem zu wechseln, muss der Auszahlungsslot leer sein!",
   "container.crate": "Kiste",
   "container.crate.owner": "Mein Kistenladen",
-  "crate.set.creative": "Die Kiste ist nun ein Kreativladen."
+  "crate.set.creative": "Die Kiste ist nun ein Kreativladen.",
+  "crate.add.owner": "Add owner",
+  "crate.add.owner.already_owner": "%s is already an owner!",
+  "crate.add.owner.confirm": "Confirm add owner",
+  "crate.add.owner.not_found": "Player %s not found, cannot add as owner",
+  "crate.add.owner.success": "Added %s as an owner!",
+  "crate.button.sale.buyer": "Trade",
+  "crate.button.sale.owner": "Set Trade",
+  "crate.set.creative": "Crate set to creative shop",
+  "tab.crate": "Crates"
 }

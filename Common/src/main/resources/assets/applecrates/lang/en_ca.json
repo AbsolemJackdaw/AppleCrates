@@ -7,8 +7,16 @@
   "block.applecrates.oak_crate": "Oak Crate",
   "block.applecrates.spruce_crate": "Spruce Crate",
   "block.applecrates.warped_crate": "Warped Crate",
-  "cannot.switch.trade": "To switch payment item, your green payout slot has to be empty",
+  "cannot.switch.trade": "To switch payment, the payout slot has to be empty",
   "container.crate": "Crate",
   "container.crate.owner": "My Crate Shop",
-  "crate.set.creative": "Crate set to creative shop"
+  "crate.add.owner": "Add owner",
+  "crate.add.owner.already_owner": "%s is already an owner!",
+  "crate.add.owner.confirm": "Confirm add owner",
+  "crate.add.owner.not_found": "Player %s not found, cannot add as owner",
+  "crate.add.owner.success": "Added %s as an owner!",
+  "crate.button.sale.buyer": "Trade",
+  "crate.button.sale.owner": "Set Trade",
+  "crate.set.creative": "Crate set to creative shop",
+  "tab.crate": "Crates"
 }
