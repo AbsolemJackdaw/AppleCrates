@@ -4,13 +4,6 @@ plugins {
     id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 
-mixin {
-    add(sourceSets.main, "${mod_id}.refmap.json")
-
-   // config("${mod_id}.mixins.json")
-   // config("${mod_id}.forge.mixins.json")
-}
-
 legacyForge {
     version = "${minecraft_version}-${forge_version}"
 
