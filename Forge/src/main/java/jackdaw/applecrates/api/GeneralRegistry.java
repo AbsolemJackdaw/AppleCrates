@@ -32,6 +32,13 @@ public class GeneralRegistry {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Constants.MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MODID);
     private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Constants.MODID);
+    public static final RegistryObject<CreativeModeTab> CRATE_TAB = TABS.register("tab.crate", () ->
+            CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+                    .title(Component.translatable("tab.crate"))
+                    .displayItems((itemDisplayParameters, output) -> GeneralRegistry.BLOCKS.getEntries().stream().map(blockRegistryObject -> blockRegistryObject.get()).forEach(output::accept))
+                    .icon(() -> new ItemStack(CrateWoodType.getBlock(CrateWoodType.values().filter(crateWoodType -> crateWoodType.name().equals("oak")).findFirst().get())))
+                    .build()
+    );
 
     public static final RegistryObject<MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IForgeMenuType.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
@@ -53,12 +60,6 @@ public class GeneralRegistry {
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
             beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), block.get()).build(null));
         });
-
-        CreativeModeTab.Builder tabBuilder = CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0).title(Component.translatable("tab.crate"));
-        tabBuilder.displayItems((itemDisplayParameters, output) -> GeneralRegistry.BLOCKS.getEntries().stream().map(blockRegistryObject -> blockRegistryObject.get()).forEach(output::accept));
-        tabBuilder.icon(() -> new ItemStack(CrateWoodType.getBlock(CrateWoodType.values().filter(crateWoodType -> crateWoodType.name().equals("oak")).findFirst().get())));
-        var tab = tabBuilder.build();
-        TABS.register("tab.crate", () -> tab);
     }
 
     public static void startup() {

@@ -46,4 +46,11 @@ public class AppleCrates {
         GeneralRegistry.prepareForRegistry(Constants.MODID, GeneralRegistry.BLOCKS, GeneralRegistry.ITEMS, GeneralRegistry.BLOCK_ENTITY_TYPES);
 
     }
+
+    public void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(GeneralRegistry.CRATE_TAB)) {
+            for (RegistryObject<Item> item : GeneralRegistry.ITEMS.getEntries())
+                event.accept(item);
+        }
+    }
 }
