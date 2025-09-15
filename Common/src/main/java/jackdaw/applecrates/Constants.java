@@ -2,13 +2,13 @@ package jackdaw.applecrates;
 
 public class Constants {
     public static final String MODID = "applecrates";
-    public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"};
+    public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped", "bamboo", "cherry", "mangrove"};
 
     /**
      * change to true when generating data.
      */
     public static boolean IS_DATA_GEN = false;
-    public static final boolean GEN_VANILLA_CRATES = false;
+    public static final boolean GEN_VANILLA_CRATES = true;
 
     public static final String TAGOWNER = "owner";
     public static final String TAGSTOCK = "cratestock";

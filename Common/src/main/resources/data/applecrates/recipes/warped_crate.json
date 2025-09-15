@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "p": {
       "item": "minecraft:warped_planks"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "applecrates:warped_crate"
-  }
+  },
+  "show_notification": false
 }

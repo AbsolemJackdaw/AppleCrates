@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "applecrates:block/bamboo_crate",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "applecrates:block/bamboo_crate"
+    },
+    "facing=south": {
+      "model": "applecrates:block/bamboo_crate",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "applecrates:block/bamboo_crate",
+      "y": 270
+    }
+  }
+}

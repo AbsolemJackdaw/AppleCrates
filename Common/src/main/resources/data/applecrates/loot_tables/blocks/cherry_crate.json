@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "applecrates:acacia_crate"
+          "name": "applecrates:cherry_crate"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "applecrates:blocks/acacia_crate"
+  "random_sequence": "applecrates:blocks/cherry_crate"
 }

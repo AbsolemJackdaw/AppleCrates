@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "p": {
-      "item": "minecraft:jungle_planks"
+      "item": "minecraft:bamboo_planks"
     },
     "s": {
       "item": "minecraft:stick"
@@ -14,7 +14,7 @@
     "ppp"
   ],
   "result": {
-    "item": "applecrates:jungle_crate"
+    "item": "applecrates:bamboo_crate"
   },
   "show_notification": false
 }
