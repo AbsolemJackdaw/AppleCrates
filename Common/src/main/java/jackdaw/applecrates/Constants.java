@@ -8,7 +8,7 @@ public class Constants {
      * change to true when generating data.
      */
     public static boolean IS_DATA_GEN = false;
-    public static final boolean GEN_VANILLA_CRATES = true;
+    public static final boolean GEN_VANILLA_CRATES = false;
 
     public static final String TAGOWNER = "owner";
     public static final String TAGSTOCK = "cratestock";
