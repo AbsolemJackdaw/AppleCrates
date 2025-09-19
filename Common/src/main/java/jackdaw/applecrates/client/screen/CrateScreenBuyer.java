@@ -1,7 +1,6 @@
 package jackdaw.applecrates.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.client.screen.widget.HoverTooltipButton;
@@ -9,14 +8,11 @@ import jackdaw.applecrates.client.screen.widget.SaleButton;
 import jackdaw.applecrates.container.CrateMenuBuyer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-
-import java.awt.*;
 
 public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
     private static final ResourceLocation BUYER = new ResourceLocation(Constants.MODID, "gui/buyer.png");

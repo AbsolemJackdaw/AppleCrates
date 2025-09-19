@@ -1,17 +1,13 @@
 package jackdaw.applecrates.client.screen.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 public class AddOwnerEditBox extends EditBox {
     private static final ResourceLocation BG = new ResourceLocation("textures/gui/container/gamemode_switcher.png");

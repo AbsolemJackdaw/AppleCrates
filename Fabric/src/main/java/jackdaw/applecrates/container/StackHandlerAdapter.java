@@ -2,9 +2,9 @@ package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.container.inventory.CrateStackHandler;
+import jackdaw.applecrates.container.inventory.GenericStackHandler;
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
-import jackdaw.applecrates.container.inventory.GenericStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

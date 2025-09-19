@@ -1,6 +1,5 @@
 package jackdaw.applecrates.datagen;
 
-import jackdaw.applecrates.AppleCrates;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
 import net.minecraft.data.DataGenerator;

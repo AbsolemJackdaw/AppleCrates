@@ -1,6 +1,7 @@
 package jackdaw.applecrates;
 
 import jackdaw.applecrates.api.CrateWoodType;
+import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
@@ -22,8 +23,8 @@ public class FabricCratesClient implements ClientModInitializer {
         CrateWoodType.values().forEach(crateWoodType -> {
             BlockEntityRendererRegistry.register(CrateWoodType.getBlockEntityType(crateWoodType), CrateBlockEntitySpecialRenderer::new);
         });
-        MenuScreens.register(FabricCrates.CRATE_MENU_OWNER, CrateScreenOwner::new);
-        MenuScreens.register(FabricCrates.CRATE_MENU_BUYER, CrateScreenBuyer::new);
+        MenuScreens.register(GeneralRegistry.CRATE_MENU_OWNER, CrateScreenOwner::new);
+        MenuScreens.register(GeneralRegistry.CRATE_MENU_BUYER, CrateScreenBuyer::new);
 
         Content.buyerGuiButton = () -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketSale());
         Content.ownerGuiButton = () -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());

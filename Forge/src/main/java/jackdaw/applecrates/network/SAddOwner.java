@@ -1,7 +1,6 @@
 package jackdaw.applecrates.network;
 
 import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
-import jackdaw.applecrates.network.packetprocessing.ServerGetSale;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;

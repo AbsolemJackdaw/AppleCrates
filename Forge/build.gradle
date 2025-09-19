@@ -13,13 +13,17 @@ legacyForge {
     if (at.exists()) {
         accessTransformers = ["src/main/resources/META-INF/accesstransformer.cfg"]
     }
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
     runs {
         client {
             client()
         }
         data {
             data()
-            programArguments.addAll '--mod', 'applecrates', '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
         server {
             server()
@@ -27,7 +31,7 @@ legacyForge {
     }
 
     mods {
-        testproject {
+        "${mod_id}" {
             sourceSet sourceSets.main
         }
     }
@@ -42,16 +46,13 @@ dependencies {
 
 jar {
     finalizedBy('reobfJar')
-//    manifest.attributes([
-//            "MixinConfigs": "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
-//    ])
 }
 
-task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     dependsOn(tasks.build)
     apiToken = findProperty('cf_api_token')
-    // The main file to upload
-    def mainFile = upload(630726, jar)
+    def mainFile = upload(630726, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.displayName = "${mod_name}-forge-${minecraft_version}-${version}"
     mainFile.releaseType = "${releasetype}"
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'

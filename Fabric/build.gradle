@@ -39,8 +39,8 @@ loom {
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     dependsOn(tasks.build)
     apiToken = findProperty('cf_api_token');
-    // The main file to upload
     def mainFile = upload(630726, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.displayName = "${mod_name}-fabric-${minecraft_version}-${version}"
     mainFile.releaseType = "${releasetype}"
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'
@@ -48,5 +48,4 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.addGameVersion("${minecraft_version}");
     mainFile.addModLoader('Fabric')
     mainFile.addModLoader('Quilt')
-
 }

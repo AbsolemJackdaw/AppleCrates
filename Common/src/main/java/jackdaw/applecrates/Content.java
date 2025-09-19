@@ -4,7 +4,6 @@ import jackdaw.applecrates.client.IClientConfig;
 import jackdaw.applecrates.container.IMenuSlots;
 import jackdaw.applecrates.container.inventory.IMoneyPatch;
 import jackdaw.applecrates.network.IPacketOnButtonPress;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 

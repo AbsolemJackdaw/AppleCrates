@@ -1,8 +1,8 @@
 package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.api.CrateWoodType;
-import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntity;
+import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import jackdaw.applecrates.container.CrateMenuBuyerService;
 import jackdaw.applecrates.container.CrateMenuOwnerService;
 import jackdaw.applecrates.container.factory.CrateMenuFactory;

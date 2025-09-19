@@ -17,11 +17,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Mod.EventBusSubscriber(modid = Constants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GeneralRegistry {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Constants.MODID);
@@ -32,7 +39,7 @@ public class GeneralRegistry {
     public static final RegistryObject<CreativeModeTab> CRATE_TAB = TABS.register("tab.crate", () ->
             CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                     .title(Component.translatable("tab.crate"))
-                    .displayItems((itemDisplayParameters, output) -> GeneralRegistry.BLOCKS.getEntries().stream().map(blockRegistryObject -> blockRegistryObject.get()).forEach(output::accept))
+                    //.displayItems((itemDisplayParameters, output) -> GeneralRegistry.BLOCKS.getEntries().stream().map(blockRegistryObject -> blockRegistryObject.get()).forEach(output::accept))
                     .icon(() -> new ItemStack(CrateWoodType.getBlock(CrateWoodType.values().filter(crateWoodType -> crateWoodType.name().equals("oak")).findFirst().get())))
                     .build()
     );
@@ -47,16 +54,26 @@ public class GeneralRegistry {
         return new CrateMenuBuyerService(windowId, inv, unlimited);
     }));
 
+    private static final List<RegistryObject<Block>> TAB_BLOCKS = new ArrayList<>();
+
     /**
      * @param modId filter through all registered crates. Use your own modid
      */
     public static void prepareForRegistry(String modId, DeferredRegister<Block> blockRegistry, DeferredRegister<Item> itemRegistry, DeferredRegister<BlockEntityType<?>> beRegistry) {
-
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
             RegistryObject<Block> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
             beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), block.get()).build(null));
+            TAB_BLOCKS.add(block);
         });
+    }
+
+    @SubscribeEvent
+    public static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(GeneralRegistry.CRATE_TAB.getKey())) {
+            for (RegistryObject<Block> block : GeneralRegistry.TAB_BLOCKS)
+                event.accept(block);
+        }
     }
 
     public static void startup() {
