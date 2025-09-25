@@ -31,8 +31,8 @@ public class CrateWoodType {
         this.compatId = compatId; //compatId.equals("minecraft") ? "" :
 
         beName = getBlockRegistryName() + "_be";
-        resourceLocation = new ResourceLocation(yourModId, getBlockRegistryName());
-        resourceLocationBe = new ResourceLocation(yourModId, getBeRegistryName());
+        resourceLocation = ResourceLocation.fromNamespaceAndPath(yourModId, getBlockRegistryName());
+        resourceLocationBe = ResourceLocation.fromNamespaceAndPath(yourModId, getBeRegistryName());
     }
 
     public String getBlockRegistryName() {

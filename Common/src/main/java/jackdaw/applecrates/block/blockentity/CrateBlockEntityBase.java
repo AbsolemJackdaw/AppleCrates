@@ -4,6 +4,7 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.container.IStackHandlerAdapter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -31,15 +32,15 @@ public class CrateBlockEntityBase extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        loadCrateDataFromTag(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        loadCrateDataFromTag(registries, tag);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        saveCrateDataToTag(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        saveCrateDataToTag(registries, tag);
     }
 
     /**
@@ -54,12 +55,12 @@ public class CrateBlockEntityBase extends BlockEntity {
      * sync on login : getUpdateTag / handleUpdateTag
      */
     @Override
-    public CompoundTag getUpdateTag() {
-        return saveCrateDataToTag(new CompoundTag());
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveCrateDataToTag(registries, new CompoundTag());
     }
 
-    protected CompoundTag saveCrateDataToTag(CompoundTag tag) {
-        stackHandler.saveInventoryData(tag);
+    protected CompoundTag saveCrateDataToTag(HolderLookup.Provider registries, CompoundTag tag) {
+        stackHandler.saveInventoryData(registries, tag);
         tag.putBoolean(Constants.TAGUNLIMITED, isUnlimitedShop);
         if (!owners.isEmpty()) {
             ListTag ownersTag = owners.stream()
@@ -70,8 +71,8 @@ public class CrateBlockEntityBase extends BlockEntity {
         return tag;
     }
 
-    protected void loadCrateDataFromTag(CompoundTag tag) {
-        stackHandler.loadInventoryData(tag);
+    protected void loadCrateDataFromTag(HolderLookup.Provider registries, CompoundTag tag) {
+        stackHandler.loadInventoryData(registries, tag);
         if (tag.contains(Constants.TAGUNLIMITED))
             isUnlimitedShop = tag.getBoolean(Constants.TAGUNLIMITED);
         if (tag.contains(Constants.TAGOWNER)) {

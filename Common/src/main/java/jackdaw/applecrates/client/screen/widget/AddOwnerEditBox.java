@@ -7,10 +7,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.network.ServerLoginPacketListenerImpl;
+import net.minecraft.util.StringUtil;
 
 public class AddOwnerEditBox extends EditBox {
-    private static final ResourceLocation BG = new ResourceLocation("textures/gui/container/gamemode_switcher.png");
+    private static final ResourceLocation BG = ResourceLocation.withDefaultNamespace("textures/gui/container/gamemode_switcher.png");
 
     public AddOwnerEditBox(Font font, int x, int y, int w, int h, Component comp) {
         super(font, x, y, w, h, comp);
@@ -19,13 +19,13 @@ public class AddOwnerEditBox extends EditBox {
         this.setEditable(false);
         this.setCanLoseFocus(false);
         this.setValue("username");
-        this.setFilter(ServerLoginPacketListenerImpl::isValidUsername);
+        this.setFilter(StringUtil::isValidPlayerName);
     }
 
     public void renderBgCustom(GuiGraphics graphics) {
         if (!isVisible())
             return;
-        var bg = new ResourceLocation("textures/gui/advancements/window.png");
+        var bg = ResourceLocation.withDefaultNamespace("textures/gui/advancements/window.png");
         RenderSystem.setShaderTexture(0, bg);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();

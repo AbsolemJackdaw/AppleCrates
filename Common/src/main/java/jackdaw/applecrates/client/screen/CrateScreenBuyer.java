@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
-    private static final ResourceLocation BUYER = new ResourceLocation(Constants.MODID, "gui/buyer.png");
+    private static final ResourceLocation BUYER = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/buyer.png");
 
     public CrateScreenBuyer(CrateMenuBuyer menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, Component.translatable(title.getString()));
@@ -45,7 +45,7 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
 
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

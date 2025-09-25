@@ -5,6 +5,7 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.client.screen.widget.*;
 import jackdaw.applecrates.container.CrateMenuOwner;
+import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
-    private static final ResourceLocation OWNER = new ResourceLocation(Constants.MODID, "gui/owner.png");
+    private static final ResourceLocation OWNER = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/owner.png");
 
     private AddOwnerEditBox inputField;
     private ConfirmAddOwnerButton confirmAddOwnerButton;
@@ -96,7 +97,7 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     }
 
     @Override
-    public void setFocused( GuiEventListener $$0) { // This method fires after a buttons onClick method to set focus to the button
+    public void setFocused(GuiEventListener $$0) { // This method fires after a buttons onClick method to set focus to the button
         if (cancelFocusChange) { // We cancel that under certain conditions so that focus can be transferred to the username text box upon clicking the add owner button, which is just nice.
             cancelFocusChange = false;
             return;
@@ -119,15 +120,14 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
         if (give.isEmpty() || payout.isEmpty())
             return true;
 
-        if (payout.hasTag() && payout.getTag().contains(Constants.TAGSTOCK)) {
-            payout.removeTagKey(Constants.TAGSTOCK);
-        }
-        return ItemStack.isSameItemSameTags(payout, give);
+        if (payout.getOrDefault(Content.coinCounter, new CoinCounter(0)).count() > 0)
+            payout.remove(Content.coinCounter);
+        return ItemStack.isSameItemSameComponents(payout, give);
     }
 
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.enableBlend();
         if (!(menu.adapter.getSavedTradeSlotsItem(0).isEmpty() && menu.adapter.getSavedTradeSlotsItem(1).isEmpty()) && menu.adapter.getInteractableTradeItem(0).isEmpty() && menu.adapter.getInteractableTradeItem(1).isEmpty())
@@ -144,11 +144,10 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
 
         if (!menu.adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS).isEmpty()) { // moneyslot
             ItemStack inSlot = menu.adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS); // moneyslot
-            if (inSlot.getOrCreateTag().contains(Constants.TAGSTOCK)) {
-                int pay = inSlot.getOrCreateTag().getInt(Constants.TAGSTOCK);
+            if (inSlot.getOrDefault(Content.coinCounter, new CoinCounter(0)).count() > 0) {
                 //set inSlot's itemcount to the nbt ammount, but only on client side
                 //this is visual
-                inSlot.setCount(pay);
+                inSlot.setCount(inSlot.get(Content.coinCounter).count());
             }
         }
 
@@ -186,8 +185,10 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
     @Override
     protected void containerTick() {
         super.containerTick();
-        if (this.inputField.isVisible())
-            this.inputField.tick();
+        //TODO check if removing this unexisting method breaks stuff
+
+//        if (this.inputField.isVisible())
+//            this.inputField.tick();
     }
 
     @Override

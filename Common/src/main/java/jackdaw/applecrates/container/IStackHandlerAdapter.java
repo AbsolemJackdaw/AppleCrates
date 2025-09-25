@@ -2,6 +2,7 @@ package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,9 +28,9 @@ public interface IStackHandlerAdapter {
 
     void setCrateStockItem(int slot, ItemStack stack);
 
-    void saveInventoryData(CompoundTag tag);
+    void saveInventoryData(HolderLookup.Provider registries, CompoundTag tag);
 
-    void loadInventoryData(CompoundTag tag);
+    void loadInventoryData(HolderLookup.Provider registries, CompoundTag tag);
 
     int getCratestacksTotalItemCount(Item item);
 

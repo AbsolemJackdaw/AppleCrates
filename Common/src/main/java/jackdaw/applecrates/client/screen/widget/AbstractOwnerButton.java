@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class AbstractOwnerButton extends Button {
-    private static final ResourceLocation OWNER_BUTTONS = new ResourceLocation(Constants.MODID, "gui/owner_buttons.png");
+    private static final ResourceLocation OWNER_BUTTONS = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/owner_buttons.png");
     private final float blitOffset;
 
     public AbstractOwnerButton(int x, int y, int size, float blitOffset, Component message, OnPress onPress) {
@@ -16,9 +16,10 @@ public class AbstractOwnerButton extends Button {
         this.blitOffset = blitOffset;
     }
 
+
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float f) {
-        super.render(g, mouseX, mouseY, f);
+    public void renderWidget(GuiGraphics g, int mouseX, int mouseY, float f) {
+        super.renderWidget(g, mouseX, mouseY, f);
 
         RenderSystem.setShaderTexture(0, OWNER_BUTTONS);
         RenderSystem.enableBlend();

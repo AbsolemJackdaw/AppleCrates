@@ -71,7 +71,7 @@ public class CrateMenuBuyer extends CrateMenu {
         ItemStack payment = this.adapter.getInteractableTradeItem(0);
         ItemStack toPay = this.adapter.getSavedTradeSlotsItem(0);
         var isBuySlotEmpty = this.adapter.getInteractableTradeItem(1).isEmpty();
-        var isSamePay = ItemStack.isSameItemSameTags(toPay, payment) && !toPay.isEmpty();
+        var isSamePay = ItemStack.isSameItemSameComponents(toPay, payment) && !toPay.isEmpty();
         var hasEnough = payment.getCount() >= toPay.getCount();
 
         if (isBuySlotEmpty && isSamePay && hasEnough)
@@ -100,7 +100,7 @@ public class CrateMenuBuyer extends CrateMenu {
         if (!give.isEmpty()) {
             for (int i = Constants.PLAYERSTARTSLOT; i < Constants.PLAYERENDSLOT; ++i) {
                 ItemStack stackinSlot = this.slots.get(i).getItem();
-                if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameTags(give, stackinSlot)) {
+                if (!stackinSlot.isEmpty() && ItemStack.isSameItemSameComponents(give, stackinSlot)) {
                     ItemStack paymentSlot = this.adapter.getInteractableTradeItem(0);
                     int j = paymentSlot.isEmpty() ? 0 : paymentSlot.getCount();
                     int k = Math.min(give.getMaxStackSize() - j, stackinSlot.getCount());

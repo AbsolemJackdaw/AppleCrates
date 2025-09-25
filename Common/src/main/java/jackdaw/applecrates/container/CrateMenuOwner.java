@@ -1,8 +1,9 @@
 package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
-import net.minecraft.nbt.CompoundTag;
+import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -57,17 +58,11 @@ public class CrateMenuOwner extends CrateMenu {
 
     protected ItemStack pickUpPayment() {
         ItemStack original = adapter.getCrateStockItem(Constants.TOTALCRATESTOCKLOTS); //do not modify originals !
-        int amount = 0;
-        if (original.getOrCreateTag().contains(Constants.TAGSTOCK))
-            amount = original.getTag().getInt(Constants.TAGSTOCK);
+        int amount = original.getOrDefault(Content.coinCounter, new CoinCounter(0)).count();
 
-        if (amount > 0 && original.hasTag()) { //Redundant double check, but better safe then sorry
+        if (amount > 0) { //Redundant double check, but better safe then sorry
             ItemStack prepPickup = original.copy();
-            CompoundTag tag = prepPickup.getTag();
-            tag.remove(Constants.TAGSTOCK);
-            if (tag.isEmpty()) //fix empty tag bug where an empty tag and a null tag are distinct items
-                tag = null;
-            prepPickup.setTag(tag);
+            prepPickup.remove(Content.coinCounter);
             int pickUp = Math.min(amount, prepPickup.getMaxStackSize());
             prepPickup.setCount(pickUp);
 
@@ -76,7 +71,7 @@ public class CrateMenuOwner extends CrateMenu {
                 adapter.setCrateStockItem(Constants.TOTALCRATESTOCKLOTS, ItemStack.EMPTY);
             } else {
                 ItemStack prepUpdate = original.copy();
-                prepUpdate.getTag().putInt(Constants.TAGSTOCK, updatedAmount);
+                prepUpdate.set(Content.coinCounter, new CoinCounter(updatedAmount));
                 adapter.setCrateStockItem(Constants.TOTALCRATESTOCKLOTS, prepUpdate);
             }
             return prepPickup;

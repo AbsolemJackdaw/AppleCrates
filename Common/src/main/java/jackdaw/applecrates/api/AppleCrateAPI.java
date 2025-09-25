@@ -24,7 +24,7 @@ public class AppleCrateAPI {
     }
 
     protected static void registerForCrate(AppleCrateBuilder builder) {
-        //when datagen for other mods is ran, vanilla crates shouldnt be registered. when the game is ran however, they should
+        //when datagen for other mods is ran, vanilla crates shouldn't be registered. when the game is ran however, they should
         if (!builder.yourModId.equals(Constants.MODID) || Constants.GEN_VANILLA_CRATES || !Constants.IS_DATA_GEN) {
             try {
                 CrateWoodType wood = CrateWoodType.create(builder.compatModId, builder.yourModId, builder.woodName);
@@ -143,16 +143,16 @@ public class AppleCrateAPI {
         }
 
         public ResourceLocation getTextureResourceLocation() {
-            return new ResourceLocation(optifineTextureOverride ? "minecraft" : compatModId, parentFolder.concat(subFolder).concat(textureName).concat(planksSuffix));
+            return ResourceLocation.fromNamespaceAndPath(optifineTextureOverride ? "minecraft" : compatModId, parentFolder.concat(subFolder).concat(textureName).concat(planksSuffix));
         }
 
         public ResourceLocation getPlanksResourceLocation() {
             if (plankRegistryName.isEmpty()) { //try and determine a resourcelocation based on general practice 
                 boolean same = woodName.equals(textureName);
                 String _plank = planksSuffix.isEmpty() ? same ? "" : "_planks" : planksSuffix;
-                return new ResourceLocation(compatModId, woodName.concat(_plank));
+                return ResourceLocation.fromNamespaceAndPath(compatModId, woodName.concat(_plank));
             } else { //if general practice failed, override with provided name
-                return new ResourceLocation(compatModId, plankRegistryName);
+                return ResourceLocation.fromNamespaceAndPath(compatModId, plankRegistryName);
             }
         }
 

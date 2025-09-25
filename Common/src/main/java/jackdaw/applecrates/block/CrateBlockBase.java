@@ -1,8 +1,10 @@
 package jackdaw.applecrates.block;
 
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
+import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -14,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +35,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CrateBlockBase extends BaseEntityBlock {
+public class CrateBlockBase extends Block implements EntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
@@ -40,7 +43,7 @@ public class CrateBlockBase extends BaseEntityBlock {
     private final CrateWoodType type;
 
     public CrateBlockBase(CrateWoodType type) {
-        super(Properties.copy(Blocks.OAK_PLANKS).noOcclusion().isValidSpawn(CrateBlockBase::never).isRedstoneConductor(CrateBlockBase::never).isSuffocating(CrateBlockBase::never).isViewBlocking(CrateBlockBase::never));
+        super(Properties.ofFullCopy(Blocks.OAK_PLANKS).noOcclusion().isValidSpawn(CrateBlockBase::never).isRedstoneConductor(CrateBlockBase::never).isSuffocating(CrateBlockBase::never).isViewBlocking(CrateBlockBase::never));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         this.type = type;
     }
@@ -59,7 +62,7 @@ public class CrateBlockBase extends BaseEntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState,  LivingEntity pPlacer, ItemStack pStack) {
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
         if (pPlacer instanceof ServerPlayer serverPlayer && pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate) {
             crate.addOwner(serverPlayer.getUUID());
@@ -103,10 +106,10 @@ public class CrateBlockBase extends BaseEntityBlock {
                 for (int i = 0; i < Constants.TOTALCRATESLOTS; i++) {
                     ItemStack stack = crate.stackHandler.getCrateStockItem(i);
                     if (i == Constants.TOTALCRATESTOCKLOTS) {
-                        if (!stack.isEmpty() && stack.hasTag() && stack.getTag().contains(Constants.TAGSTOCK)) {
-                            int pay = stack.getTag().getInt(Constants.TAGSTOCK);
+                        if (!stack.isEmpty() && stack.getOrDefault(Content.coinCounter, new CoinCounter(0)).count() > 0) {
+                            int pay = stack.get(Content.coinCounter).count();
                             ItemStack prepCopy = stack.copy();
-                            prepCopy.removeTagKey(Constants.TAGSTOCK);
+                            prepCopy.remove(Content.coinCounter);
 
                             while (pay > 0) {
                                 ItemStack toDrop = prepCopy.copy();
@@ -169,26 +172,32 @@ public class CrateBlockBase extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof CrateBlockEntityBase crate) {
+            boolean owner = !player.isShiftKeyDown() && crate.isOwner(player); //add shift debug testing
+            if (player instanceof ServerPlayer serverPlayer) {
+                if (owner)
+                    openOwnerUI(serverPlayer, crate);
+                else
+                    openBuyerUI(serverPlayer, crate);
+            }
+            level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof CrateBlockEntityBase crate && hand.equals(InteractionHand.MAIN_HAND)) {
             if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.getGameProfile())) {
                 crate.isUnlimitedShop = true;
                 player.displayClientMessage(Component.translatable("crate.set.creative"), true);
                 crate.setChanged();
-            } else {
-                boolean owner = !player.isShiftKeyDown() && crate.isOwner(player); //add shift debug testing
-
-                if (player instanceof ServerPlayer serverPlayer) {
-                    if (owner)
-                        openOwnerUI(serverPlayer, crate);
-                    else
-                        openBuyerUI(serverPlayer, crate);
-                }
-                level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.FAIL;
         }
-        return InteractionResult.FAIL;
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     public void openOwnerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
