@@ -5,8 +5,9 @@ import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
-import jackdaw.applecrates.network.PacketId;
-import jackdaw.applecrates.network.ServerNetwork;
+import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
+import jackdaw.applecrates.network.packetprocessing.ServerCrateSync;
+import jackdaw.applecrates.network.packetprocessing.ServerGetSale;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,8 +27,8 @@ public class FabricCratesClient implements ClientModInitializer {
         MenuScreens.register(GeneralRegistry.CRATE_MENU_OWNER, CrateScreenOwner::new);
         MenuScreens.register(GeneralRegistry.CRATE_MENU_BUYER, CrateScreenBuyer::new);
 
-        Content.buyerGuiButton = () -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketSale());
-        Content.ownerGuiButton = () -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketTrade());
-        Content.addOwnerButton = username -> ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacketAddOwner(username));
+        Content.buyerGuiButton = () -> ClientPlayNetworking.send(new ServerGetSale());
+        Content.ownerGuiButton = () -> ClientPlayNetworking.send(new ServerCrateSync());
+        Content.addOwnerButton = username -> ClientPlayNetworking.send(new ServerAddOwner(username));
     }
 }

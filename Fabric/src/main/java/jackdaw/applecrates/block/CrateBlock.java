@@ -21,7 +21,7 @@ public class CrateBlock extends CrateBlockBase {
         serverPlayer.openMenu(
                 new CrateMenuFactory((i, inventory, player) -> new CrateMenuBuyerService(i, inventory, crate, crate.isUnlimitedShop),
                         Component.translatable("container.crate"),
-                        buf -> buf.writeBoolean(crate.isUnlimitedShop))
+                        (crate.isUnlimitedShop))
         );
     }
 
@@ -31,7 +31,7 @@ public class CrateBlock extends CrateBlockBase {
         serverPlayer.openMenu(
                 new CrateMenuFactory((i, inventory, player) -> new CrateMenuOwnerService(i, inventory, crate, crate.isUnlimitedShop),
                         Component.translatable("container.crate.owner"),
-                        buf -> buf.writeBoolean(crate.isUnlimitedShop))
+                        (crate.isUnlimitedShop))
         );
     }
 }

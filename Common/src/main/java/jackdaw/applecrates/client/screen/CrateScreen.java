@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class CrateScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
-    protected static final ResourceLocation VILLAGER_UI = ResourceLocation.withDefaultNamespace("textures/gui/container/villager2.png");
+    protected static final ResourceLocation TRADE_ARROW_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/trade_arrow");
 
     protected int guiStartX;
     protected int guiStartY;

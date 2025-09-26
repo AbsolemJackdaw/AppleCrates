@@ -68,7 +68,7 @@ public class GeneralRegistry {
         return new CrateMenuBuyerService(windowId, inv, unlimited);
     }));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CoinCounter>> COIN_COUNTER = DATA_COMPONENTS.registerComponentType(
-            "coun_counter",
+            "coin_counter",
             builder -> builder
                     // The codec to read/write the data to disk
                     .persistent(Content.DATA_COIN_CODEC)

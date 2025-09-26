@@ -14,5 +14,6 @@ public class FabricCrates implements ModInitializer {
         AppleCrateAPI.AppleCrateBuilder.registerVanilla();
         GeneralRegistry.prepareForRegistry(Constants.MODID);
         ServerNetwork.registerServerPackets();
+        ServerNetwork.registerPayloads();
     }
 }

@@ -5,7 +5,9 @@ import jackdaw.applecrates.container.inventory.CrateStackHandler;
 import jackdaw.applecrates.container.inventory.GenericStackHandler;
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -65,17 +67,17 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     }
 
     @Override
-    public void saveInventoryData(CompoundTag tag) {
-        tag.put(Constants.TAGSTOCK, crateStock.serializeNBT());
-        tag.put(Constants.TAGINTERACTABLE, interactableTrades.serializeNBT());
-        tag.put(Constants.TAGPRICESALE, savedTrades.serializeNBT());
+    public void saveInventoryData(HolderLookup.Provider registries, CompoundTag tag) {
+        tag.put(Constants.TAGSTOCK, crateStock.createTag(registries));
+        tag.put(Constants.TAGINTERACTABLE, interactableTrades.createTag(registries));
+        tag.put(Constants.TAGPRICESALE, savedTrades.createTag(registries));
     }
 
     @Override
-    public void loadInventoryData(CompoundTag tag) {
-        crateStock.deserializeNBT((CompoundTag) tag.get(Constants.TAGSTOCK));
-        interactableTrades.deserializeNBT((CompoundTag) tag.get(Constants.TAGINTERACTABLE));
-        savedTrades.deserializeNBT((CompoundTag) tag.get(Constants.TAGPRICESALE));
+    public void loadInventoryData(HolderLookup.Provider registries, CompoundTag tag) {
+        crateStock.fromTag((ListTag) tag.get(Constants.TAGSTOCK), registries);
+        interactableTrades.fromTag((ListTag) tag.get(Constants.TAGINTERACTABLE), registries);
+        savedTrades.fromTag((ListTag) tag.get(Constants.TAGPRICESALE), registries);
     }
 
     @Override

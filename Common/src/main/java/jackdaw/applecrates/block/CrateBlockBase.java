@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -172,28 +171,22 @@ public class CrateBlockBase extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof CrateBlockEntityBase crate) {
-            boolean owner = !player.isShiftKeyDown() && crate.isOwner(player); //add shift debug testing
-            if (player instanceof ServerPlayer serverPlayer) {
-                if (owner)
-                    openOwnerUI(serverPlayer, crate);
-                else
-                    openBuyerUI(serverPlayer, crate);
-            }
-            level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        return super.useWithoutItem(state, level, pos, player, hitResult);
-    }
-
-    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof CrateBlockEntityBase crate && hand.equals(InteractionHand.MAIN_HAND)) {
             if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.getGameProfile())) {
                 crate.isUnlimitedShop = true;
                 player.displayClientMessage(Component.translatable("crate.set.creative"), true);
                 crate.setChanged();
+            } else {
+                boolean owner = !player.isShiftKeyDown() && crate.isOwner(player); //add shift debug testing
+                if (player instanceof ServerPlayer serverPlayer) {
+                    if (owner)
+                        openOwnerUI(serverPlayer, crate);
+                    else
+                        openBuyerUI(serverPlayer, crate);
+                }
+                level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             return ItemInteractionResult.FAIL;
         }

@@ -135,8 +135,8 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
         if (!isSamePayout())
             RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, VILLAGER_UI);
-        graphics.blit(VILLAGER_UI, guiStartX + 100, guiStartY + 79, /*this.getBlitOffset(),*/ 15.0F, 171.0F, 10, 9, 512, 256);
+//        RenderSystem.setShaderTexture(0, TRADE_ARROW_SPRITE);
+        graphics.blitSprite(TRADE_ARROW_SPRITE, guiStartX + 100, guiStartY + 79, 0, 10, 9);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         renderTrade(graphics, 0, guiStartX, guiStartY);
         renderTrade(graphics, 1, guiStartX, guiStartY);

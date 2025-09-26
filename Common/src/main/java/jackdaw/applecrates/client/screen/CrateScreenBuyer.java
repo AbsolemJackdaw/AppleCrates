@@ -49,11 +49,11 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, VILLAGER_UI);
+        RenderSystem.setShaderTexture(0, TRADE_ARROW_SPRITE);
         if (menu.outOfStock() && !isUnlimitedShop())
-            graphics.blit(VILLAGER_UI, guiStartX + 40, guiStartY + 24, /*this.getBlitOffset(),*/ 25.0F, 171.0F, 10, 9, 512, 256);
+            graphics.blitSprite(TRADE_ARROW_SPRITE, guiStartX + 40, guiStartY + 24, 0, 10, 9);
         else
-            graphics.blit(VILLAGER_UI, guiStartX + 46, guiStartY + 24, /*this.getBlitOffset(),*/ 15.0F, 171.0F, 10, 9, 512, 256);
+            graphics.blitSprite(TRADE_ARROW_SPRITE, guiStartX + 46, guiStartY + 24, 0, 10, 9);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         renderTrade(graphics, 0, guiStartX, guiStartY);
         renderTrade(graphics, 1, guiStartX, guiStartY);

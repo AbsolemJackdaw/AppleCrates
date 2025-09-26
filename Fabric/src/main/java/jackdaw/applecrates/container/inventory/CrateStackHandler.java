@@ -1,7 +1,8 @@
 package jackdaw.applecrates.container.inventory;
 
 import jackdaw.applecrates.Constants;
-import net.minecraft.nbt.CompoundTag;
+import jackdaw.applecrates.Content;
+import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -50,19 +51,17 @@ public class CrateStackHandler extends GenericStackHandler implements ICrateStoc
         }
         //remove custom tag from money slot stack for comparison with 'virgin' item in the savedStack slot
         ItemStack paymentCompare = getItem(Constants.TOTALCRATESTOCKLOTS).copy();
-        if (paymentCompare.hasTag() && paymentCompare.getTag().contains(Constants.TAGSTOCK)) {
-            paymentCompare.removeTagKey(Constants.TAGSTOCK);
-        }
+        if (paymentCompare.has(Content.coinCounter))
+            paymentCompare.remove(Content.coinCounter);
 
-        if (!ItemStack.isSameItemSameTags(payment, paymentCompare))
+        if (!ItemStack.isSameItemSameComponents(payment, paymentCompare))
             return false;
 
         ItemStack prepXchange = getItem(Constants.TOTALCRATESTOCKLOTS).copy();
-        CompoundTag tag = prepXchange.getOrCreateTag();
-        if (tag.contains(Constants.TAGSTOCK)) {
-            tag.putInt(Constants.TAGSTOCK, tag.getInt(Constants.TAGSTOCK) + payment.getCount());
+        if (prepXchange.has(Content.coinCounter)) {
+            prepXchange.set(Content.coinCounter, new CoinCounter(prepXchange.get(Content.coinCounter).count() + payment.getCount()));
         } else {
-            tag.putInt(Constants.TAGSTOCK, payment.getCount());
+            prepXchange.set(Content.coinCounter, new CoinCounter(payment.getCount()));
         }
         setItem(Constants.TOTALCRATESTOCKLOTS, prepXchange);
         return true;

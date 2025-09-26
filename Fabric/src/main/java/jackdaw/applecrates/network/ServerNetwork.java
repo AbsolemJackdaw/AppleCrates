@@ -1,51 +1,25 @@
 package jackdaw.applecrates.network;
 
-import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
-import jackdaw.applecrates.network.packetprocessing.ServerCrateSync;
-import jackdaw.applecrates.network.packetprocessing.ServerGetSale;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
 
 public class ServerNetwork {
 
     public static void registerServerPackets() {
-        //Handles when server packet is received on server
-        ServerPlayNetworking.registerGlobalReceiver(PacketId.CHANNEL, (server, serverPlayer, handler, buf, responseSender) -> {
-            byte FORGE_PACKET_ID = buf.readByte();//FORGE PACKET COMPAT
-            switch (FORGE_PACKET_ID) {
-                case PacketId.SPACKET_TRADE -> server.execute(() -> {
-                    new ServerCrateSync().run(serverPlayer);
-                });
-                case PacketId.SPACKET_SALE -> server.execute(() -> {
-                    new ServerGetSale().run(serverPlayer);
-                });
-                case PacketId.SPACKET_ADDOWNER -> {
-                    var name = buf.readUtf();
-                    server.execute(() -> {
-                        new ServerAddOwner().run(serverPlayer, name);
-                    });
-                }
-            }
+        PayloadTypeRegistry.playC2S().register(PacketId.SPACKET_ADDOWNER_TYPE, PacketId.SPACKET_ADDOWNER_CODEC);
+        PayloadTypeRegistry.playC2S().register(PacketId.SPACKET_TRADE_TYPE, PacketId.SPACKET_TRADE_CODEC);
+        PayloadTypeRegistry.playC2S().register(PacketId.SPACKET_SALE_TYPE, PacketId.SPACKET_SALE_CODEC);
+    }
+
+    public static void registerPayloads() {
+        ServerPlayNetworking.registerGlobalReceiver(PacketId.SPACKET_SALE_TYPE, (payload, context) -> {
+            payload.run(context.player());
         });
-    }
-
-    public static FriendlyByteBuf sPacketTrade() {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeByte(PacketId.SPACKET_TRADE); //FORGE PACKET COMPAT
-        return buf;
-    }
-
-    public static FriendlyByteBuf sPacketSale() {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeByte(PacketId.SPACKET_SALE); //FORGE PACKET COMPAT
-        return buf;
-    }
-
-    public static FriendlyByteBuf sPacketAddOwner(String username) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeByte(PacketId.SPACKET_ADDOWNER);
-        buf.writeUtf(username);
-        return buf;
+        ServerPlayNetworking.registerGlobalReceiver(PacketId.SPACKET_TRADE_TYPE, (payload, context) -> {
+            payload.run(context.player());
+        });
+        ServerPlayNetworking.registerGlobalReceiver(PacketId.SPACKET_ADDOWNER_TYPE, (payload, context) -> {
+            payload.run(context.player());
+        });
     }
 }

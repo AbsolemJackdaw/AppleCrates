@@ -1,8 +1,7 @@
 package jackdaw.applecrates.container.factory;
 
-import io.netty.buffer.Unpooled;
+import jackdaw.applecrates.api.GeneralRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,25 +9,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuConstructor;
 
-import java.util.function.Consumer;
+public class CrateMenuFactory implements ExtendedScreenHandlerFactory<GeneralRegistry.CrateData> {
 
-public class CrateMenuFactory implements ExtendedScreenHandlerFactory {
-
-    final FriendlyByteBuf buf;
     final MenuConstructor menuConstructor;
-
+    final boolean isunlimited;
     final Component screenTitle;
 
-    public CrateMenuFactory(MenuConstructor menuConstructor, Component component, Consumer<FriendlyByteBuf> buf) {
-        this.buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.accept(this.buf);
+    public CrateMenuFactory(MenuConstructor menuConstructor, Component component, boolean isunlimited) {
         this.menuConstructor = menuConstructor;
         this.screenTitle = component;
+        this.isunlimited = isunlimited;
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBytes(this.buf);
+    public GeneralRegistry.CrateData getScreenOpeningData(ServerPlayer player) {
+        return new GeneralRegistry.CrateData(isunlimited);
     }
 
     @Override
@@ -40,4 +35,6 @@ public class CrateMenuFactory implements ExtendedScreenHandlerFactory {
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return this.menuConstructor.createMenu(id, inventory, player);
     }
+
+
 }

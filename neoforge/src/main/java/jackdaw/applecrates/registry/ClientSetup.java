@@ -7,9 +7,9 @@ import jackdaw.applecrates.api.GeneralRegistry;
 import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
-import jackdaw.applecrates.network.SAddOwner;
-import jackdaw.applecrates.network.SCrateTradeSync;
-import jackdaw.applecrates.network.SGetSale;
+import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
+import jackdaw.applecrates.network.packetprocessing.ServerCrateSync;
+import jackdaw.applecrates.network.packetprocessing.ServerGetSale;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -28,13 +28,13 @@ public class ClientSetup {
         });
 
         Content.buyerGuiButton = () -> {
-            PacketDistributor.sendToServer(new SGetSale());
+            PacketDistributor.sendToServer(new ServerGetSale());
         };
         Content.ownerGuiButton = () -> {
-            PacketDistributor.sendToServer(new SCrateTradeSync());
+            PacketDistributor.sendToServer(new ServerCrateSync());
         };
         Content.addOwnerButton = username -> {
-            PacketDistributor.sendToServer(new SAddOwner(username));
+            PacketDistributor.sendToServer(new ServerAddOwner(username));
         };
     }
 
