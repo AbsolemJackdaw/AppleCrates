@@ -1,6 +1,7 @@
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
+    id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 
 neoForge {
@@ -42,3 +43,29 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    dependsOn(tasks.build)
+    apiToken = findProperty('cf_api_token')
+    def mainFile = upload(630726, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.displayName = "${mod_name}-neoforge-${minecraft_version}-${version}"
+    mainFile.releaseType = "${releasetype}"
+    mainFile.changelog = "${changelog}"
+    mainFile.changelogType = 'markdown'
+    mainFile.addGameVersion("${minecraft_version}")
+    mainFile.addJavaVersion('Java 17')
+    mainFile.addModLoader('neoforge')
+    mainFile.addOptional('sectionprotection')
+    mainFile.addOptional('byg-crates')
+    mainFile.addOptional('plenty-crates')
+    mainFile.addOptional('dynamic-crates')
+    mainFile.addOptional('botanical-crates')
+    mainFile.addOptional('malumian-crates')
+    mainFile.addOptional('premium-crates')
+    mainFile.addOptional('fruit-crates')
+    mainFile.addOptional('enlightened-crates')
+    mainFile.addOptional('solar-crates')
+    mainFile.addOptional('construct-crates')
+    mainFile.addOptional('forbidden-crates')
+    mainFile.addOptional('firma-crates')
+}

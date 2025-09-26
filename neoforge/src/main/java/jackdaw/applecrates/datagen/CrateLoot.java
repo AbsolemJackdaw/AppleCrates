@@ -15,14 +15,15 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class CrateLoot extends LootTableProvider {
 
     private final String modId;
 
-    public CrateLoot(String modId, DataGenerator pGenerator) {
-        super(pGenerator.getPackOutput(), null, null, null);
+    public CrateLoot(String modId, DataGenerator pGenerator, CompletableFuture<HolderLookup.Provider> registries) {
+        super(pGenerator.getPackOutput(), null, null, registries);
         this.modId = modId;
     }
 

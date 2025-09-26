@@ -20,7 +20,7 @@ public class DataGenerators {
         //datapack  server
         generator.addProvider(event.includeServer(), new CrateTag(generator.getPackOutput(), event.getLookupProvider(), modid, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new CrateRecipes(modid, generator, event.getLookupProvider()));
-        generator.addProvider(event.includeServer(), new CrateLoot(modid, generator));
+        generator.addProvider(event.includeServer(), new CrateLoot(modid, generator, event.getLookupProvider()));
 
         //resourcepack  client
         generator.addProvider(event.includeClient(), new CrateModels(modid, generator, event.getExistingFileHelper()));

@@ -1,9 +1,10 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
+  "group": "crates",
   "key": {
     "p": {
-      "item": "minecraft:warped_planks"
+      "item": "minecraft:jungle_planks"
     },
     "s": {
       "item": "minecraft:stick"
@@ -14,7 +15,7 @@
     "ppp"
   ],
   "result": {
-    "item": "applecrates:warped_crate"
-  },
-  "show_notification": false
+    "count": 1,
+    "id": "applecrates:jungle_crate"
+  }
 }

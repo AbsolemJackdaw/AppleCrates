@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
+  "group": "crates",
   "key": {
     "p": {
       "item": "minecraft:crimson_planks"
@@ -14,7 +15,7 @@
     "ppp"
   ],
   "result": {
-    "item": "applecrates:crimson_crate"
-  },
-  "show_notification": false
+    "count": 1,
+    "id": "applecrates:crimson_crate"
+  }
 }

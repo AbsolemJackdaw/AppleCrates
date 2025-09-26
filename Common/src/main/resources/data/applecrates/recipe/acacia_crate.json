@@ -1,9 +1,10 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
+  "group": "crates",
   "key": {
     "p": {
-      "item": "minecraft:spruce_planks"
+      "item": "minecraft:acacia_planks"
     },
     "s": {
       "item": "minecraft:stick"
@@ -14,7 +15,7 @@
     "ppp"
   ],
   "result": {
-    "item": "applecrates:spruce_crate"
-  },
-  "show_notification": false
+    "count": 1,
+    "id": "applecrates:acacia_crate"
+  }
 }
