@@ -6,13 +6,14 @@ import jackdaw.applecrates.client.ClientConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 
 @Mod(Constants.MODID)
 public class AppleCrates {
 
     public AppleCrates(ModContainer container) {
         //Adjust constant
-        //Constants.IS_DATA_GEN = FMLLoader.getLaunchHandler().isData();
+        Constants.IS_DATA_GEN = DatagenModLoader.isRunningDataGen();
         GeneralRegistry.startup();
 
         //init config for Forge
