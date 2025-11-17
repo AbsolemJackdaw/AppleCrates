@@ -1,18 +1,29 @@
 package jackdaw.applecrates.block.blockentity;
 
 import jackdaw.applecrates.Constants;
+import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.container.IStackHandlerAdapter;
+import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,15 +43,15 @@ public class CrateBlockEntityBase extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        loadCrateDataFromTag(registries, tag);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        loadCrateDataFromTag(input);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        saveCrateDataToTag(registries, tag);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        saveCrateDataToTag(output);
     }
 
     /**
@@ -56,34 +67,25 @@ public class CrateBlockEntityBase extends BlockEntity {
      */
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveCrateDataToTag(registries, new CompoundTag());
+        TagValueOutput valueOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
+        saveCrateDataToTag(valueOutput);
+        return valueOutput.buildResult();
     }
 
-    protected CompoundTag saveCrateDataToTag(HolderLookup.Provider registries, CompoundTag tag) {
-        stackHandler.saveInventoryData(registries, tag);
-        tag.putBoolean(Constants.TAGUNLIMITED, isUnlimitedShop);
+    protected void saveCrateDataToTag(ValueOutput output) {
+        stackHandler.saveInventoryData(output);
+        output.putBoolean(Constants.TAGUNLIMITED, isUnlimitedShop);
         if (!owners.isEmpty()) {
-            ListTag ownersTag = owners.stream()
-                    .map(NbtUtils::createUUID)
-                    .collect(Collectors.toCollection(ListTag::new));
-            tag.put(Constants.TAGOWNER, ownersTag);
+            var list = output.list(Constants.TAGOWNER, UUIDUtil.CODEC);
+            owners.forEach(list::add);
         }
-        return tag;
     }
 
-    protected void loadCrateDataFromTag(HolderLookup.Provider registries, CompoundTag tag) {
-        stackHandler.loadInventoryData(registries, tag);
-        if (tag.contains(Constants.TAGUNLIMITED))
-            isUnlimitedShop = tag.getBoolean(Constants.TAGUNLIMITED);
-        if (tag.contains(Constants.TAGOWNER)) {
-            Tag owner = tag.get(Constants.TAGOWNER);
-            if (owner.getType() == IntArrayTag.TYPE) // Allow loading crates from an older version of the mod. Can be removed in the next major MC version.
-                owners = new HashSet<>(Collections.singleton(NbtUtils.loadUUID(owner)));
-            else if (owner instanceof ListTag ownerList)
-                owners = ownerList.stream()
-                        .map(NbtUtils::loadUUID)
-                        .collect(Collectors.toCollection(HashSet::new));
-        }
+    protected void loadCrateDataFromTag(ValueInput input) {
+        stackHandler.loadInventoryData(input);
+        isUnlimitedShop = input.getBooleanOr(Constants.TAGUNLIMITED, false);
+        var owner = input.listOrEmpty(Constants.TAGOWNER, UUIDUtil.CODEC);
+        owners = owner.stream().collect(Collectors.toCollection(HashSet::new));
     }
 
 
@@ -101,7 +103,7 @@ public class CrateBlockEntityBase extends BlockEntity {
 
     //defaults to true without owner to prevent unbreakable blocks, even though the owner should always be set
     public boolean isOwner(Player player) {
-        return owners.isEmpty() || player != null && owners.contains(player.getGameProfile().getId());
+        return owners.isEmpty() || player != null && owners.contains(player.getGameProfile().id());
     }
 
     public static int getStockSignal(BlockGetter blockLevel, BlockPos pos) {
@@ -119,5 +121,40 @@ public class CrateBlockEntityBase extends BlockEntity {
             return (int) ratio;
         }
         return 0;
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if (this.getLevel().getBlockEntity(pos) instanceof CrateBlockEntityBase crate && getLevel() instanceof ServerLevel serverLevel) {
+            for (int i = 0; i < Constants.TOTALCRATESLOTS; i++) {
+                ItemStack stack = crate.stackHandler.getCrateStockItem(i);
+                if (i == Constants.TOTALCRATESTOCKLOTS) {
+                    if (!stack.isEmpty() && stack.getOrDefault(Content.coinCounter, new CoinCounter(0)).count() > 0) {
+                        int pay = stack.get(Content.coinCounter).count();
+                        ItemStack prepCopy = stack.copy();
+                        prepCopy.remove(Content.coinCounter);
+
+                        while (pay > 0) {
+                            ItemStack toDrop = prepCopy.copy();
+                            if (pay >= prepCopy.getMaxStackSize()) {
+                                toDrop.setCount(prepCopy.getMaxStackSize());
+                                pay -= prepCopy.getMaxStackSize();
+                            } else {
+                                toDrop.setCount(pay);
+                                pay = 0; //set to 0. we could count down the last items from the counter, but it's the same
+                            }
+                            Containers.dropItemStack(serverLevel, pos.getX(), pos.getY(), pos.getZ(), toDrop);
+                        }
+                    }
+                } else if (!stack.isEmpty()) {
+                    Containers.dropItemStack(serverLevel, pos.getX(), pos.getY(), pos.getZ(), stack);
+                }
+            }
+            for (int i = 0; i < 2; i++) {
+                ItemStack toDrop = crate.stackHandler.getInteractableTradeItem(i);
+                Containers.dropItemStack(serverLevel, pos.getX(), pos.getY(), pos.getZ(), toDrop);
+            }
+            getLevel().updateNeighbourForOutputSignal(pos, state.getBlock());
+        }
     }
 }

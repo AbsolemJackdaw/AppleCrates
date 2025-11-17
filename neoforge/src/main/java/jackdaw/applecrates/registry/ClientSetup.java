@@ -4,7 +4,6 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
-import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;

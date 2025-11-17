@@ -5,16 +5,17 @@ import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.container.StackHandlerAdapter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.neoforged.neoforge.transfer.StacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class CrateBlockEntity extends CrateBlockEntityBase {
 
-    private final IItemHandler crateStockHopper;
+    private final ItemStacksResourceHandler crateStockHopper;
 
     public CrateBlockEntity(CrateWoodType type, BlockPos pos, BlockState state) {
         super(type, pos, state, new StackHandlerAdapter());
@@ -22,19 +23,18 @@ public class CrateBlockEntity extends CrateBlockEntityBase {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        // super.onDataPacket(net, pkt, lookupProvider);
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         // do not read super here, for the same reason as handleUpdateTag !!
-        loadCrateDataFromTag(lookupProvider, pkt.getTag());
+        loadCrateDataFromTag(valueInput);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+    public void handleUpdateTag(ValueInput input) {
         //do not call super here. it uses the load method from above, but we're not sending all the same data here !
-        loadCrateDataFromTag(lookupProvider, tag);
+        loadCrateDataFromTag(input);
     }
 
-    public IItemHandler getCapability(Direction side) {
+    public StacksResourceHandler<ItemStack, ItemResource> getCapability(Direction side) {
         return getBlockState().getValue(CrateBlockBase.FACING).equals(side) ? crateStockHopper : null;
     }
 }

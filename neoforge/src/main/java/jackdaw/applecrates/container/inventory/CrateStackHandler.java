@@ -3,16 +3,17 @@ package jackdaw.applecrates.container.inventory;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.item.datacomponent.CoinCounter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
+public class CrateStackHandler extends ItemStacksResourceHandler implements ICrateStock {
 
     private final Map<Item, Integer> itemCountCache = new HashMap<>();
 
@@ -27,10 +28,10 @@ public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
     @Override
     public int getCountOfItemImmediately(Item item) {
         int count = 0;
-        for (int i = 0; i < this.getSlots(); i++) {
-            var stack = this.getStackInSlot(i);
+        for (int i = 0; i < this.size(); i++) {
+            var stack = this.getResource(i);
             if (stack.is(item)) {
-                count += stack.getCount();
+                count += this.getAmountAsInt(i);
             }
         }
         return count;
@@ -42,61 +43,59 @@ public class CrateStackHandler extends ItemStackHandler implements ICrateStock {
 
         ItemStack prepPay = payment.copy();
 
-        if (getStackInSlot(Constants.TOTALCRATESTOCKLOTS).isEmpty()) {
+        if (this.getAmountAsInt(Constants.TOTALCRATESTOCKLOTS) == 0) {
             prepPay.setCount(1);
-            setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepPay);
+            this.set(Constants.TOTALCRATESTOCKLOTS, ItemResource.of(prepPay.getItem()), prepPay.getCount());
         }
 
         //remove custom tag from money slot stack for comparison with 'virgin' item in the savedStack slot
-        ItemStack paymentCompare = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
+        var paymentCompare = this.getResource(Constants.TOTALCRATESTOCKLOTS);
         if (paymentCompare.get(Content.coinCounter) != null)
-            paymentCompare.remove(Content.coinCounter);
+            paymentCompare.without(Content.coinCounter);
 
-        if (!ItemStack.isSameItemSameComponents(payment, paymentCompare))
+        if (!paymentCompare.matches(payment))
             return false;
-
-        ItemStack prepXchange = getStackInSlot(Constants.TOTALCRATESTOCKLOTS).copy();
+        //make a copy of the stack to manipulate the count without already modifying the actual payout slot
+        var prepXchange = getResource(Constants.TOTALCRATESTOCKLOTS).toStack().copy();
         var counter = prepXchange.get(Content.coinCounter);
         if (counter != null)
             prepXchange.set(Content.coinCounter, new CoinCounter(counter.count() + payment.getCount()));
         else
             prepXchange.set(Content.coinCounter, new CoinCounter(payment.getCount()));
 
-        setStackInSlot(Constants.TOTALCRATESTOCKLOTS, prepXchange);
+        //set payoutslot with the prepared coincounter. item will always be 1 in the slot. prevent cheats or slot manipulation
+        this.set(Constants.TOTALCRATESTOCKLOTS, this.getResourceFrom(prepXchange), 1);
         return true;
     }
 
     @Override
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (slot == Constants.TOTALCRATESTOCKLOTS)
-            return stack;
-        return super.insertItem(slot, stack, simulate);
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (index == Constants.TOTALCRATESTOCKLOTS)
+            return 0;
+        return super.insert(index, resource, amount, transaction);
     }
 
     @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (slot == Constants.TOTALCRATESTOCKLOTS)
-            return ItemStack.EMPTY;
-        return super.extractItem(slot, amount, simulate);
+    public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (index == Constants.TOTALCRATESTOCKLOTS)
+            return 0;
+        return super.extract(index, resource, amount, transaction);
     }
 
     @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        return slot != Constants.TOTALCRATESTOCKLOTS && super.isItemValid(slot, stack);
+    public boolean isValid(int index, ItemResource resource) {
+        return index != Constants.TOTALCRATESTOCKLOTS && super.isValid(index, resource);
     }
 
     @Override
-    protected void onContentsChanged(int slot) {
-        super.onContentsChanged(slot);
+    protected void onContentsChanged(int index, ItemStack previousContents) {
+        super.onContentsChanged(index, previousContents);
         this.itemCountCache.clear();
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        /* removed moneypatch : users should run any version before 1.21.1 to apply
-         *  the fix for an issue that was caused by updating the slots from 29 to 31 */
-        //Content.moneyPatch.apply(nbt);
-        super.deserializeNBT(provider, nbt);
+    public void deserialize(ValueInput input) {
+        super.deserialize(input);
         this.itemCountCache.clear();
     }
 }

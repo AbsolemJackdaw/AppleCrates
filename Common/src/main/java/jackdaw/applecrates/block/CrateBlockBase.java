@@ -1,10 +1,7 @@
 package jackdaw.applecrates.block;
 
-import jackdaw.applecrates.Constants;
-import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
-import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -13,9 +10,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,14 +25,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CrateBlockBase extends Block implements EntityBlock {
 
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
     private final CrateWoodType type;
@@ -79,8 +75,8 @@ public class CrateBlockBase extends Block implements EntityBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level blockLevel, BlockPos pos) {
-        return blockState.getSignal(blockLevel, pos, blockState.getValue(FACING));
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+        return state.getSignal(level, pos, state.getValue(FACING));
     }
 
     @Override
@@ -96,45 +92,6 @@ public class CrateBlockBase extends Block implements EntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (!pState.is(pNewState.getBlock())) {
-            if (pLevel.getBlockEntity(pPos) instanceof CrateBlockEntityBase crate && pLevel instanceof ServerLevel serverLevel) {
-                for (int i = 0; i < Constants.TOTALCRATESLOTS; i++) {
-                    ItemStack stack = crate.stackHandler.getCrateStockItem(i);
-                    if (i == Constants.TOTALCRATESTOCKLOTS) {
-                        if (!stack.isEmpty() && stack.getOrDefault(Content.coinCounter, new CoinCounter(0)).count() > 0) {
-                            int pay = stack.get(Content.coinCounter).count();
-                            ItemStack prepCopy = stack.copy();
-                            prepCopy.remove(Content.coinCounter);
-
-                            while (pay > 0) {
-                                ItemStack toDrop = prepCopy.copy();
-                                if (pay >= prepCopy.getMaxStackSize()) {
-                                    toDrop.setCount(prepCopy.getMaxStackSize());
-                                    pay -= prepCopy.getMaxStackSize();
-                                } else {
-                                    toDrop.setCount(pay);
-                                    pay = 0; //set to 0. we could count down the last items from the counter, but it's the same
-                                }
-                                Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
-                            }
-                        }
-                    } else if (!stack.isEmpty()) {
-                        Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), stack);
-                    }
-                }
-                for (int i = 0; i < 2; i++) {
-                    ItemStack toDrop = crate.stackHandler.getInteractableTradeItem(i);
-                    Containers.dropItemStack(serverLevel, pPos.getX(), pPos.getY(), pPos.getZ(), toDrop);
-                }
-                pLevel.updateNeighbourForOutputSignal(pPos, this);
-            }
-
-            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-        }
     }
 
     @Override
@@ -171,9 +128,9 @@ public class CrateBlockBase extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof CrateBlockEntityBase crate && hand.equals(InteractionHand.MAIN_HAND)) {
-            if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.getGameProfile())) {
+            if (level instanceof ServerLevel server && player.getItemInHand(hand).getItem() instanceof DebugStickItem && server.getServer().getPlayerList().isOp(player.nameAndId())) {
                 crate.isUnlimitedShop = true;
                 player.displayClientMessage(Component.translatable("crate.set.creative"), true);
                 crate.setChanged();
@@ -186,9 +143,9 @@ public class CrateBlockBase extends Block implements EntityBlock {
                         openBuyerUI(serverPlayer, crate);
                 }
                 level.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
             }
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }

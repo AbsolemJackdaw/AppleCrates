@@ -114,14 +114,14 @@ public class CrateMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public  Slot addSlot(Slot slot) {
+    public Slot addSlot(Slot slot) {
         return super.addSlot(slot);
     }
 
     public void addOwner(ServerPlayer currentOwner, String newOwnerUsername) {
         if (crate.isOwner(currentOwner)) {
             currentOwner.server.getPlayerList().getPlayers().stream()
-                    .filter(player -> player.getGameProfile().getName().equalsIgnoreCase(newOwnerUsername))
+                    .filter(player -> player.getGameProfile().name().equalsIgnoreCase(newOwnerUsername))
                     .findFirst()
                     .ifPresentOrElse(player -> {
                                 UUID newOwner = player.getUUID();

@@ -1,6 +1,7 @@
 package jackdaw.applecrates.api.exception;
 
 import jackdaw.applecrates.api.CrateWoodType;
+import net.minecraft.core.Registry;
 
 public class WoodException extends RuntimeException {
     public static final WoodException INSTANCE = new WoodException();
@@ -26,5 +27,9 @@ public class WoodException extends RuntimeException {
 
     public WoodException alreadyInList(CrateWoodType wood) {
         return new WoodException(String.format("The %s for %s was already registered to the CrateWoodType ! Skipping.", wood.name(), wood.getCompatId()));
+    }
+
+    public WoodException notInRegistry(CrateWoodType wood, Registry registry) {
+        return new WoodException(String.format("The %s for %s couldn't be found in the %s registry", wood.name(), wood.getCompatId(), registry.getClass().getName()));
     }
 }

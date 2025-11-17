@@ -29,9 +29,9 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.transfer.StacksResourceHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -54,10 +54,10 @@ public class GeneralRegistry {
                     //.displayItems((itemDisplayParameters, output) -> GeneralRegistry.BLOCKS.getEntries().stream().map(blockRegistryObject -> blockRegistryObject.get()).forEach(output::accept))
                     .icon(() -> new ItemStack(CrateWoodType.getBlock(CrateWoodType.values().filter(crateWoodType -> crateWoodType.name().equals("oak")).findFirst().get())))
                     .build());
-    public static final BlockCapability<IItemHandler, @Nullable Direction> CRATE_CAPABILITY_HOPPER =
+    public static final BlockCapability<StacksResourceHandler, @Nullable Direction> CRATE_CAPABILITY_HOPPER =
             BlockCapability.create(
                     ResourceLocation.fromNamespaceAndPath(Constants.MODID, "crate_hopper_handler"),
-                    IItemHandler.class,
+                    StacksResourceHandler.class,
                     Direction.class);
     public static final DeferredHolder<MenuType<?>, MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IMenuTypeExtension.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
@@ -83,7 +83,7 @@ public class GeneralRegistry {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
             DeferredHolder<Block, CrateBlock> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
             itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
-            var be = beRegistry.register(crateWoodType.getBeRegistryName(), () -> BlockEntityType.Builder.of((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), block.get()).build(null));
+            var be = beRegistry.register(crateWoodType.getBeRegistryName(), () -> new BlockEntityType<>((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), false, block.get()));
             TAB_REGISTRY.add(block);
             CAPABILITY_REGISTRY.add(be);
         });
@@ -100,7 +100,7 @@ public class GeneralRegistry {
     }
 
 
-    @EventBusSubscriber(modid = Constants.MODID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = Constants.MODID)
     private class EventHandler {
         @SubscribeEvent
         public static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {

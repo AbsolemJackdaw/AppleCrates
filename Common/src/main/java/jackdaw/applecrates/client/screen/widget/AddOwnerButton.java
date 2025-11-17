@@ -2,6 +2,7 @@ package jackdaw.applecrates.client.screen.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -27,9 +28,9 @@ public class AddOwnerButton extends AbstractOwnerButton implements HoverTooltipB
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         this.isOn = !this.isOn;
-        super.onPress();
+        super.onPress(input);
     }
 }
 

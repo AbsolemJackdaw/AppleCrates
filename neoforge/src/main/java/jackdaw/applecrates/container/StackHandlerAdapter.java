@@ -5,10 +5,12 @@ import jackdaw.applecrates.container.inventory.CrateStackHandler;
 import jackdaw.applecrates.container.inventory.GenericStackHandler;
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.StacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class StackHandlerAdapter implements IStackHandlerAdapter {
     public CrateStackHandler crateStock = new CrateStackHandler();
@@ -32,32 +34,46 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
 
     @Override
     public ItemStack getInteractableTradeItem(int slot) {
-        return interactableTradeSlots.getStackInSlot(slot);
+        return getStackFromInSlot(interactableTradeSlots, slot);
     }
 
     @Override
     public void setInteractableTradeItem(int slot, ItemStack stack) {
-        interactableTradeSlots.setStackInSlot(slot, stack);
+        setStackFromInSlot(interactableTradeSlots, slot, stack);
     }
 
     @Override
     public ItemStack getSavedTradeSlotsItem(int slot) {
-        return savedTradeSlots.getStackInSlot(slot);
+        return getStackFromInSlot(savedTradeSlots, slot);
     }
 
     @Override
     public void setSavedTradeSlotItem(int slot, ItemStack stack) {
-        savedTradeSlots.setStackInSlot(slot, stack);
+        setStackFromInSlot(savedTradeSlots, slot, stack);
     }
 
     @Override
     public ItemStack getCrateStockItem(int slot) {
-        return crateStock.getStackInSlot(slot);
+        return getStackFromInSlot(crateStock, slot);
     }
 
     @Override
     public void setCrateStockItem(int slot, ItemStack stack) {
-        crateStock.setStackInSlot(slot, stack);
+        setStackFromInSlot(crateStock, slot, stack);
+    }
+
+    @Override
+    public void loadInventoryData(ValueInput input) {
+        input.child(Constants.TAGSTOCK).ifPresent(crateStock::deserialize);
+        input.child(Constants.TAGINTERACTABLE).ifPresent(interactableTradeSlots::deserialize);
+        input.child(Constants.TAGPRICESALE).ifPresent(savedTradeSlots::deserialize);
+    }
+
+    @Override
+    public void saveInventoryData(ValueOutput output) {
+        output.putChild(Constants.TAGSTOCK, crateStock);
+        output.putChild(Constants.TAGINTERACTABLE, interactableTradeSlots);
+        output.putChild(Constants.TAGPRICESALE, savedTradeSlots);
     }
 
     @Override
@@ -66,21 +82,17 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     }
 
     @Override
-    public void saveInventoryData(HolderLookup.Provider registries, CompoundTag tag) {
-        tag.put(Constants.TAGSTOCK, crateStock.serializeNBT(registries));
-        tag.put(Constants.TAGINTERACTABLE, interactableTradeSlots.serializeNBT(registries));
-        tag.put(Constants.TAGPRICESALE, savedTradeSlots.serializeNBT(registries));
-    }
-
-    @Override
-    public void loadInventoryData(HolderLookup.Provider registries, CompoundTag tag) {
-        crateStock.deserializeNBT(registries, (CompoundTag) tag.get(Constants.TAGSTOCK));
-        interactableTradeSlots.deserializeNBT(registries, (CompoundTag) tag.get(Constants.TAGINTERACTABLE));
-        savedTradeSlots.deserializeNBT(registries, (CompoundTag) tag.get(Constants.TAGPRICESALE));
-    }
-
-    @Override
     public boolean updatePaymentSlot(ItemStack payment, boolean unlimitedShop) {
         return crateStock.updateStackInPaymentSlot(payment, unlimitedShop);
+    }
+
+    private ItemStack getStackFromInSlot(StacksResourceHandler<ItemStack, ItemResource> handler, int slot) {
+        var itemresource = handler.getResource(slot);
+        var count = handler.getAmountAsInt(slot);
+        return itemresource.toStack(count);
+    }
+
+    private void setStackFromInSlot(StacksResourceHandler<ItemStack, ItemResource> handler, int slot, ItemStack stack) {
+        handler.set(slot, ItemResource.of(stack), stack.getCount());
     }
 }

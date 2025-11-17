@@ -6,6 +6,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public interface IStackHandlerAdapter {
 
@@ -28,9 +30,9 @@ public interface IStackHandlerAdapter {
 
     void setCrateStockItem(int slot, ItemStack stack);
 
-    void saveInventoryData(HolderLookup.Provider registries, CompoundTag tag);
+    void loadInventoryData(ValueInput input);
 
-    void loadInventoryData(HolderLookup.Provider registries, CompoundTag tag);
+    void saveInventoryData(ValueOutput output);
 
     int getCratestacksTotalItemCount(Item item);
 

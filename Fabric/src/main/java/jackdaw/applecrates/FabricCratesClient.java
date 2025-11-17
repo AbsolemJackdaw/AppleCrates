@@ -2,7 +2,6 @@ package jackdaw.applecrates;
 
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
-import jackdaw.applecrates.client.besr.CrateBlockEntitySpecialRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;

@@ -1,9 +1,9 @@
 package jackdaw.applecrates.container.inventory;
 
 
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
-public class GenericStackHandler extends ItemStackHandler implements IGenericInventory {
+public class GenericStackHandler extends ItemStacksResourceHandler implements IGenericInventory {
     public GenericStackHandler(int size) {
         super(size);
     }

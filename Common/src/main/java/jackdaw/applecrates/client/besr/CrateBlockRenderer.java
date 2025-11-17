@@ -5,41 +5,48 @@ import jackdaw.applecrates.Content;
 import jackdaw.applecrates.EnumCrateItemRendering;
 import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
-
-public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<CrateBlockEntityBase> {
+public class CrateBlockRenderer implements BlockEntityRenderer<CrateBlockEntityBase, CrateBlockRenderState> {
     private static final int MAX_RENDERED_ITEMS = 9;
     private static final int ITEMS_PER_ROW = 3;
 
-    public CrateBlockEntitySpecialRenderer(BlockEntityRendererProvider.Context ctx) {
+    @Override
+    public CrateBlockRenderState createRenderState() {
+        return new CrateBlockRenderState();
     }
 
+    @Override
+    public void extractRenderState(CrateBlockEntityBase blockEntity, CrateBlockRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+        renderState.stackHandler = blockEntity.stackHandler;
+        renderState.isUnlimitedShop = blockEntity.isUnlimitedShop;
+    }
 
     @Override
-    public void render(CrateBlockEntityBase crateBE, float pPartialTick, PoseStack stack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        float blockRotation = crateBE.getBlockState().getValue(CrateBlockBase.FACING).toYRot();
-        ItemStack selling = crateBE.stackHandler.getSavedTradeSlotsItem(1);
-
+    public void submit(CrateBlockRenderState state, PoseStack stack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        float blockRotation = state.blockState.getValue(CrateBlockBase.FACING).toYRot();
+        var stackHandler = state.stackHandler;
+        ItemStack selling = stackHandler.getSavedTradeSlotsItem(1);
         if (!selling.isEmpty()) {
             boolean one = Content.clientConfig.getCrateItemRenderingValue() == EnumCrateItemRendering.ONE;
             boolean three = Content.clientConfig.getCrateItemRenderingValue() == EnumCrateItemRendering.THREE;
-            int amount = one ? 1 : three ? 3 : (crateBE.isUnlimitedShop ? MAX_RENDERED_ITEMS : Mth.clamp(crateBE.stackHandler.getCratestacksTotalItemCount(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
+            int amount = one ? 1 : three ? 3 : (state.isUnlimitedShop ? MAX_RENDERED_ITEMS : Mth.clamp(stackHandler.getCratestacksTotalItemCount(selling.getItem()) / selling.getCount(), 1, MAX_RENDERED_ITEMS));
 
             for (int i = 0; i < amount; i++) {
                 stack.pushPose();
 
                 //prepare normalisation of crate rotation in shown itemstacks
-                int angleSimp = (int) crateBE.getBlockState().getValue(CrateBlockBase.FACING).toYRot() / 90;
+                int angleSimp = (int) state.blockState.getValue(CrateBlockBase.FACING).toYRot() / 90;
                 float xoff = angleSimp == 1 || angleSimp == 2 ? 1.0f : 0.0f;
                 float zoff = angleSimp == 2 || angleSimp == 3 ? 1.0f : 0.0f;
                 float zfront = angleSimp % 2 == 1 ? (0.5f * (angleSimp == 3 ? -1 : 1)) : 0f;
@@ -56,7 +63,7 @@ public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<Crat
                 /////////////do actual translation or offset here./////////////
                 //translate is z,x,y
                 //or crate's left/right, up/down, and lower/higher
-                var offset = calculateOffset(crateBE.getBlockPos());
+                var offset = calculateOffset(state.blockPos);
                 float randX = (float) offset.x();
                 float randZ = (float) offset.z();
 
@@ -71,12 +78,10 @@ public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<Crat
                             0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2) * 0.01 //y or crate's higher/lower. In general, don't touch this value
                     );
                 }
-
-                Minecraft.getInstance().getItemRenderer().renderStatic(selling, ItemDisplayContext.GROUND, pPackedLight, pPackedOverlay, stack, pBufferSource, crateBE.getLevel(), 0);
+                //todo render item
                 stack.popPose();
             }
         }
-
     }
 
     private static Vec3 calculateOffset(BlockPos pPos) {
@@ -87,4 +92,18 @@ public class CrateBlockEntitySpecialRenderer implements BlockEntityRenderer<Crat
         return new Vec3(d0, 0.0, d2);
     }
 
+    @Override
+    public boolean shouldRenderOffScreen() {
+        return BlockEntityRenderer.super.shouldRenderOffScreen();
+    }
+
+    @Override
+    public int getViewDistance() {
+        return BlockEntityRenderer.super.getViewDistance();
+    }
+
+    @Override
+    public boolean shouldRender(CrateBlockEntityBase blockEntity, Vec3 cameraPos) {
+        return BlockEntityRenderer.super.shouldRender(blockEntity, cameraPos);
+    }
 }

@@ -79,7 +79,7 @@ public class CrateWoodType {
     }
 
     public static Block getBlock(CrateWoodType type) {
-        return BuiltInRegistries.BLOCK.get(type.getFullRegistryResLoc());
+        return BuiltInRegistries.BLOCK.getValue(type.getFullRegistryResLoc());
     }
 
     /**
@@ -90,7 +90,9 @@ public class CrateWoodType {
     }
 
     public static BlockEntityType<CrateBlockEntityBase> getBlockEntityType(CrateWoodType type) {
-        return (BlockEntityType<CrateBlockEntityBase>) BuiltInRegistries.BLOCK_ENTITY_TYPE.get(type.getFullBeRegistryResLoc());
+        var block = BuiltInRegistries.BLOCK_ENTITY_TYPE.getOptional(type.getFullBeRegistryResLoc());
+        if (block.isEmpty()) throw WoodException.INSTANCE.notInRegistry(type, BuiltInRegistries.BLOCK_ENTITY_TYPE);
+        return (BlockEntityType<CrateBlockEntityBase>) block.get();
     }
 
     public ResourceLocation getFullBeRegistryResLoc() {
