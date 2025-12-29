@@ -4,6 +4,7 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.client.besr.CrateBlockRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
@@ -14,26 +15,26 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
-@EventBusSubscriber(modid = Constants.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Constants.MODID, value = Dist.CLIENT)
 public class ClientSetup {
 
     @SubscribeEvent
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event) {
 
         CrateWoodType.values().forEach(crateWoodType -> {
-            event.registerBlockEntityRenderer(CrateWoodType.getBlockEntityType(crateWoodType), CrateBlockEntitySpecialRenderer::new);
+            event.registerBlockEntityRenderer(CrateWoodType.getBlockEntityType(crateWoodType), CrateBlockRenderer::new);
         });
 
         Content.buyerGuiButton = () -> {
-            PacketDistributor.sendToServer(new ServerGetSale());
+            ClientPacketDistributor.sendToServer(new ServerGetSale());
         };
         Content.ownerGuiButton = () -> {
-            PacketDistributor.sendToServer(new ServerCrateSync());
+            ClientPacketDistributor.sendToServer(new ServerCrateSync());
         };
         Content.addOwnerButton = username -> {
-            PacketDistributor.sendToServer(new ServerAddOwner(username));
+            ClientPacketDistributor.sendToServer(new ServerAddOwner(username));
         };
     }
 

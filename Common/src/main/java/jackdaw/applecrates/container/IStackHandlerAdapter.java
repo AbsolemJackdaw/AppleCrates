@@ -2,8 +2,6 @@ package jackdaw.applecrates.container;
 
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;

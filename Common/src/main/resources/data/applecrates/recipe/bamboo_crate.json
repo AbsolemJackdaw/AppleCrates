@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "crates",
   "key": {
-    "p": {
-      "item": "minecraft:bamboo_planks"
-    },
-    "s": {
-      "item": "minecraft:stick"
-    }
+    "p": "minecraft:bamboo_planks",
+    "s": "minecraft:stick"
   },
   "pattern": [
     "s s",

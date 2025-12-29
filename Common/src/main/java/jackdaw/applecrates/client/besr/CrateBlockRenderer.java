@@ -7,6 +7,7 @@ import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
@@ -19,6 +20,9 @@ import org.joml.Quaternionf;
 public class CrateBlockRenderer implements BlockEntityRenderer<CrateBlockEntityBase, CrateBlockRenderState> {
     private static final int MAX_RENDERED_ITEMS = 9;
     private static final int ITEMS_PER_ROW = 3;
+
+    public CrateBlockRenderer(BlockEntityRendererProvider.Context context) {
+    }
 
     @Override
     public CrateBlockRenderState createRenderState() {

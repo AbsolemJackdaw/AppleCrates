@@ -19,7 +19,8 @@ public class CrateBlockEntity extends CrateBlockEntityBase {
 
     public CrateBlockEntity(CrateWoodType type, BlockPos pos, BlockState state) {
         super(type, pos, state, new StackHandlerAdapter());
-        crateStockHopper = ((StackHandlerAdapter) this.stackHandler).crateStock;
+//        crateStockHopper = ((StackHandlerAdapter) this.stackHandler).crateStock;
+        crateStockHopper = new ItemStacksResourceHandler(((StackHandlerAdapter) this.stackHandler).crateStock.getItems());
     }
 
     @Override

@@ -2,6 +2,7 @@ package jackdaw.applecrates;
 
 import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.api.GeneralRegistry;
+import jackdaw.applecrates.client.besr.CrateBlockRenderer;
 import jackdaw.applecrates.client.screen.CrateScreenBuyer;
 import jackdaw.applecrates.client.screen.CrateScreenOwner;
 import jackdaw.applecrates.network.packetprocessing.ServerAddOwner;
@@ -11,8 +12,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 @Environment(EnvType.CLIENT)
 public class FabricCratesClient implements ClientModInitializer {
@@ -21,7 +22,7 @@ public class FabricCratesClient implements ClientModInitializer {
     public void onInitializeClient() {
         Content.clientConfig = () -> EnumCrateItemRendering.THREE;
         CrateWoodType.values().forEach(crateWoodType -> {
-            BlockEntityRendererRegistry.register(CrateWoodType.getBlockEntityType(crateWoodType), CrateBlockEntitySpecialRenderer::new);
+            BlockEntityRenderers.register(CrateWoodType.getBlockEntityType(crateWoodType), CrateBlockRenderer::new);
         });
         MenuScreens.register(GeneralRegistry.CRATE_MENU_OWNER, CrateScreenOwner::new);
         MenuScreens.register(GeneralRegistry.CRATE_MENU_BUYER, CrateScreenBuyer::new);

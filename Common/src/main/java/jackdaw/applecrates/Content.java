@@ -5,11 +5,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import jackdaw.applecrates.client.IClientConfig;
 import jackdaw.applecrates.container.IMenuSlots;
+import jackdaw.applecrates.container.StackHandlerAdapter;
+import jackdaw.applecrates.container.slot.SlotCrateStock;
+import jackdaw.applecrates.container.slot.SlotPriceSale;
 import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import jackdaw.applecrates.network.IPacketOnButtonPress;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -60,4 +66,26 @@ public class Content {
 //            }
 //        }
 //    };
+
+    public static void populateMenus() {
+        menuSlots = menu -> {
+            if (!(menu.adapter instanceof StackHandlerAdapter stackHandlerAdapter))
+                return;
+            menu.addSlot(new Slot(stackHandlerAdapter.interactableTrades, 0, menu.isOwner() ? 10 : 102, menu.isOwner() ? 76 : 21));
+            menu.addSlot(new Slot(stackHandlerAdapter.interactableTrades, 1, menu.isOwner() ? 46 : 142, menu.isOwner() ? 76 : 21) {
+                @Override
+                public boolean mayPlace(@NotNull ItemStack stack) {
+                    return menu.isOwner();
+                }
+            });
+
+            menu.addSlot(new SlotPriceSale(stackHandlerAdapter.savedTrades, 0));//buyer pays
+            menu.addSlot(new SlotPriceSale(stackHandlerAdapter.savedTrades, 1));//buyer gets
+
+            for (int y = 0; y < 3; y++) //crate stock
+                for (int x = 0; x < 10; x++)
+                    menu.addSlot(new SlotCrateStock(stackHandlerAdapter.crateStock, y * 10 + x, x * 18 + 10, y * 18 + 17, menu.isOwner()));
+            menu.addSlot(new SlotCrateStock(stackHandlerAdapter.crateStock, Constants.TOTALCRATESTOCKLOTS, 172, 76, menu.isOwner()));
+        };
+    }
 }

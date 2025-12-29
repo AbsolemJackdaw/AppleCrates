@@ -6,7 +6,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 public class AddOwnerButton extends AbstractOwnerButton implements HoverTooltipButton {
 
@@ -24,7 +23,7 @@ public class AddOwnerButton extends AbstractOwnerButton implements HoverTooltipB
 
     @Override
     public void renderToolTip(GuiGraphics g, int x, int y) {
-        g.renderTooltip(Minecraft.getInstance().font, List.of(getHovertext()), Optional.empty(), x, y);
+        g.setComponentTooltipForNextFrame(Minecraft.getInstance().font, List.of(getHovertext()), x, y);
     }
 
     @Override

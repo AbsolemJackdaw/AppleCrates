@@ -42,7 +42,7 @@ loom {
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     dependsOn(tasks.build)
     apiToken = findProperty('cf_api_token');
-    def mainFile = upload(630726, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    def mainFile = upload(cf_project, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
     mainFile.displayName = "${mod_name}-fabric-${minecraft_version}-${version}"
     mainFile.releaseType = "${releasetype}"
     mainFile.changelog = "${changelog}"
@@ -51,4 +51,17 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.addGameVersion("${minecraft_version}");
     mainFile.addModLoader('Fabric')
     mainFile.addModLoader('Quilt')
+}
+
+modrinth {
+
+    token.set(project.findProperty('modrinth_api_token'))
+    projectId.set(modrinth_project)
+    changelog = "${changelog}"
+    versionName.set("${mod_name}-Fabric-${minecraft_version}-$version")
+    versionType.set("${releasetype}")
+    uploadFile.set(tasks.remapJar)
+    dependencies {
+        required.project("fabric-api")
+    }
 }

@@ -4,7 +4,10 @@ import jackdaw.applecrates.api.CrateWoodType;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -37,8 +40,8 @@ public class CrateBlockBase extends Block implements EntityBlock {
 
     private final CrateWoodType type;
 
-    public CrateBlockBase(CrateWoodType type) {
-        super(Properties.ofFullCopy(Blocks.OAK_PLANKS).noOcclusion().isValidSpawn(CrateBlockBase::never).isRedstoneConductor(CrateBlockBase::never).isSuffocating(CrateBlockBase::never).isViewBlocking(CrateBlockBase::never));
+    public CrateBlockBase(CrateWoodType type, ResourceKey<Block> key) {
+        super(Properties.ofFullCopy(Blocks.OAK_PLANKS).setId(key).noOcclusion().isValidSpawn(CrateBlockBase::never).isRedstoneConductor(CrateBlockBase::never).isSuffocating(CrateBlockBase::never).isViewBlocking(CrateBlockBase::never));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         this.type = type;
     }

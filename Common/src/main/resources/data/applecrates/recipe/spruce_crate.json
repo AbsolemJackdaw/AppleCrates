@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "crates",
   "key": {
-    "p": {
-      "item": "minecraft:spruce_planks"
-    },
-    "s": {
-      "item": "minecraft:stick"
-    }
+    "p": "minecraft:spruce_planks",
+    "s": "minecraft:stick"
   },
   "pattern": [
     "s s",

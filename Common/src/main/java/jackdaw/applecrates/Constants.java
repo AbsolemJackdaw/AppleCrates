@@ -1,5 +1,10 @@
 package jackdaw.applecrates;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+
 public class Constants {
     public static final String MODID = "applecrates";
     public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped", "bamboo", "cherry", "mangrove"};
@@ -8,7 +13,7 @@ public class Constants {
      * change to true when generating data.
      */
     public static boolean IS_DATA_GEN = false;
-    public static final boolean GEN_VANILLA_CRATES = false;
+    public static final boolean GEN_VANILLA_CRATES = true;
 
     public static final String TAGOWNER = "owner";
     public static final String TAGSTOCK = "cratestock";

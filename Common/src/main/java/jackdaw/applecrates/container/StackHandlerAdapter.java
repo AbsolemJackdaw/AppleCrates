@@ -5,11 +5,12 @@ import jackdaw.applecrates.container.inventory.CrateStackHandler;
 import jackdaw.applecrates.container.inventory.GenericStackHandler;
 import jackdaw.applecrates.container.inventory.ICrateStock;
 import jackdaw.applecrates.container.inventory.IGenericInventory;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class StackHandlerAdapter implements IStackHandlerAdapter {
     public CrateStackHandler crateStock = new CrateStackHandler();
@@ -67,21 +68,41 @@ public class StackHandlerAdapter implements IStackHandlerAdapter {
     }
 
     @Override
-    public void saveInventoryData(HolderLookup.Provider registries, CompoundTag tag) {
-        tag.put(Constants.TAGSTOCK, crateStock.createTag(registries));
-        tag.put(Constants.TAGINTERACTABLE, interactableTrades.createTag(registries));
-        tag.put(Constants.TAGPRICESALE, savedTrades.createTag(registries));
+    public void loadInventoryData(ValueInput input) {
+        loadAllItems(input, crateStock.getItems(), Constants.TAGSTOCK);
+        loadAllItems(input, interactableTrades.getItems(), Constants.TAGINTERACTABLE);
+        loadAllItems(input, savedTrades.getItems(), Constants.TAGPRICESALE);
     }
 
     @Override
-    public void loadInventoryData(HolderLookup.Provider registries, CompoundTag tag) {
-        crateStock.fromTag((ListTag) tag.get(Constants.TAGSTOCK), registries);
-        interactableTrades.fromTag((ListTag) tag.get(Constants.TAGINTERACTABLE), registries);
-        savedTrades.fromTag((ListTag) tag.get(Constants.TAGPRICESALE), registries);
+    public void saveInventoryData(ValueOutput output) {
+        saveAllItems(output, crateStock.getItems(), Constants.TAGSTOCK);
+        saveAllItems(output, interactableTrades.getItems(), Constants.TAGINTERACTABLE);
+        saveAllItems(output, savedTrades.getItems(), Constants.TAGPRICESALE);
     }
 
     @Override
     public boolean updatePaymentSlot(ItemStack payment, boolean unlimitedShop) {
         return crateStock.updateStackInPaymentSlot(payment, unlimitedShop);
+    }
+
+    private void saveAllItems(ValueOutput output, NonNullList<ItemStack> items, String tag) {
+        ValueOutput.TypedOutputList<ItemStackWithSlot> typedOutputList = output.list(tag, ItemStackWithSlot.CODEC);
+
+        for (int i = 0; i < items.size(); ++i) {
+            ItemStack itemStack = (ItemStack) items.get(i);
+            if (!itemStack.isEmpty()) {
+                typedOutputList.add(new ItemStackWithSlot(i, itemStack));
+            }
+        }
+    }
+
+    private void loadAllItems(ValueInput input, NonNullList<ItemStack> items, String tag) {
+        for (ItemStackWithSlot itemStackWithSlot : input.listOrEmpty(tag, ItemStackWithSlot.CODEC)) {
+            if (itemStackWithSlot.isValidInContainer(items.size())) {
+                items.set(itemStackWithSlot.slot(), itemStackWithSlot.stack());
+            }
+        }
+
     }
 }

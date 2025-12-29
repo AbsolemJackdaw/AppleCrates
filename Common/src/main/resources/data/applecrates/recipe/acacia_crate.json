@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "crates",
   "key": {
-    "p": {
-      "item": "minecraft:acacia_planks"
-    },
-    "s": {
-      "item": "minecraft:stick"
-    }
+    "p": "minecraft:acacia_planks",
+    "s": "minecraft:stick"
   },
   "pattern": [
     "s s",

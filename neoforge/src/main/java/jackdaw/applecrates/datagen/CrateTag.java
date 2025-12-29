@@ -5,23 +5,21 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
 public class CrateTag extends BlockTagsProvider {
     private final String modid;
 
-    public CrateTag(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId,  ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, modId, existingFileHelper);
+    public CrateTag(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
+        super(output, lookupProvider, modId);
         this.modid = modId;
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modid)).forEach(crateWoodType -> {
-            tag(BlockTags.MINEABLE_WITH_AXE).addOptional(crateWoodType.getFullRegistryResLoc());
-            //tag(BlockTags.).addOptional(crateWoodType.getFullRegistryResLoc());
+            tag(BlockTags.MINEABLE_WITH_AXE).addOptional(CrateWoodType.getBlock(crateWoodType));
         });
     }
 }

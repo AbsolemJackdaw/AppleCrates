@@ -120,7 +120,7 @@ public class CrateMenu extends AbstractContainerMenu {
 
     public void addOwner(ServerPlayer currentOwner, String newOwnerUsername) {
         if (crate.isOwner(currentOwner)) {
-            currentOwner.server.getPlayerList().getPlayers().stream()
+            currentOwner.level().getServer().getPlayerList().getPlayers().stream()
                     .filter(player -> player.getGameProfile().name().equalsIgnoreCase(newOwnerUsername))
                     .findFirst()
                     .ifPresentOrElse(player -> {

@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "crates",
   "key": {
-    "p": {
-      "item": "minecraft:jungle_planks"
-    },
-    "s": {
-      "item": "minecraft:stick"
-    }
+    "p": "minecraft:jungle_planks",
+    "s": "minecraft:stick"
   },
   "pattern": [
     "s s",

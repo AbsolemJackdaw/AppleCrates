@@ -22,6 +22,7 @@ public class CrateStackHandler extends GenericStackHandler implements ICrateStoc
         return this.itemCountCache.computeIfAbsent(item, $ -> getCountOfItemImmediately(item));
     }
 
+    @Override
     public int getCountOfItemImmediately(Item item) {
         int count = 0;
         for (int i = 0; i < this.getContainerSize(); i++) {

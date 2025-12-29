@@ -4,10 +4,7 @@ import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.block.CrateBlock;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntity;
-import jackdaw.applecrates.container.CrateMenuBuyer;
-import jackdaw.applecrates.container.CrateMenuBuyerService;
-import jackdaw.applecrates.container.CrateMenuOwner;
-import jackdaw.applecrates.container.CrateMenuOwnerService;
+import jackdaw.applecrates.container.*;
 import jackdaw.applecrates.item.CrateItem;
 import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.core.Direction;
@@ -15,6 +12,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -61,11 +59,11 @@ public class GeneralRegistry {
                     Direction.class);
     public static final DeferredHolder<MenuType<?>, MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IMenuTypeExtension.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenuOwnerService(windowId, inv, unlimited);
+        return new CrateMenuOwnerService(windowId, inv, new StackHandlerAdapter(), unlimited);
     }));
     public static final DeferredHolder<MenuType<?>, MenuType<CrateMenuBuyer>> CRATE_MENU_BUYER = MENU_TYPES.register("crate_menu_buyer", () -> IMenuTypeExtension.create((windowId, inv, data) -> {
         boolean unlimited = data.readBoolean();
-        return new CrateMenuBuyerService(windowId, inv, unlimited);
+        return new CrateMenuBuyerService(windowId, inv, new StackHandlerAdapter(), unlimited);
     }));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CoinCounter>> COIN_COUNTER = DATA_COMPONENTS.registerComponentType(
             "coin_counter",
@@ -81,12 +79,20 @@ public class GeneralRegistry {
      */
     public static void prepareForRegistry(String modId, DeferredRegister<Block> blockRegistry, DeferredRegister<Item> itemRegistry, DeferredRegister<BlockEntityType<?>> beRegistry) {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
-            DeferredHolder<Block, CrateBlock> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType));
-            itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get()));
+            DeferredHolder<Block, CrateBlock> block = blockRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateBlock(crateWoodType, makeBlockKey(crateWoodType)));
+            itemRegistry.register(crateWoodType.getBlockRegistryName(), () -> new CrateItem(block.get(), makeItemKey(crateWoodType)));
             var be = beRegistry.register(crateWoodType.getBeRegistryName(), () -> new BlockEntityType<>((pos, state) -> new CrateBlockEntity(crateWoodType, pos, state), false, block.get()));
             TAB_REGISTRY.add(block);
             CAPABILITY_REGISTRY.add(be);
         });
+    }
+
+    private static ResourceKey<Block> makeBlockKey(CrateWoodType key) {
+        return ResourceKey.create(Registries.BLOCK, key.getFullRegistryResLoc());
+    }
+
+    private static ResourceKey<Item> makeItemKey(CrateWoodType key) {
+        return ResourceKey.create(Registries.ITEM, key.getFullRegistryResLoc());
     }
 
     public static void startup() {

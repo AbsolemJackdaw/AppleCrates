@@ -24,7 +24,7 @@ public class CrateLanguage extends LanguageProvider {
                     .filter(word -> word.length() > 0)
                     .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
                     .collect(Collectors.joining(" "));
-            add(CrateWoodType.getBlock(crateWoodType), capitalized);
+            add(CrateWoodType.getItem(crateWoodType), capitalized);
         });
 
         if (Constants.GEN_VANILLA_CRATES) {

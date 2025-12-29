@@ -6,6 +6,7 @@ import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -80,6 +81,10 @@ public class CrateWoodType {
 
     public static Block getBlock(CrateWoodType type) {
         return BuiltInRegistries.BLOCK.getValue(type.getFullRegistryResLoc());
+    }
+
+    public static Item getItem(CrateWoodType type) {
+        return BuiltInRegistries.ITEM.getValue(type.getFullRegistryResLoc());
     }
 
     /**

@@ -1,6 +1,5 @@
 package jackdaw.applecrates.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.Content;
 import jackdaw.applecrates.client.screen.widget.HoverTooltipButton;
@@ -8,14 +7,18 @@ import jackdaw.applecrates.client.screen.widget.SaleButton;
 import jackdaw.applecrates.container.CrateMenuBuyer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+
+import java.util.List;
 
 public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
-    private static final ResourceLocation BUYER = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/buyer.png");
+    private static final ResourceLocation BUYER = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/buyer.png");
 
     public CrateScreenBuyer(CrateMenuBuyer menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, Component.translatable(title.getString()));
@@ -47,14 +50,14 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
-        RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, TRADE_ARROW_SPRITE);
+//        RenderSystem.enableBlend();
+//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//        RenderSystem.setShaderTexture(0, TRADE_ARROW_SPRITE);
         if (menu.outOfStock() && !isUnlimitedShop())
-            graphics.blitSprite(TRADE_ARROW_SPRITE, guiStartX + 40, guiStartY + 24, 0, 10, 9);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TRADE_ARROW_SPRITE, guiStartX + 40, guiStartY + 24, 10, 9, 0xffff0000);
         else
-            graphics.blitSprite(TRADE_ARROW_SPRITE, guiStartX + 46, guiStartY + 24, 0, 10, 9);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TRADE_ARROW_SPRITE, guiStartX + 40, guiStartY + 24, 10, 9, 0xff00ff00);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         renderTrade(graphics, 0, guiStartX, guiStartY);
         renderTrade(graphics, 1, guiStartX, guiStartY);
 
@@ -74,19 +77,16 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, BUYER);
-        graphics.blit(BUYER, guiStartX, guiStartY, /*this.getBlitOffset(),*/ 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BUYER, guiStartX, guiStartY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 
     @Override
     protected void renderTooltip(GuiGraphics g, int x, int y) {
         super.renderTooltip(g, x, y);
-        for (var ren : children()) {
-            if (ren instanceof HoverTooltipButton htb && ren instanceof AbstractWidget widget) {
+        for (var childwidget : children()) {
+            if (childwidget instanceof HoverTooltipButton hoverTooltipButton && childwidget instanceof AbstractWidget widget) {
                 if (widget.active && widget.isHovered() && widget.visible) {
-                    htb.renderToolTip(g, x, y);
+                    hoverTooltipButton.renderToolTip(g, x, y);
                 }
             }
         }
@@ -111,10 +111,13 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
             ItemStack pay = menu.adapter.getSavedTradeSlotsItem(0);
             ItemStack result = menu.adapter.getSavedTradeSlotsItem(1);
 
+            List<Component> list;
             if (pMouseX < this.getX() + 20 && !pay.isEmpty()) {
-                graphics.renderTooltip(CrateScreenBuyer.this.font, CrateScreenBuyer.this.getTooltipFromContainerItem(pay), pay.getTooltipImage(), pMouseX, pMouseY);
+                list = (pay.getTooltipLines(Item.TooltipContext.EMPTY, minecraft.player, TooltipFlag.NORMAL));
+                graphics.setComponentTooltipForNextFrame(CrateScreenBuyer.this.font, list, pMouseX, pMouseY);
             } else if (pMouseX > this.getX() + this.width - 25 && !result.isEmpty()) {
-                graphics.renderTooltip(CrateScreenBuyer.this.font, CrateScreenBuyer.this.getTooltipFromContainerItem(result), result.getTooltipImage(), pMouseX, pMouseY);
+                list = (result.getTooltipLines(Item.TooltipContext.EMPTY, minecraft.player, TooltipFlag.NORMAL));
+                graphics.setComponentTooltipForNextFrame(CrateScreenBuyer.this.font, list, pMouseX, pMouseY);
             }
         }
     }

@@ -7,12 +7,14 @@ import jackdaw.applecrates.container.CrateMenuBuyerService;
 import jackdaw.applecrates.container.CrateMenuOwnerService;
 import jackdaw.applecrates.container.factory.CrateMenuFactory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
 
 public class CrateBlock extends CrateBlockBase {
 
-    public CrateBlock(CrateWoodType type) {
-        super(type);
+    public CrateBlock(CrateWoodType type, ResourceKey<Block> id) {
+        super(type, id);
     }
 
     @Override
