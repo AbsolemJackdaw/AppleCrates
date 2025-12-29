@@ -5,7 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public abstract class SaleButton extends Button implements HoverTooltipButton {
+public abstract class SaleButton extends Button.Plain implements HoverTooltipButton {
     protected final Component narratorText;
 
     public SaleButton(int x, int y, Component message, Button.OnPress press) {

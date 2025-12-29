@@ -9,12 +9,9 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.*;
-import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,10 +26,10 @@ public class CrateModels extends ModelProvider {
 
         CrateWoodType.values().forEach(crateWoodType -> {
             try {
-                ResourceLocation existingTexture = AppleCrateAPI.getTexturePathFromWood().get(crateWoodType);
+                Identifier existingTexture = AppleCrateAPI.getTexturePathFromWood().get(crateWoodType);
                 if (existingTexture == null)
                     throw WoodException.INSTANCE.resLocNotFound(crateWoodType);
-                var baseModel = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "applecrate");
+                var baseModel = Identifier.fromNamespaceAndPath(Constants.MODID, "applecrate");
                 var textureSlots = Set.of(TextureSlot.PARTICLE, TextureSlot.create("0", TextureSlot.TEXTURE));
                 var template = new ModelTemplate(Optional.of(ModelLocationUtils.decorateBlockModelLocation(baseModel.toString())), Optional.of(""), textureSlots.toArray(textureSlots.toArray(new TextureSlot[0]))).extend().build();
                 var textureMap = new TextureMapping();

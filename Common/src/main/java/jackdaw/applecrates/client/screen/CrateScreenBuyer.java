@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
-    private static final ResourceLocation BUYER = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/buyer.png");
+    private static final Identifier BUYER = Identifier.fromNamespaceAndPath(Constants.MODID, "textures/gui/buyer.png");
 
     public CrateScreenBuyer(CrateMenuBuyer menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, Component.translatable(title.getString()));
@@ -100,6 +100,11 @@ public class CrateScreenBuyer extends CrateScreen<CrateMenuBuyer> {
     private class SaleButtonBuyer extends SaleButton {
         public SaleButtonBuyer(int x, int y, OnPress press) {
             super(x, y, Component.translatable("crate.button.sale.buyer"), press);
+        }
+
+        @Override
+        protected void renderContents(GuiGraphics guiGraphics, int i, int i1, float v) {
+            super.renderContents(guiGraphics, i, i1, v);
         }
 
         @Override

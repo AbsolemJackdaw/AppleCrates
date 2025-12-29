@@ -13,7 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -54,7 +54,7 @@ public class GeneralRegistry {
                     .build());
     public static final BlockCapability<StacksResourceHandler, @Nullable Direction> CRATE_CAPABILITY_HOPPER =
             BlockCapability.create(
-                    ResourceLocation.fromNamespaceAndPath(Constants.MODID, "crate_hopper_handler"),
+                    Identifier.fromNamespaceAndPath(Constants.MODID, "crate_hopper_handler"),
                     StacksResourceHandler.class,
                     Direction.class);
     public static final DeferredHolder<MenuType<?>, MenuType<CrateMenuOwner>> CRATE_MENU_OWNER = MENU_TYPES.register("crate_menu_owner", () -> IMenuTypeExtension.create((windowId, inv, data) -> {

@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.Constants;
 import jackdaw.applecrates.api.exception.WoodException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,14 +12,14 @@ import java.util.Set;
 
 public class AppleCrateAPI {
     private static final Set<AppleCrateBuilder> VALUES = new ObjectArraySet<>();
-    private static Map<CrateWoodType, ResourceLocation> texturePathFromWood = new HashMap<>();
-    private static Map<CrateWoodType, ResourceLocation> originalPlankBlockForWood = new HashMap<>();
+    private static Map<CrateWoodType, Identifier> texturePathFromWood = new HashMap<>();
+    private static Map<CrateWoodType, Identifier> originalPlankBlockForWood = new HashMap<>();
 
-    public static Map<CrateWoodType, ResourceLocation> getTexturePathFromWood() {
+    public static Map<CrateWoodType, Identifier> getTexturePathFromWood() {
         return texturePathFromWood;
     }
 
-    public static Map<CrateWoodType, ResourceLocation> getPlanksResourceLocation() {
+    public static Map<CrateWoodType, Identifier> getPlanksResourceLocation() {
         return originalPlankBlockForWood;
     }
 
@@ -30,8 +30,8 @@ public class AppleCrateAPI {
                 CrateWoodType wood = CrateWoodType.create(builder.compatModId, builder.yourModId, builder.woodName);
                 if (CrateWoodType.values().noneMatch(wood::equals)) {
                     CrateWoodType.register(wood);
-                    texturePathFromWood.put(wood, builder.getTextureResourceLocation());
-                    originalPlankBlockForWood.put(wood, builder.getPlanksResourceLocation());
+                    texturePathFromWood.put(wood, builder.getTextureIdentifier());
+                    originalPlankBlockForWood.put(wood, builder.getPlanksIdentifier());
                 } else throw WoodException.INSTANCE.alreadyInList(wood);
             } catch (WoodException e) {
                 LogUtils.getLogger().error(e.getMessage());
@@ -142,17 +142,17 @@ public class AppleCrateAPI {
             return this;
         }
 
-        public ResourceLocation getTextureResourceLocation() {
-            return ResourceLocation.fromNamespaceAndPath(optifineTextureOverride ? "minecraft" : compatModId, parentFolder.concat(subFolder).concat(textureName).concat(planksSuffix));
+        public Identifier getTextureIdentifier() {
+            return Identifier.fromNamespaceAndPath(optifineTextureOverride ? "minecraft" : compatModId, parentFolder.concat(subFolder).concat(textureName).concat(planksSuffix));
         }
 
-        public ResourceLocation getPlanksResourceLocation() {
-            if (plankRegistryName.isEmpty()) { //try and determine a resourcelocation based on general practice 
+        public Identifier getPlanksIdentifier() {
+            if (plankRegistryName.isEmpty()) { //try and determine a Identifier based on general practice 
                 boolean same = woodName.equals(textureName);
                 String _plank = planksSuffix.isEmpty() ? same ? "" : "_planks" : planksSuffix;
-                return ResourceLocation.fromNamespaceAndPath(compatModId, woodName.concat(_plank));
+                return Identifier.fromNamespaceAndPath(compatModId, woodName.concat(_plank));
             } else { //if general practice failed, override with provided name
-                return ResourceLocation.fromNamespaceAndPath(compatModId, plankRegistryName);
+                return Identifier.fromNamespaceAndPath(compatModId, plankRegistryName);
             }
         }
 

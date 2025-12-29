@@ -11,7 +11,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
-    private static final ResourceLocation OWNER = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/owner.png");
+    private static final Identifier OWNER = Identifier.fromNamespaceAndPath(Constants.MODID, "textures/gui/owner.png");
 
     private AddOwnerEditBox inputField;
     private ConfirmAddOwnerButton confirmAddOwnerButton;
@@ -234,6 +234,11 @@ public class CrateScreenOwner extends CrateScreen<CrateMenuOwner> {
                     graphics.setComponentTooltipForNextFrame(CrateScreenOwner.this.font, List.of(this.getHovertext()), pMouseX, pMouseY);
                 }
             }
+        }
+
+        @Override
+        protected void renderContents(GuiGraphics guiGraphics, int i, int i1, float v) {
+            super.renderContents(guiGraphics, i, i1, v);
         }
     }
 }

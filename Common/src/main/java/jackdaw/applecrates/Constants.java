@@ -1,10 +1,5 @@
 package jackdaw.applecrates;
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-
 public class Constants {
     public static final String MODID = "applecrates";
     public static final String[] VANILLAWOODS = {"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped", "bamboo", "cherry", "mangrove"};

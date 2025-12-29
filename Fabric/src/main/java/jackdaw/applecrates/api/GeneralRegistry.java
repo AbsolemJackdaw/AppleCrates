@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -56,11 +56,11 @@ public class GeneralRegistry {
     public static void prepareForRegistry(String modId) {
         CrateWoodType.values().filter(crateWoodType -> crateWoodType.getYourModId().equals(modId)).forEach(crateWoodType -> {
             var crate = new CrateBlock(crateWoodType, makeBlockKey(crateWoodType));
-            Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(modId, crateWoodType.getBlockRegistryName()), crate);
-            Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(modId, crateWoodType.getBlockRegistryName()), new CrateItem(crate, makeItemKey(crateWoodType)));
+            Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(modId, crateWoodType.getBlockRegistryName()), crate);
+            Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(modId, crateWoodType.getBlockRegistryName()), new CrateItem(crate, makeItemKey(crateWoodType)));
             var type = Registry.register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                    ResourceLocation.fromNamespaceAndPath(modId, crateWoodType.getBeRegistryName()),
+                    Identifier.fromNamespaceAndPath(modId, crateWoodType.getBeRegistryName()),
                     FabricBlockEntityTypeBuilder.create((blockPos, blockState) -> new CrateBlockEntity(crateWoodType, blockPos, blockState, new StackHandlerAdapter()), crate).build());
             besrreg.add(() -> type);
             TAB_BLOCKS.add(crate);
@@ -77,12 +77,12 @@ public class GeneralRegistry {
 
     public static void startUp() {
         var tab = createTab();
-        Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
-        Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
+        Registry.register(BuiltInRegistries.MENU, Identifier.fromNamespaceAndPath(Constants.MODID, "crate_menu_owner"), CRATE_MENU_OWNER);
+        Registry.register(BuiltInRegistries.MENU, Identifier.fromNamespaceAndPath(Constants.MODID, "crate_menu_buyer"), CRATE_MENU_BUYER);
         Content.populateMenus();
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "tab.crate"), tab);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(Constants.MODID, "tab.crate"), tab);
         ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(tab).get()).register(GeneralRegistry::populateTab);
-        var dataComponentRegistryResult = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "coin_counter"), DataComponentType.<CoinCounter>builder().persistent(Content.DATA_COIN_CODEC).build());
+        var dataComponentRegistryResult = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath(Constants.MODID, "coin_counter"), DataComponentType.<CoinCounter>builder().persistent(Content.DATA_COIN_CODEC).build());
         Content.coinCounter = dataComponentRegistryResult;
     }
 

@@ -6,11 +6,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringUtil;
 
 public class AddOwnerEditBox extends EditBox {
-    private static final ResourceLocation BG = ResourceLocation.withDefaultNamespace("textures/gui/advancements/window.png");
+    private static final Identifier BG = Identifier.withDefaultNamespace("textures/gui/advancements/window.png");
 
     public AddOwnerEditBox(Font font, int x, int y, int w, int h, Component comp) {
         super(font, x, y, w, h, comp);

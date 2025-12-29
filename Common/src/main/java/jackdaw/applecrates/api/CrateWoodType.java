@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import jackdaw.applecrates.api.exception.WoodException;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,8 +22,8 @@ public class CrateWoodType {
     private final String compatId;
 
     private String beName;
-    private ResourceLocation resourceLocation;
-    private ResourceLocation resourceLocationBe;
+    private Identifier Identifier;
+    private Identifier IdentifierBe;
 
 
     protected CrateWoodType(String compatId, String yourModId, String woodName) {
@@ -32,8 +32,8 @@ public class CrateWoodType {
         this.compatId = compatId; //compatId.equals("minecraft") ? "" :
 
         beName = getBlockRegistryName() + "_be";
-        resourceLocation = ResourceLocation.fromNamespaceAndPath(yourModId, getBlockRegistryName());
-        resourceLocationBe = ResourceLocation.fromNamespaceAndPath(yourModId, getBeRegistryName());
+        Identifier = Identifier.fromNamespaceAndPath(yourModId, getBlockRegistryName());
+        IdentifierBe = Identifier.fromNamespaceAndPath(yourModId, getBeRegistryName());
     }
 
     public String getBlockRegistryName() {
@@ -90,8 +90,8 @@ public class CrateWoodType {
     /**
      * yourmodid : modid + woodname + _crate
      */
-    public ResourceLocation getFullRegistryResLoc() {
-        return resourceLocation;
+    public Identifier getFullRegistryResLoc() {
+        return Identifier;
     }
 
     public static BlockEntityType<CrateBlockEntityBase> getBlockEntityType(CrateWoodType type) {
@@ -100,8 +100,8 @@ public class CrateWoodType {
         return (BlockEntityType<CrateBlockEntityBase>) block.get();
     }
 
-    public ResourceLocation getFullBeRegistryResLoc() {
-        return resourceLocationBe;
+    public Identifier getFullBeRegistryResLoc() {
+        return IdentifierBe;
     }
 
     public boolean isFrom(String modId) {
