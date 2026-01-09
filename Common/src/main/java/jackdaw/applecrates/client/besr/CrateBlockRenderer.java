@@ -5,13 +5,19 @@ import jackdaw.applecrates.Content;
 import jackdaw.applecrates.EnumCrateItemRendering;
 import jackdaw.applecrates.block.CrateBlockBase;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemFrameRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -82,6 +88,17 @@ public class CrateBlockRenderer implements BlockEntityRenderer<CrateBlockEntityB
                             0.1f + ((int) (i / ITEMS_PER_ROW) % 2) * 0.025 + randX * 0.02 + (i % 2) * 0.01 //y or crate's higher/lower. In general, don't touch this value
                     );
                 }
+                ItemStackRenderState itemstackrenderstate = new ItemStackRenderState();
+                Minecraft.getInstance().getItemModelResolver().updateForTopItem(
+                        itemstackrenderstate,
+                        selling,
+                        ItemDisplayContext.GROUND,
+                        Minecraft.getInstance().level,
+                        null,
+                        0
+                );
+                itemstackrenderstate.submit(stack, submitNodeCollector, 15728880, OverlayTexture.NO_OVERLAY, 0);
+
                 //todo render item
                 stack.popPose();
             }
