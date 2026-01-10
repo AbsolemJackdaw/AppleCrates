@@ -64,4 +64,5 @@ modrinth {
     dependencies {
         required.project("fabric-api")
     }
+    gameVersions = ["${minecraft_version}"]
 }
