@@ -97,7 +97,8 @@ public class CrateBlockRenderer implements BlockEntityRenderer<CrateBlockEntityB
                         null,
                         0
                 );
-                itemstackrenderstate.submit(stack, submitNodeCollector, 15728880, OverlayTexture.NO_OVERLAY, 0);
+
+                itemstackrenderstate.submit(stack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
                 //todo render item
                 stack.popPose();
