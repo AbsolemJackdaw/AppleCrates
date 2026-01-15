@@ -46,7 +46,6 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    dependsOn(tasks.build)
     apiToken = findProperty('cf_api_token')
     def mainFile = upload(cf_project, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
     mainFile.displayName = "${mod_name}-neoforge-${minecraft_version}-${version}"
@@ -80,4 +79,10 @@ modrinth {
     uploadFile.set(tasks.jar)
     loaders = ["neoforge"]
     gameVersions = ["${minecraft_version}"]
+}
+
+tasks.register('publishModrinthAndCurseForge') {
+    dependsOn(tasks.build)
+    dependsOn(tasks.modrinth)
+    dependsOn(tasks.publishCurseForge)
 }
