@@ -8,13 +8,19 @@ import jackdaw.applecrates.item.datacomponent.CoinCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Containers;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -23,17 +29,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CrateBlockEntityBase extends BlockEntity {
+public abstract class CrateBlockEntityBase extends BlockEntity implements Nameable {
 
     public final IStackHandlerAdapter stackHandler;
     public boolean isUnlimitedShop = false;
     private Set<UUID> owners = new HashSet<>();
+    private @Nullable Component name;
+    protected static final Component NAME_OWNER = Component.translatable("container.crate.owner");
+    protected static final Component NAME_SHOP = Component.translatable("container.crate");
+    protected Component DEFAULT_NAME = NAME_SHOP;
 
     public CrateBlockEntityBase(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter stackHandler) {
         super(CrateWoodType.getBlockEntityType(type), pos, state);
@@ -41,15 +52,55 @@ public class CrateBlockEntityBase extends BlockEntity {
     }
 
     @Override
+    public Component getName() {
+        return this.name != null ? this.name : DEFAULT_NAME;
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return this.getName();
+    }
+
+    public Component initDisplayName(boolean isOwner) {
+        DEFAULT_NAME = isOwner ? NAME_OWNER : NAME_SHOP;
+        return DEFAULT_NAME;
+    }
+
+    @Override
+    public @Nullable Component getCustomName() {
+        return this.name;
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter componentGetter) {
+        super.applyImplicitComponents(componentGetter);
+        this.name = (Component) componentGetter.get(DataComponents.CUSTOM_NAME);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(DataComponents.CUSTOM_NAME, this.name);
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard("CustomName");
+    }
+
+    @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         loadCrateDataFromTag(input);
+        this.name = parseCustomNameSafe(input, "CustomName");
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         saveCrateDataToTag(output);
+        output.storeNullable("CustomName", ComponentSerialization.CODEC, this.name);
     }
 
     /**

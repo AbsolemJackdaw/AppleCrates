@@ -46,7 +46,11 @@ public class CrateLoot extends LootTableProvider {
 
         @Override
         protected void generate() {
-            CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modId)).map(CrateWoodType::getBlock).forEach(this::dropSelf);
+            CrateWoodType.values().filter(crateWoodType -> crateWoodType.isFrom(modId)).map(CrateWoodType::getBlock).forEach(
+                    block -> {
+                        this.add(block, this.createNameableBlockEntityTable(block));
+                    }
+            );
         }
 
         @Override

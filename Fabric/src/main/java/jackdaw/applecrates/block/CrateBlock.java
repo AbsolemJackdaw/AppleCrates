@@ -20,9 +20,10 @@ public class CrateBlock extends CrateBlockBase {
     @Override
     public void openBuyerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
         if (!(commonCrate instanceof CrateBlockEntity crate)) return;
+        crate.initDisplayName(false);
         serverPlayer.openMenu(
                 new CrateMenuFactory((i, inventory, player) -> new CrateMenuBuyerService(i, inventory, crate, crate.isUnlimitedShop),
-                        Component.translatable("container.crate"),
+                        crate.getDisplayName(),
                         (crate.isUnlimitedShop))
         );
     }
@@ -30,9 +31,10 @@ public class CrateBlock extends CrateBlockBase {
     @Override
     public void openOwnerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
         if (!(commonCrate instanceof CrateBlockEntity crate)) return;
+        crate.initDisplayName(true);
         serverPlayer.openMenu(
                 new CrateMenuFactory((i, inventory, player) -> new CrateMenuOwnerService(i, inventory, crate, crate.isUnlimitedShop),
-                        Component.translatable("container.crate.owner"),
+                        crate.getDisplayName(),
                         (crate.isUnlimitedShop))
         );
     }

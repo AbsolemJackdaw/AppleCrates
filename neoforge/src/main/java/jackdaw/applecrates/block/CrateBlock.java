@@ -5,8 +5,6 @@ import jackdaw.applecrates.block.blockentity.CrateBlockEntity;
 import jackdaw.applecrates.block.blockentity.CrateBlockEntityBase;
 import jackdaw.applecrates.container.CrateMenuBuyerService;
 import jackdaw.applecrates.container.CrateMenuOwnerService;
-import jackdaw.applecrates.container.StackHandlerAdapter;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
@@ -22,7 +20,7 @@ public class CrateBlock extends CrateBlockBase {
     public void openBuyerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
         if (!(commonCrate instanceof CrateBlockEntity crate)) return;
         serverPlayer.openMenu(new SimpleMenuProvider((id, inv, interactingPlayer) ->
-                new CrateMenuBuyerService(id, inv, crate, crate.isUnlimitedShop), Component.translatable("container.crate")), buf -> {
+                new CrateMenuBuyerService(id, inv, crate, crate.isUnlimitedShop), commonCrate.getDisplayName()), buf -> {
             //buffer to read client side
             buf.writeBoolean(crate.isUnlimitedShop);
         });
@@ -32,7 +30,7 @@ public class CrateBlock extends CrateBlockBase {
     public void openOwnerUI(ServerPlayer serverPlayer, CrateBlockEntityBase commonCrate) {
         if (!(commonCrate instanceof CrateBlockEntity crate)) return;
         serverPlayer.openMenu(new SimpleMenuProvider((id, inv, interactingPlayer) ->
-                new CrateMenuOwnerService(id, inv, crate, crate.isUnlimitedShop), Component.translatable("container.crate.owner")), buf -> {
+                new CrateMenuOwnerService(id, inv, crate, crate.isUnlimitedShop), commonCrate.getDisplayName()), buf -> {
             //buffer to read client side
             buf.writeBoolean(crate.isUnlimitedShop);
         });

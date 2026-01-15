@@ -8,6 +8,7 @@ import jackdaw.applecrates.container.StackHandlerAdapter;
 import jackdaw.applecrates.container.inventory.CrateStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.stream.IntStream;
 
 public class CrateBlockEntity extends CrateBlockEntityBase implements WorldlyContainer {
+
 
     public CrateBlockEntity(CrateWoodType type, BlockPos pos, BlockState state, IStackHandlerAdapter handler) {
         super(type, pos, state, handler);

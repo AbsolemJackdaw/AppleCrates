@@ -9,17 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuConstructor;
 
-public class CrateMenuFactory implements ExtendedScreenHandlerFactory<GeneralRegistry.CrateData> {
-
-    final MenuConstructor menuConstructor;
-    final boolean isunlimited;
-    final Component screenTitle;
-
-    public CrateMenuFactory(MenuConstructor menuConstructor, Component component, boolean isunlimited) {
-        this.menuConstructor = menuConstructor;
-        this.screenTitle = component;
-        this.isunlimited = isunlimited;
-    }
+public record CrateMenuFactory(MenuConstructor menuConstructor, Component screenTitle,
+                               boolean isunlimited) implements ExtendedScreenHandlerFactory<GeneralRegistry.CrateData> {
 
     @Override
     public GeneralRegistry.CrateData getScreenOpeningData(ServerPlayer player) {
