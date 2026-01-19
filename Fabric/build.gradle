@@ -65,7 +65,7 @@ modrinth {
     gameVersions = ["${minecraft_version}"]
 }
 
-tasks.register('publishModrinthAndCurseForge') {
+tasks.register('publish2platforms') {
     dependsOn(tasks.build)
     dependsOn(tasks.modrinth)
     dependsOn(tasks.publishCurseForge)
