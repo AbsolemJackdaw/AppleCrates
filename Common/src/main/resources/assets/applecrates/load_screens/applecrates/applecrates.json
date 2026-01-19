@@ -1,0 +1,14 @@
+
+{
+  "screens": [
+    {
+      "COMMENT": "applecrates support",
+      "class": "jackdaw.applecrates.client.screen.CrateScreenOwner",
+      "texture": "applecrates:textures/gui/owner.png"
+    },
+    {
+      "class": "jackdaw.applecrates.client.screen.CrateScreenBuyer",
+      "texture": "applecrates:textures/gui/buyer.png"
+    }
+  ]
+}
