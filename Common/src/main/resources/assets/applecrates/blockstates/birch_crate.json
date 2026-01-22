@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=east": {
+    "attached=false,facing=east": {
       "model": "applecrates:block/birch_crate",
       "y": 90
     },
-    "facing=north": {
+    "attached=false,facing=north": {
       "model": "applecrates:block/birch_crate"
     },
-    "facing=south": {
+    "attached=false,facing=south": {
       "model": "applecrates:block/birch_crate",
       "y": 180
     },
-    "facing=west": {
+    "attached=false,facing=west": {
       "model": "applecrates:block/birch_crate",
+      "y": 270
+    },
+    "attached=true,facing=east": {
+      "model": "applecrates:block/birch_crate_connected",
+      "y": 90
+    },
+    "attached=true,facing=north": {
+      "model": "applecrates:block/birch_crate_connected"
+    },
+    "attached=true,facing=south": {
+      "model": "applecrates:block/birch_crate_connected",
+      "y": 180
+    },
+    "attached=true,facing=west": {
+      "model": "applecrates:block/birch_crate_connected",
       "y": 270
     }
   }

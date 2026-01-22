@@ -1,0 +1,7 @@
+{
+  "parent": "applecrates:block/applecrate_connected",
+  "textures": {
+    "0": "minecraft:block/jungle_planks",
+    "particle": "minecraft:block/jungle_planks"
+  }
+}
